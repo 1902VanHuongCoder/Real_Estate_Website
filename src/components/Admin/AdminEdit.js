@@ -46,4 +46,4 @@ function Edit({ productId }) {
   );
 }
 
-export default Edit
+export default Edit;

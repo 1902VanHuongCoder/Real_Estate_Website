@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../../firebase_setup/firebase";
 import Edit from "./AdminEdit";
-import {
-  collection,
-  getDocs,
-  doc,
-  deleteDoc,
-} from "firebase/firestore";
+import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
 import AdminAddProducts from "./AdminAddProducts";
 const Admin = () => {
   const [data, setData] = useState();
@@ -88,4 +83,3 @@ const Admin = () => {
 };
 
 export default Admin;
-
