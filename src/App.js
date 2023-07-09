@@ -8,6 +8,7 @@ import AdminLogin from "./components/Admin/AdminLogin";
 import Error from "./components/Error";
 import Admin from "./components/Admin/Admin";
 import UploadFile from "./UploadFile";
+import Order from "./components/Order";
 
 function App() {
   return (
@@ -21,6 +22,8 @@ function App() {
           <Route path="/signin" element={<SigninForm />}></Route>
           <Route path="/error" element={<Error />}></Route>
           <Route path="/admin" element={<Admin />}></Route>
+          <Route path="/order" element={<Order />}></Route>
+
           <Route path="/uploadfile" element={<UploadFile />}></Route>
         </Routes>
       </BrowserRouter>

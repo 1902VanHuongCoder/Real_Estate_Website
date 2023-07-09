@@ -2,15 +2,36 @@ import React, { useState } from "react";
 import { db } from "../../firebase_setup/firebase";
 import { addDoc, collection } from "firebase/firestore";
 import UploadImage from "./UploadImage";
-
+const colors = [
+  "blue",
+  "Yellow",
+  "Red",
+  "Milk Yellow",
+  "Purple",
+  "Black",
+  "Brown",
+  "White",
+  "Light Black",
+  "Green",
+];
 const AdminAddProducts = () => {
   const [stt, setStt] = useState("");
   const [productName, setProductName] = useState("");
   const [productType, setProductType] = useState("");
   const [productPrice, setProductPrice] = useState("");
   const [url, setUrl] = useState("");
+  const [productColors, setProductColors] = useState([]);
 
-  console.log(url);
+  const handleChooseColorsForProduct = (e) => {
+        let colorHaveAlready = productColors.find((color) => e.target.value === color);
+        if(colorHaveAlready){
+            const newColors = productColors.filter((color) => color !== e.target.value);
+            setProductColors(newColors);
+        }else{
+          setProductColors([...productColors, e.target.value]);
+        }
+  };
+
   const addProduct = async () => {
     await addDoc(collection(db, "products"), {
       stt: stt,
@@ -18,6 +39,7 @@ const AdminAddProducts = () => {
       productType: productType,
       productPrice: productPrice,
       imageURL: url,
+      productColors: productColors,
     });
   };
   return (
@@ -63,7 +85,22 @@ const AdminAddProducts = () => {
         />
       </label>
       <br />
-      <UploadImage setUrl={setUrl}/>
+      <h2>Choose colors of product</h2>
+      {colors.map((color, i) => {
+        return (
+          <label key={i}>
+            <input
+              value={color}
+              type="checkbox"
+              onChange={handleChooseColorsForProduct}
+            />
+            <span>{color}</span>
+          </label>
+        );
+      })}
+      <br />
+
+      <UploadImage setUrl={setUrl} />
       <br />
       <button onClick={addProduct}>Sign In</button>
     </div>

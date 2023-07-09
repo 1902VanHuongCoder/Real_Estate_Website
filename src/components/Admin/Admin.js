@@ -25,7 +25,6 @@ const Admin = () => {
         id: doc.id,
       }));
       setData(responsedData);
-      console.log("Data have gotten from firestore");
     });
   };
 
