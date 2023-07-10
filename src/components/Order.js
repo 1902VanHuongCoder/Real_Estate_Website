@@ -1,14 +1,18 @@
-import React, { useState } from "react";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "../firebase_setup/firebase";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 const Order = () => {
   const [transportFee, setTransportFee] = useState(10);
   const [amount, setAmount] = useState(1);
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
-  const [deliveryMethod, setDeliveryMethod] = useState("");
+  const [deliveryMethod, setDeliveryMethod] = useState("On delivery");
   const [totalAmount, setTotalAmount] = useState();
+  const [colorIsChoosed, setColorIsChoosed] = useState([]);
 
-  
+  console.log(deliveryMethod);
+
   const { state } = useLocation();
   const handleDecreAmount = () => {
     if (amount > 1) {
@@ -18,6 +22,34 @@ const Order = () => {
 
   const handleIncreAmount = () => {
     setAmount((pre) => pre + 1);
+  };
+
+  const handleChooseColor = (e) => {
+    let color = colorIsChoosed.find((color) => color === e.target.value);
+    if (color) {
+      const remainingColors = colorIsChoosed.filter(
+        (color) => color !== e.target.value
+      );
+      setColorIsChoosed(remainingColors);
+    } else {
+      setColorIsChoosed([...colorIsChoosed, e.target.value]);
+    }
+  };
+
+  useEffect(() => {
+    setTotalAmount(state.productPrice * amount + transportFee);
+  }, [amount, transportFee, state.productPrice]);
+
+  const order = async () => {
+    await addDoc(collection(db, "orders"), {
+      productName: state.productName,
+      productAmount: amount,
+      totalAmount: totalAmount,
+      address: address,
+      phone: phone,
+      productColors: colorIsChoosed,
+      deliveryMethod: deliveryMethod,
+    });
   };
   return (
     <>
@@ -58,22 +90,26 @@ const Order = () => {
           <div>
             <h2>Choose your color:</h2>
             <div>
-              <label>
-                Yellow <input type="checkbox" />
-              </label>
-              <label>
-                Blue <input type="checkbox" />
-              </label>
-              <label>
-                Red <input type="checkbox" />
-              </label>
+              {state.productColors.map((item, i) => {
+                return (
+                  <label key={i}>
+                    <input
+                      type="checkbox"
+                      value={item}
+                      onChange={handleChooseColor}
+                    />
+                    {item}
+                  </label>
+                );
+              })}
             </div>
           </div>
 
           <div>
             <h2>Choose Payment Method</h2>
-            <select>
-              <option>On delivery</option>
+            <select onChange={(e) => setDeliveryMethod(e.target.value)}>
+              <option value="On delivery">On delivery</option>
+              <option value="Bank">Bank</option>
             </select>
           </div>
 
@@ -92,17 +128,18 @@ const Order = () => {
               Phone{" "}
               <input
                 type="text"
+                value={phone}
                 placeholder="Phone"
-                onChange={(e) => setAddress(e.target.value)}
+                onChange={(e) => setPhone(e.target.value)}
               />
             </label>
           </div>
 
           <div>
             <h2>Total amount: </h2>
-            {state.productPrice * amount + transportFee}$
+            {totalAmount}$
           </div>
-          <button>Order</button>
+          <button onClick={order}>Order</button>
         </div>
       </div>
     </>
