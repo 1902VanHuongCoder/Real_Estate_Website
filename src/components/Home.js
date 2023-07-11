@@ -1,16 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../firebase_setup/firebase";
 import ShoppingCart from "./ShoppingCart";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-
+import { db } from "../firebase_setup/firebase";
+import React, { useEffect, useState } from "react";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { useLocation, useNavigate } from "react-router-dom";
+import { FaUserAlt } from "react-icons/fa";
+import UserProfile from "./UserProfile";
 const Home = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const [data, setData] = useState();
+  const [showOrderHistory, setShowOrderHistory] = useState(false);
+  const [orderHistory, setOrderHistory] = useState([]);
+  console.log(orderHistory);
   const [shoppingCartData, setShoppingCartData] = useState([]);
   const [isLogin, setIsLogin] = useState(false);
-  const [username, setUserName] = useState('');
+  const [username, setUserName] = useState("");
 
   const fetchData = async () => {
     await getDocs(collection(db, "products")).then((response) => {
@@ -39,6 +43,11 @@ const Home = () => {
     navigate("/login");
   };
 
+  const handleRemoveProductOutOfShoppingCart = (id) => {
+    const filterdData = shoppingCartData.filter((product) => product.id !== id);
+    setShoppingCartData(filterdData);
+  };
+
   useEffect(() => {
     if (state) {
       setIsLogin(true);
@@ -47,23 +56,61 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-      const loggedInAccount = JSON.parse( localStorage.getItem('loggedInAccount'));
-      if(loggedInAccount){
-          setIsLogin(true);
-          setUserName(loggedInAccount);
-      }
+    const loggedInAccount = JSON.parse(localStorage.getItem("loggedInAccount"));
+    if (loggedInAccount) {
+      setIsLogin(true);
+      setUserName(loggedInAccount);
+    }
   }, []);
+
+  //Retrieve user's order history from database ===>
+  const getOrderedHistory = async () => {
+    const collection_ref = collection(db, "orders");
+    const q = query(collection_ref, where("username", "==", username.username));
+    const doc_ref = await getDocs(q);
+
+    const res = [];
+    doc_ref.forEach((order) => {
+      res.push({
+        ...order.data(),
+      });
+    });
+
+    if (res.length > 0) {
+      setOrderHistory(res);
+    } else {
+      setOrderHistory([]);
+    }
+  };
+
+  const handleShowOrderHistory = () => {
+    getOrderedHistory();
+    setShowOrderHistory(!showOrderHistory);
+  };
+  //<====
+
+  const handleShowProfile = () => {};
   return (
     <div>
       <div>
-        Nav bar
+        {/* Nav bar */}
+        <h1
+          onClick={handleShowProfile}
+          style={{
+            background: "#ff0",
+            padding: "3px",
+            width: "40px",
+            height: "40px",
+          }}
+        >
+          <FaUserAlt />
+        </h1>
         {isLogin && <h1>{username.username}</h1>}
         {!isLogin && (
           <button style={{ background: "blue" }} onClick={handleLogin}>
             Login
-          </button> 
+          </button>
         )}
-       {isLogin &&  <Link to='/login'><button style={{background: 'red'}}>Use another account</button></Link>}
       </div>
       <div>Banner</div>
       <div>
@@ -92,7 +139,31 @@ const Home = () => {
         </ul>
       </div>
       <h1>Shopping Cart</h1>
-      <ShoppingCart products={shoppingCartData} user={username}/>
+      <ShoppingCart
+        products={shoppingCartData}
+        user={username}
+        handleRemoveProductOutOfShoppingCart={
+          handleRemoveProductOutOfShoppingCart
+        }
+      />
+      <UserProfile
+        username={username.username}
+        isLogin={isLogin}
+        handleShowOrderHistory={handleShowOrderHistory}
+      />
+      {showOrderHistory ? <div style={{border: '1px solid black'}}>
+          {orderHistory.map((order, i) => {
+            return(
+              <div key={i}>
+                <h2>{order.productName}</h2>
+                <img src={order.imageURL} alt={order.productName}  width={100} height={100}/>
+                <p>Total amount: {order.totalAmount}</p>
+                <p>Amount: {order.productAmount}</p>
+                <p>Delivery: {order.deliveryMethod}</p>
+              </div>
+            )
+          })}
+      </div> : <div></div>}
     </div>
   );
 };

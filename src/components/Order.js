@@ -14,6 +14,7 @@ const Order = () => {
   const [colorIsChoosed, setColorIsChoosed] = useState([]);
   const [deliveryMethod, setDeliveryMethod] = useState("On delivery");
 
+  
   // Choose amount of products ==> //
   const handleDecreAmount = () => {
     if (amount > 1) {

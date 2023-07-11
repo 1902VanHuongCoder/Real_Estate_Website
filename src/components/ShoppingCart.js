@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-const ShoppingCart = ({products, user}) => {
+const ShoppingCart = ({products, user, handleRemoveProductOutOfShoppingCart}) => {
     const navigate = useNavigate();
     const handleBuyProduct = (id) => {
         const product = products.filter((item) => item.id === id);
@@ -14,6 +14,7 @@ const ShoppingCart = ({products, user}) => {
                     <img src={item.imageURL} alt={item.productName} width={100} height={100} />
                     <h2>{item.productName} </h2>
                     <button onClick={() => handleBuyProduct(item.id)}>Buy</button>
+                    <button onClick={() => handleRemoveProductOutOfShoppingCart(item.id)}>Remove</button>
                 </div>
             )
         }) }
