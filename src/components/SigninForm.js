@@ -11,7 +11,7 @@ const SigninForm = () => {
         const addUserAccount = async () => {
             await addDoc(collection(db, 'users_account'), {
                 username: userName,
-                password: password
+                password: password,              
             })
         }
 

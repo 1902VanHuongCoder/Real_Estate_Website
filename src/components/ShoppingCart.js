@@ -1,10 +1,10 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-const ShoppingCart = ({products}) => {
+const ShoppingCart = ({products, user}) => {
     const navigate = useNavigate();
     const handleBuyProduct = (id) => {
         const product = products.filter((item) => item.id === id);
-        navigate("/order", {state: product[0]});
+        navigate("/order", {state: [product[0], user]});
     }
   return (
     <div style={{display: 'flex' }}>

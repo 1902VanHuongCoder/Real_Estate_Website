@@ -11,6 +11,7 @@ const Home = () => {
   const [shoppingCartData, setShoppingCartData] = useState([]);
   const [isLogin, setIsLogin] = useState(false);
   const [username, setUserName] = useState('');
+
   const fetchData = async () => {
     await getDocs(collection(db, "products")).then((response) => {
       const dataResponsed = response.docs.map((doc) => ({
@@ -41,7 +42,7 @@ const Home = () => {
   useEffect(() => {
     if (state) {
       setIsLogin(true);
-      setUserName(state.username);
+      setUserName(state);
     }
   }, []);
 
@@ -49,18 +50,18 @@ const Home = () => {
       const loggedInAccount = JSON.parse( localStorage.getItem('loggedInAccount'));
       if(loggedInAccount){
           setIsLogin(true);
-          setUserName(loggedInAccount.username);
+          setUserName(loggedInAccount);
       }
   }, []);
   return (
     <div>
       <div>
         Nav bar
-        {isLogin && <h1>{username}</h1>}
+        {isLogin && <h1>{username.username}</h1>}
         {!isLogin && (
           <button style={{ background: "blue" }} onClick={handleLogin}>
             Login
-          </button>
+          </button> 
         )}
        {isLogin &&  <Link to='/login'><button style={{background: 'red'}}>Use another account</button></Link>}
       </div>
@@ -91,7 +92,7 @@ const Home = () => {
         </ul>
       </div>
       <h1>Shopping Cart</h1>
-      <ShoppingCart products={shoppingCartData} />
+      <ShoppingCart products={shoppingCartData} user={username}/>
     </div>
   );
 };
