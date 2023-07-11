@@ -3,15 +3,15 @@ import { db } from "../firebase_setup/firebase";
 import React, { useEffect, useState } from "react";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { useLocation, useNavigate } from "react-router-dom";
-import { FaUserAlt } from "react-icons/fa";
 import UserProfile from "./UserProfile";
+import NavbarWithDropdown from "./Home/Navbar";
+import Banner from "./Home/Banner";
 const Home = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const [data, setData] = useState();
   const [showOrderHistory, setShowOrderHistory] = useState(false);
   const [orderHistory, setOrderHistory] = useState([]);
-  console.log(orderHistory);
   const [shoppingCartData, setShoppingCartData] = useState([]);
   const [isLogin, setIsLogin] = useState(false);
   const [username, setUserName] = useState("");
@@ -37,10 +37,6 @@ const Home = () => {
     } else {
       alert("This product has already been shopping cart!");
     }
-  };
-
-  const handleLogin = () => {
-    navigate("/login");
   };
 
   const handleRemoveProductOutOfShoppingCart = (id) => {
@@ -89,30 +85,10 @@ const Home = () => {
   };
   //<====
 
-  const handleShowProfile = () => {};
   return (
     <div>
-      <div>
-        {/* Nav bar */}
-        <h1
-          onClick={handleShowProfile}
-          style={{
-            background: "#ff0",
-            padding: "3px",
-            width: "40px",
-            height: "40px",
-          }}
-        >
-          <FaUserAlt />
-        </h1>
-        {isLogin && <h1>{username.username}</h1>}
-        {!isLogin && (
-          <button style={{ background: "blue" }} onClick={handleLogin}>
-            Login
-          </button>
-        )}
-      </div>
-      <div>Banner</div>
+      <NavbarWithDropdown username={username.username} isLogged={isLogin}/>
+      <Banner />
       <div>
         <h1>Products</h1>
         <ul style={{ display: "flex" }}>
@@ -177,3 +153,4 @@ const Home = () => {
 //   );
 // }
 export default Home;
+
