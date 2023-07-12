@@ -15,13 +15,13 @@ export default function NavbarWithDropdown({ username, isLogged }) {
         </span>
       </Navbar.Brand>
       <div className="flex md:order-2 gap-3">
-        <a href="http://localhost:3000/">
+        <a href="http://localhost:3000/" className="hidden sm:block">
           <img src={messenger} alt="messenger" width={40} height={40} />
         </a>
-        <a href="http://localhost:3000/">
+        <a href="http://localhost:3000/" className="hidden sm:block">
           <img src={github} alt="github" width={40} height={40} />
         </a>
-        <a href="http://localhost:3000/">
+        <a href="http://localhost:3000/" className="hidden sm:block">
           <img src={instagram} alt="instagram" width={40} height={40} />
         </a>
         <Dropdown

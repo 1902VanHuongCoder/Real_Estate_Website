@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import UserProfile from "./UserProfile";
 import NavbarWithDropdown from "./Home/Navbar";
 import Banner from "./Home/Banner";
+import Products from "./Home/Products";
 const Home = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
@@ -89,31 +90,10 @@ const Home = () => {
     <div>
       <NavbarWithDropdown username={username.username} isLogged={isLogin}/>
       <Banner />
-      <div>
-        <h1>Products</h1>
-        <ul style={{ display: "flex" }}>
-          {data?.map((data, i) => {
-            return (
-              <li key={i}>
-                Product Name: {data.productName} | Price: {data.productPrice} |
-                Type: {data.productType}
-                <img
-                  src={data.imageURL}
-                  alt={data.productName}
-                  width={100}
-                  height={100}
-                />
-                <button
-                  style={{ background: "#ee4d2d", borderRadius: "5px" }}
-                  onClick={() => handleAddProduct(data.id)}
-                >
-                  Add product
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
+      <Products data={data} handleAddProduct={handleAddProduct} />
+
+
+
       <h1>Shopping Cart</h1>
       <ShoppingCart
         products={shoppingCartData}
