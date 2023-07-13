@@ -49,10 +49,15 @@ export default function NavbarWithDropdown({ username, isLogged }) {
         <Navbar.Toggle />
       </div>
       <Navbar.Collapse>
-        <Navbar.Link active href="#">
-          <p>Home</p>
-        </Navbar.Link>
-        <Navbar.Link href="#">Order History</Navbar.Link>
+        <Link to="/">
+          <Navbar.Link active>
+            <p>Home</p>
+          </Navbar.Link>
+        </Link>
+
+        <Link to="/orderhistory">
+        <Navbar.Link>Order History</Navbar.Link>
+        </Link>
         {!isLogged && (
           <Link to="/login">
             <p className="ml-3">Login</p>

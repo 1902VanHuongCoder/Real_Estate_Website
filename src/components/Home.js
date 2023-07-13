@@ -1,12 +1,12 @@
-import ShoppingCart from "./ShoppingCart";
+import ShoppingCart from "./Home/ShoppingCart";
 import { db } from "../firebase_setup/firebase";
 import React, { useEffect, useState } from "react";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { useLocation, useNavigate } from "react-router-dom";
-import UserProfile from "./UserProfile";
 import NavbarWithDropdown from "./Home/Navbar";
 import Banner from "./Home/Banner";
 import Products from "./Home/Products";
+import  Footer  from "./Home/Footer";
 const Home = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
@@ -90,23 +90,16 @@ const Home = () => {
     <div>
       <NavbarWithDropdown username={username.username} isLogged={isLogin}/>
       <Banner />
-      <Products data={data} handleAddProduct={handleAddProduct} />
-
-
-
-      <h1>Shopping Cart</h1>
       <ShoppingCart
         products={shoppingCartData}
         user={username}
         handleRemoveProductOutOfShoppingCart={
           handleRemoveProductOutOfShoppingCart
         }
-      />
-      <UserProfile
-        username={username.username}
         isLogin={isLogin}
-        handleShowOrderHistory={handleShowOrderHistory}
       />
+      <Products data={data} handleAddProduct={handleAddProduct} />
+      <Footer />
       {showOrderHistory ? <div style={{border: '1px solid black'}}>
           {orderHistory.map((order, i) => {
             return(
