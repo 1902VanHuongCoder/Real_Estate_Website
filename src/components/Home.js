@@ -87,7 +87,7 @@ const Home = () => {
   //<====
 
   return (
-    <div>
+    <div className="relative">
       <NavbarWithDropdown username={username.username} isLogged={isLogin}/>
       <Banner />
       <ShoppingCart

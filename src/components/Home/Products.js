@@ -91,7 +91,7 @@ const Products = ({ data, handleAddProduct }) => {
                   key={i}
                 >
                   <div className="w-full flex justify-center items-center">
-                    <div className="w-[250px] h-[200px] overflow-hidden bg-[red]">
+                    <div className="w-[250px] h-[200px] overflow-hidden">
                       <img
                         className="w-full h-full"
                         src={data.imageURL}

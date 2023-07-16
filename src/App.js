@@ -9,26 +9,24 @@ import SigninForm from "./components/SigninForm";
 import AdminLogin from "./components/Admin/AdminLogin";
 import AdminSigninForm from "./components/Admin/AdminSignin";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
-
+import OrderHistory from "./components/OrderHistory";
 function App() {
   return (
-    <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />}></Route>
-          <Route path="/order" element={<Order />}></Route>
-          <Route path="/error" element={<Error />} />
-          <Route path="*" element={<Navigate to="/error" />} />
-          <Route path="/admin" element={<Admin />}></Route>
-          <Route path="/login" element={<LoginForm />}></Route>
-          <Route path="/signin" element={<SigninForm />}></Route>
-          <Route path="/admin/login" element={<AdminLogin />}></Route>
-          <Route path="/admin/signin" element={<AdminSigninForm />}></Route>
-
-          <Route path="/uploadfile" element={<UploadFile />}></Route>
-        </Routes>
-      </BrowserRouter>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />}></Route>
+        <Route path="/order" element={<Order />}></Route>
+        <Route path="/error" element={<Error />} />
+        <Route path="*" element={<Navigate to="/error" />} />
+        <Route path="/admin" element={<Admin />}></Route>
+        <Route path="/login" element={<LoginForm />}></Route>
+        <Route path="/signin" element={<SigninForm />}></Route>
+        <Route path="/admin/login" element={<AdminLogin />}></Route>
+        <Route path="/admin/signin" element={<AdminSigninForm />}></Route>
+        <Route path="/orderhistory" element={<OrderHistory />}></Route>
+        <Route path="/uploadfile" element={<UploadFile />}></Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 

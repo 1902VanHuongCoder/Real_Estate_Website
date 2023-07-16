@@ -1,19 +1,21 @@
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
 import { db } from "../firebase_setup/firebase";
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import NavbarWithDropdown from "./Home/Navbar";
+
+import { toast } from "https://cdn.skypack.dev/wc-toast";
 const Order = () => {
   const { state } = useLocation();
-  console.log(state);
   const [phone, setPhone] = useState("");
   const [amount, setAmount] = useState(1);
   const [address, setAddress] = useState("");
   const [totalAmount, setTotalAmount] = useState();
-  const [orderHistory, setOrderHistory] = useState([]);
   const [transportFee, setTransportFee] = useState(10);
   const [colorIsChoosed, setColorIsChoosed] = useState([]);
+  console.log(colorIsChoosed);
+  console.log("1");
   const [deliveryMethod, setDeliveryMethod] = useState("On delivery");
 
   // Choose amount of products ==> //
@@ -48,49 +50,31 @@ const Order = () => {
   }, [amount, transportFee, state]);
   //<===
 
-  //Retrieve user's order history from database ===>
-  const getOrderedHistory = async () => {
-    const collection_ref = collection(db, "orders");
-    const q = query(collection_ref, where("username", "==", state[1].username));
-    const doc_ref = await getDocs(q);
-
-    const res = [];
-    doc_ref.forEach((order) => {
-      res.push({
-        ...order.data(),
-      });
-    });
-
-    if (res.length > 0) {
-      setOrderHistory(res);
-    } else {
-      setOrderHistory([]);
-    }
-  };
-  useEffect(() => {
-    getOrderedHistory();
-  }, []);
-  //<====
-
   // When user hit submit, will set these datas to database (firestore - firebase) ===>
   const order = async () => {
-    await addDoc(collection(db, "orders"), {
-      phone: phone,
-      address: address,
-      productId: uuidv4(),
-      productAmount: amount,
-      totalAmount: totalAmount,
-      username: state[1].username,
-      imageURL: state[0].imageURL,
-      productColors: colorIsChoosed,
-      deliveryMethod: deliveryMethod,
-      productName: state[0].productName,
-    });
+    if (address === "" || phone === "" || colorIsChoosed.length < 0) {
+      toast.error("Order isn't success! Check your order");
+    } else {
+      await addDoc(collection(db, "orders"), {
+        phone: phone,
+        address: address,
+        productId: uuidv4(),
+        productAmount: amount,
+        totalAmount: totalAmount,
+        username: state[1].username,
+        imageURL: state[0].imageURL,
+        productColors: colorIsChoosed,
+        deliveryMethod: deliveryMethod,
+        productName: state[0].productName,
+      });
+      toast.success("Order success");
+    }
   };
   // <===
 
   return (
     <>
+      <wc-toast></wc-toast>
       <NavbarWithDropdown username={state[1].username} isLogged={state[2]} />
       <div className="w-10/12 bg-slate-100 mx-auto rounded large">
         <h1 className="py-4 px-10 font-medium text-[#ee4d2d] text-2xl">
@@ -194,7 +178,7 @@ const Order = () => {
               <p className="text-2xl">${totalAmount}</p>
             </div>
             <button
-            onClick={order}
+              onClick={order}
               type="button"
               className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
@@ -211,29 +195,6 @@ const Order = () => {
             </button>
           </div>
         </div>
-        {/* <div>
-          <h1>Order history</h1>
-          {orderHistory.length > 0 ? (
-            orderHistory?.map((order, i) => {
-              return (
-                <div key={i}>
-                  <h1>{order.productName}</h1>
-                  <img src={order.imageURL} alt={order.productName} />
-                  <p>Amount: {order.productAmount}</p>
-                  <p>
-                    Colors:{" "}
-                    {order.productColors.map((color, index) => {
-                      return <span key={index}>{color}</span>;
-                    })}
-                  </p>
-                  <h2>Total amount: {order.totalAmount} $</h2>
-                </div>
-              );
-            })
-          ) : (
-            <h1> You haven't bought anything!</h1>
-          )}
-        </div> */}
       </div>
     </>
   );
