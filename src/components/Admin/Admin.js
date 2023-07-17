@@ -3,11 +3,16 @@ import { db } from "../../firebase_setup/firebase";
 import Edit from "./AdminEdit";
 import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
 import AdminAddProducts from "./AdminAddProducts";
+import { useLocation, useNavigate } from "react-router-dom";
 const Admin = () => {
+  const {state} = useLocation();
+
   const [data, setData] = useState();
   const [edit, setEdit] = useState(false);
   const [productId, setProductId] = useState("");
+  const [loggedin, setLoggedIn] = useState(false);
 
+  const navigate = useNavigate();
   const handleEdit = (id) => {
     setEdit(true);
     setProductId(id);
@@ -32,8 +37,15 @@ const Admin = () => {
     addData();
   }, []);
 
+  useEffect(() => {
+    if(state){
+      setLoggedIn(true);
+    }else{
+      navigate('/admin/login');
+    }
+  },[]);
   return (
-    <div>
+    loggedin && ( <div>
       <div>
         <h1>Products List</h1>
         <table>
@@ -77,7 +89,7 @@ const Admin = () => {
         <AdminAddProducts />
       </div>
       <div>{edit && <Edit productId={productId} />}</div>
-    </div>
+    </div>)
   );
 };
 

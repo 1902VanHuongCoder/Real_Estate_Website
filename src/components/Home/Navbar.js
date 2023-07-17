@@ -5,7 +5,11 @@ import { Dropdown, Navbar } from "flowbite-react";
 import messenger from "../../assets/messenger.png";
 import instagram from "../../assets/instagram.png";
 import { Link, useNavigate } from "react-router-dom";
-export default function NavbarWithDropdown({ username, isLogged }) {
+export default function NavbarWithDropdown({
+  username,
+  isLogged,
+  handleSignOut,
+}) {
   const navigate = useNavigate();
   const handleRedirectToOrderHistory = () => {
     navigate("/orderhistory", {
@@ -39,17 +43,25 @@ export default function NavbarWithDropdown({ username, isLogged }) {
           }
         >
           <Dropdown.Header>
-            <span className="block text-sm">{username}</span>
+            {isLogged ? (
+              <span className="block text-sm">{username}</span>
+            ) : (
+              <span className="block text-sm">Customer</span>
+            )}
           </Dropdown.Header>
-          <Dropdown.Item onClick={handleRedirectToOrderHistory}>
-            Order History
-          </Dropdown.Item>
-          <Dropdown.Divider />
+          {isLogged && (
+            <Dropdown.Item onClick={handleRedirectToOrderHistory}>
+              Order History
+            </Dropdown.Item>
+          )}
           <Link to="/login">
             {" "}
             <Dropdown.Item>Use another account</Dropdown.Item>
           </Link>
-          <Dropdown.Item>Sign out</Dropdown.Item>
+          <Dropdown.Divider />
+          {isLogged && (
+            <Dropdown.Item onClick={handleSignOut}>Sign out</Dropdown.Item>
+          )}
         </Dropdown>
         <Navbar.Toggle />
       </div>
@@ -59,12 +71,14 @@ export default function NavbarWithDropdown({ username, isLogged }) {
             <p>Home</p>
           </Navbar.Link>
         </Link>
-        <Navbar.Link
-          onClick={handleRedirectToOrderHistory}
-          className="cursor-pointer"
-        >
-          Order History
-        </Navbar.Link>
+        {isLogged && (
+          <Navbar.Link
+            onClick={handleRedirectToOrderHistory}
+            className="cursor-pointer"
+          >
+            Order History
+          </Navbar.Link>
+        )}
         {!isLogged && (
           <Link to="/login">
             <p className="ml-3">Login</p>

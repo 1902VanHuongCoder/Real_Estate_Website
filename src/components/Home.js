@@ -44,6 +44,11 @@ const Home = () => {
     setShoppingCartData(filterdData);
   };
 
+  const handleSignOut = () => {
+      setIsLogin(false);
+      localStorage.removeItem('loggedInAccount');
+      window.location.reload(true);
+  }
   useEffect(() => {
     if (state) {
       setIsLogin(true);
@@ -62,7 +67,7 @@ const Home = () => {
   return (
     <div className="relative">
       <wc-toast></wc-toast>
-      <NavbarWithDropdown username={username.username} isLogged={isLogin} />
+      <NavbarWithDropdown username={username.username} isLogged={isLogin} handleSignOut={handleSignOut} />
       <Banner />
       <ShoppingCart
         products={shoppingCartData}

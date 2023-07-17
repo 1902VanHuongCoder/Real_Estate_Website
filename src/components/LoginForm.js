@@ -1,11 +1,12 @@
-import React, { useState } from "react";
-import { db } from "../firebase_setup/firebase";
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
-import loginimg from "../assets/loginimg.jpg";
 import logo from "../assets/logo.png";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import loginimg from "../assets/loginimg.jpg";
+import { useNavigate } from "react-router-dom";
+import { db } from "../firebase_setup/firebase";
 import { toast } from "https://cdn.skypack.dev/wc-toast";
+
+import { collection, getDocs, query, where } from "firebase/firestore";
 const LoginForm = () => {
   const [remember, setRemember] = useState(false);
   const navigate = useNavigate();
@@ -35,14 +36,13 @@ const LoginForm = () => {
       res[0]?.username === data.email &&
       res[0]?.password === data.password
     ) {
-      toast.success('Login success');
+      toast.success("Login success");
       if (remember) {
         let accountJSON = JSON.stringify({
           username: data.email,
           password: data.password,
         });
         localStorage.setItem("loggedInAccount", accountJSON);
-        console.log("Remembered you");
       }
       navigate("/", { state: res[0] });
     }
