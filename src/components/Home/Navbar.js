@@ -1,17 +1,17 @@
-import { Link, useNavigate } from "react-router-dom";
-import logo from "../../assets/logo.jpg";
+import logo from "../../assets/logo.png";
 import { FaUserAlt } from "react-icons/fa";
 import github from "../../assets/git hub.png";
 import { Dropdown, Navbar } from "flowbite-react";
 import messenger from "../../assets/messenger.png";
 import instagram from "../../assets/instagram.png";
+import { Link, useNavigate } from "react-router-dom";
 export default function NavbarWithDropdown({ username, isLogged }) {
   const navigate = useNavigate();
   const handleRedirectToOrderHistory = () => {
-      navigate('/orderhistory', {
-        state: {username: username, isLogged: isLogged}
-      })
-  }
+    navigate("/orderhistory", {
+      state: { username: username, isLogged: isLogged },
+    });
+  };
   return (
     <Navbar fluid rounded>
       <Navbar.Brand>
@@ -40,11 +40,10 @@ export default function NavbarWithDropdown({ username, isLogged }) {
         >
           <Dropdown.Header>
             <span className="block text-sm">{username}</span>
-            <span className="block truncate text-sm font-medium">
-              name@flowbite.com
-            </span>
           </Dropdown.Header>
-          <Dropdown.Item>Order History</Dropdown.Item>
+          <Dropdown.Item onClick={handleRedirectToOrderHistory}>
+            Order History
+          </Dropdown.Item>
           <Dropdown.Divider />
           <Link to="/login">
             {" "}
@@ -60,7 +59,12 @@ export default function NavbarWithDropdown({ username, isLogged }) {
             <p>Home</p>
           </Navbar.Link>
         </Link>
-        <Navbar.Link onClick={handleRedirectToOrderHistory} className="cursor-pointer">Order History</Navbar.Link>
+        <Navbar.Link
+          onClick={handleRedirectToOrderHistory}
+          className="cursor-pointer"
+        >
+          Order History
+        </Navbar.Link>
         {!isLogged && (
           <Link to="/login">
             <p className="ml-3">Login</p>

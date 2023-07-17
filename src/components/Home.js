@@ -1,18 +1,16 @@
+import Banner from "./Home/Banner";
+import Footer from "./Home/Footer";
+import Products from "./Home/Products";
+import NavbarWithDropdown from "./Home/Navbar";
 import ShoppingCart from "./Home/ShoppingCart";
 import { db } from "../firebase_setup/firebase";
 import React, { useEffect, useState } from "react";
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { useLocation, useNavigate } from "react-router-dom";
-import NavbarWithDropdown from "./Home/Navbar";
-import Banner from "./Home/Banner";
-import Products from "./Home/Products";
-import  Footer  from "./Home/Footer";
+import { collection, getDocs} from "firebase/firestore";
+import { useLocation} from "react-router-dom";
+import { toast } from "https://cdn.skypack.dev/wc-toast";
 const Home = () => {
-  const navigate = useNavigate();
   const { state } = useLocation();
   const [data, setData] = useState();
-  const [showOrderHistory, setShowOrderHistory] = useState(false);
-  const [orderHistory, setOrderHistory] = useState([]);
   const [shoppingCartData, setShoppingCartData] = useState([]);
   const [isLogin, setIsLogin] = useState(false);
   const [username, setUserName] = useState("");
@@ -35,8 +33,9 @@ const Home = () => {
     if (!haveProduct) {
       const product = data.filter((item) => item.id === id);
       setShoppingCartData([...shoppingCartData, product[0]]);
+      toast.success("You have just added this product into shopping cart");
     } else {
-      alert("This product has already been shopping cart!");
+      toast.error("This product has already been shopping cart!");
     }
   };
 
@@ -60,35 +59,10 @@ const Home = () => {
     }
   }, []);
 
-  //Retrieve user's order history from database ===>
-  const getOrderedHistory = async () => {
-    const collection_ref = collection(db, "orders");
-    const q = query(collection_ref, where("username", "==", username.username));
-    const doc_ref = await getDocs(q);
-
-    const res = [];
-    doc_ref.forEach((order) => {
-      res.push({
-        ...order.data(),
-      });
-    });
-
-    if (res.length > 0) {
-      setOrderHistory(res);
-    } else {
-      setOrderHistory([]);
-    }
-  };
-
-  const handleShowOrderHistory = () => {
-    getOrderedHistory();
-    setShowOrderHistory(!showOrderHistory);
-  };
-  //<====
-
   return (
     <div className="relative">
-      <NavbarWithDropdown username={username.username} isLogged={isLogin}/>
+      <wc-toast></wc-toast>
+      <NavbarWithDropdown username={username.username} isLogged={isLogin} />
       <Banner />
       <ShoppingCart
         products={shoppingCartData}
@@ -100,30 +74,7 @@ const Home = () => {
       />
       <Products data={data} handleAddProduct={handleAddProduct} />
       <Footer />
-      {showOrderHistory ? <div style={{border: '1px solid black'}}>
-          {orderHistory.map((order, i) => {
-            return(
-              <div key={i}>
-                <h2>{order.productName}</h2>
-                <img src={order.imageURL} alt={order.productName}  width={100} height={100}/>
-                <p>Total amount: {order.totalAmount}</p>
-                <p>Amount: {order.productAmount}</p>
-                <p>Delivery: {order.deliveryMethod}</p>
-              </div>
-            )
-          })}
-      </div> : <div></div>}
     </div>
   );
 };
-// {
-//   return (
-//     <li key={i}>
-//       Product Name: {data.productName} | Price: {data.productPrice} |
-//       Type: {data.productType}
-//       <img src={data.imageURL} alt={data.productName} />
-//     </li>
-//   );
-// }
 export default Home;
-

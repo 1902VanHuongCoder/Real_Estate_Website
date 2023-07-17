@@ -1,34 +1,160 @@
-import React, { useState } from 'react'
-import {db} from '../firebase_setup/firebase'
-import { collection, addDoc } from 'firebase/firestore'
-import { Link } from 'react-router-dom';
-
+import logo from "../assets/logo.png";
+import React from "react";
+import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import signinimg from "../assets/signinimg.jpg";
+import { db } from "../firebase_setup/firebase";
+import { toast } from "https://cdn.skypack.dev/wc-toast";
+import { collection, addDoc, getDocs, where, query } from "firebase/firestore";
 const SigninForm = () => {
-    const [userName, setUserName] = useState('');
-    const [password, setPassword] = useState('');
-    const [conformPassword, setConformPassword] = useState('');
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
 
-        const addUserAccount = async () => {
-            await addDoc(collection(db, 'users_account'), {
-                username: userName,
-                password: password,              
-            })
-        }
+  const addUserAccount = async (username, password) => {
+    await addDoc(collection(db, "users_account"), {
+      username: username,
+      password: password,
+    });
+  };
 
+  const handleSignin = async (data) => {
+    if (data.password === data.confirmpassword) {
+      const collection_ref = collection(db, "users_account");
+      const q = query(collection_ref, where("username", "==", data.email));
+      const doc_ref = await getDocs(q);
 
-        const handleSignin = (e) => {
-            e.preventDefault();
-            addUserAccount();
-        }
+      const res = [];
+      doc_ref.forEach((order) => {
+        res.push({
+          ...order.data(),
+        });
+      });
+
+      if (res.length > 0) {
+        toast.error("Sign in fail! This account has already signed in");
+      } else {
+        addUserAccount(data.email, data.password);
+        toast.success("Sign in success");
+        reset();
+      }
+    } else {
+      toast.error("Password and confirm password are invalid");
+    }
+  };
   return (
-    <div>
-        <h1>Sign In</h1>
-        <label>Username or email <input type='text' placeholder='username' id='username' onChange={(e) => setUserName(e.target.value)}/></label>
-        <br /><label>Password <input type='password' placeholder='password' id='password' onChange={(e) => setPassword(e.target.value)}/></label>
-        <br /><label>Conform password<input type='password' placeholder='conformpassword' id='conformpassword' onChange={(e) => setConformPassword(e.target.value)}/></label>
-        <br /><button onClick={(e) => handleSignin(e)}>Sign In</button><Link to='/'><button style={{background: 'yellow'}}>Home</button></Link>
-    </div> 
-  )
-}
+    <div className="w-full min-h-screen bg-slate-50 flex items-center justify-center">
+      <wc-toast></wc-toast>
+      <div className="max-w-[1240px] w-full lg:w-10/12 min-h-screen flex lg:mt-5 lg:rounded-lg overflow-hidden shadow-lg">
+        <div className="bg-[#FED3CA] w-full lg:w-1/2 flex flex-col items-center justify-center gap-y-5">
+          <img src={logo} className="w-16 h-16" alt="logo" />
+          <div className="p-6 space-y-4 md:space-y-6 sm:p-8 bg-white w-[80%] rounded-lg">
+            <h1 className="text-center text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+              Sign In
+            </h1>
+            <form className="space-y-4 md:space-y-6" action="#">
+              <div>
+                <label
+                  htmlFor="email"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Your email
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="name@company.com"
+                  {...register("email", {
+                    required: "* This field is required!",
+                    pattern: {
+                      value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+                      message: "* Email invalid",
+                    },
+                  })}
+                />
+                <span className="text-[red] py-1">
+                  {errors.email && errors.email.message}
+                </span>
+              </div>
+              <div>
+                <label
+                  htmlFor="password"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Password
+                </label>
+                <input
+                  type="password"
+                  name="password"
+                  id="password"
+                  placeholder="••••••••"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  {...register("password", {
+                    required: "* This field is required!",
+                    maxLength: {
+                      value: 15,
+                      message: "* Password have to shorter than 15 characters",
+                    },
+                    minLength: {
+                      value: 8,
+                      message: "* Password have to longer than 8 characters",
+                    },
+                  })}
+                />
+                <span className="text-[red] py-1">
+                  {errors.password && errors.password.message}
+                </span>
+              </div>
+              <div>
+                <label
+                  htmlFor="password"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Confirm Password
+                </label>
+                <input
+                  type="password"
+                  name="confirmpassword"
+                  id="confirmpassword"
+                  placeholder="••••••••"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  {...register("confirmpassword", {
+                    required: "* This field is required!",
+                  })}
+                />
+                <span className="text-[red] py-1">
+                  {errors.confirmpassword && errors.confirmpassword.message}
+                </span>
+              </div>
+              <button
+                onClick={handleSubmit(handleSignin)}
+                type="submit"
+                className="w-full text-black bg-[#FED3CA] hover:bg-[#fcb2a3] focus:ring-4 focus:outline-none focus:ring-[#FED3CA] font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+              >
+                Sign In
+              </button>
+            </form>
+            <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+              If you have an account{" "}
+              <Link to="/login">
+                <span className="cursor-pointer font-medium text-primary-600 hover:underline dark:text-primary-500">
+                  Login
+                </span>
+              </Link>
+            </p>
+          </div>
+        </div>
+        <div className="w-1/2 h-full overflow-hidden hidden lg:block">
+          <img src={signinimg} alt="logoIMG" />
+        </div>
+      </div>
+    </div>
+  );
+};
 
-export default SigninForm
+export default SigninForm;

@@ -34,9 +34,10 @@ const OrderHistory = () => {
   }, []);
   //<====
   return (
-    <div className="relative min-h-full">
+    <>
+       <div className="relative min-h-screen">
       <NavbarWithDropdown username={state.username} isLogged={state.isLogged} />
-      <div className="w-10/12 bg-slate-100 mx-auto rounded large p-3 h-fit mb-7">
+      <div className="mt-6 w-10/12 bg-slate-100 mx-auto rounded large p-3 h-fit mb-7">
         <h1 className="py-4 px-10 font-medium text-[#ee4d2d] text-2xl">
           Order history
         </h1>
@@ -106,14 +107,16 @@ const OrderHistory = () => {
             );
           })
         ) : (
-          <div className="flex gap-2 justify-center items-center h-[40vh] border-2 border-[#7c7474] border-dashed w-[80%] mx-auto mt-3 text-[#ee4d2d]">
+          <div className="flex gap-2 justify-center items-center h-[40vh] border-2 border-[#7c7474] border-dashed w-[80%] mx-auto mt-3 text-[#ee4d2d] mb-5">
             <BsFillEmojiLaughingFill />
             <h1>You haven't bought anything!</h1>
           </div>
         )}
       </div>
-      <Footer/>
     </div>
+    <Footer/>
+    </>
+  
   );
 };
 

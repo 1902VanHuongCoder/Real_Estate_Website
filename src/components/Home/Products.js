@@ -1,10 +1,9 @@
 import React from "react";
-
 const Products = ({ data, handleAddProduct }) => {
   return (
     <div className="mt-6">
       <h1 className="mx-auto p-4 text-center uppercase text-[#ee4d2d] font-bold text-[2rem]">
-        Products
+        Products 
       </h1>
       <div className="w-full sm:w-[80%] h-fit bg-[#f5f5fa] mx-auto  p-5 rounded-lg">
         <h2 className="text-[1rem] sm:text-[1.5rem] text-[#ee4d2d] p-1 sm:p-4 font-bold mb-[1rem]">
