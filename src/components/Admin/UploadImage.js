@@ -13,7 +13,6 @@ const UploadImage = ({ setUrl }) => {
     maxfileSize: 1500,
   });
 
-  console.log(fileData.file4);
   const [image, setImage] = useState("");
 
   const handleImage = (e) => {

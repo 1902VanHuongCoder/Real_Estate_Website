@@ -10,7 +10,6 @@ const UploadFile = () => {
     maxfileSize: 1500,
   });
 
-  console.log(fileData);
   return (
     <div>
       <h1>Up load your image</h1>
