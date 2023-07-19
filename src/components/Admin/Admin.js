@@ -46,7 +46,8 @@ const Admin = () => {
   }, []);
   return (
     loggedin && (
-      <div>
+      <div className="relative">
+        <div className="fixed w-screen h-screen bg-[rgba(0,0,0,.3)] z-10">{edit && <Edit productId={productId} />}</div>
         <div className="container bg-slate-50 min-h-screen mx-auto">
           <h1 className="w-full text-center uppercase font-medium text-xl py-2 text-[#ee4d2d]">
             Admin Dashboard
@@ -118,14 +119,10 @@ const Admin = () => {
               </table>
             </div>
 
-            <h2 className="font-medium py-5 px-5"># Add products</h2>
+            <h2 className="font-medium py-5 px-5 mt-5"># Add products</h2>
             <AdminAddProducts />
           </div>
         </div>
-
-        
-        <div></div>
-        <div>{edit && <Edit productId={productId} />}</div>
       </div>
     )
   );

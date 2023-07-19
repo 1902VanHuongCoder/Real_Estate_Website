@@ -1,6 +1,5 @@
 import "./App.css";
 import Home from "./components/Home";
-import UploadFile from "./UploadFile";
 import Order from "./components/Order";
 import Error from "./components/Error";
 import Admin from "./components/Admin/Admin";
@@ -24,8 +23,6 @@ function App() {
         <Route path="/admin/login" element={<AdminLogin />}></Route>
         <Route path="/admin/signin" element={<AdminSigninForm />}></Route>
         <Route path="/orderhistory" element={<OrderHistory />}></Route>
-        
-        <Route path="/uploadfile" element={<UploadFile />}></Route>
       </Routes>
     </BrowserRouter>
   );

@@ -118,7 +118,7 @@ const AdminAddProducts = () => {
           placeholder="product type"
           id="productType"
           name="productType"
-          {...register('productType', {
+          {...register("productType", {
             required: "* This field is required!",
             maxLength: {
               value: 100,
@@ -152,7 +152,6 @@ const AdminAddProducts = () => {
         {errors.productPrice && errors.productPrice.message}
       </div>
 
-
       <div>
         <h2>5. Choose colors of product</h2>
         {colors.map((color, i) => {
@@ -185,9 +184,15 @@ const AdminAddProducts = () => {
       </div>
 
       <UploadImage setUrl={setUrl} />
-      
       <hr />
-      <button onClick={handleSubmit(addProduct)}>Sign In</button>
+      <div className="py-5 w-full text-center">
+        <button
+          onClick={handleSubmit(addProduct)}
+          className="mt-2 sm:mt-0 py-2 px-3 text-white bg-[blue] hover:opacity-50"
+        >
+          Add Product
+        </button>
+      </div>
     </div>
   );
 };
