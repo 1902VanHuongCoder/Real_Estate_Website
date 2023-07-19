@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import woman from "../../assets/woman.png";
 import { BsSearch } from "react-icons/bs";
 import shoes1 from "../../assets/shoes1.png";
@@ -10,7 +10,46 @@ import hat3 from "../../assets/hat3.png";
 import shirt1 from "../../assets/shirt1.png";
 import shirt2 from "../../assets/shirt2.png";
 import shirt3 from "../../assets/shirt3.png";
-const Banner = () => {
+import { useNavigate } from "react-router-dom";
+const Banner = ({ data }) => {
+  const navigate = useNavigate();
+  const [search, setSearch] = useState("");
+
+  const handleType = (e) => {
+    setSearch(e.target.value);
+  };
+
+  const handleSearch = () => {
+    if (search !== "" && search.toLowerCase() === "shirt") {
+      const resultFiltered = data.filter(
+        (product) => product.productType === "shirt"
+      );
+      navigate("/searchresult", {
+        state: resultFiltered,
+      });
+    } else if (search !== "" && search.toLowerCase() === "pant") {
+      const resultFiltered = data.filter(
+        (product) => product.productType === "pant"
+      );
+      navigate("/searchresult", {
+        state: resultFiltered,
+      });
+    } else if (search !== "" && search.toLowerCase() === "hat") {
+      const resultFiltered = data.filter(
+        (product) => product.productType === "hat"
+      );
+      navigate("/searchresult", {
+        state: resultFiltered,
+      });
+    } else if (search !== "") {
+      const resultFiltered = data.filter((product) =>
+        product.productName.toLowerCase().includes(search)
+      );
+      navigate("/searchresult", {
+        state: resultFiltered,
+      });
+    }
+  };
   return (
     <div className="flex relative w-full bg-gradient-to-r from-violet-200 to-pink-200 h-[400px]">
       <div className="lg:w-1/2 w-full flex flex-col gap-y-4 justify-center items-center h-full lg:items-start lg:pl-[20px] xl:pl-[60px] 2xl:pl-[80px]">
@@ -22,13 +61,18 @@ const Banner = () => {
           You can find anything here
         </p>
         <div className="relative w-fit">
-          <button className="absolute right-[10px] top-[5px] bg-[#e4e4e5] p-2 rounded-full">
+          <button
+            onClick={handleSearch}
+            className="absolute right-[10px] top-[5px] bg-[#e4e4e5] p-2 rounded-full"
+          >
             <BsSearch />
           </button>
           <input
+            id="search"
             className="outline-none rounded-lg h-10 w-[280px] border-[rgba(0,0,0,.2)]"
             type="text"
-            placeholder="Search..."
+            placeholder="Product name..."
+            onChange={handleType}
           />
         </div>
       </div>

@@ -4,18 +4,21 @@ import Edit from "./AdminEdit";
 import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
 import AdminAddProducts from "./AdminAddProducts";
 import { useLocation, useNavigate } from "react-router-dom";
+import Aos from "aos";
+import "aos/dist/aos.css";
 const Admin = () => {
   const { state } = useLocation();
 
   const [data, setData] = useState();
   const [edit, setEdit] = useState(false);
-  const [productId, setProductId] = useState("");
+  const [productId, setProductId] = useState();
   const [loggedin, setLoggedIn] = useState(false);
 
   const navigate = useNavigate();
+
   const handleEdit = (id) => {
-    setEdit(true);
-    setProductId(id);
+      setProductId(id);
+      setEdit(true);
   };
 
   const handleDelete = async (id) => {
@@ -23,6 +26,9 @@ const Admin = () => {
     window.location.reload(true);
   };
 
+  const handleCloseUpdateModal = () => {
+    setEdit(false);
+  }
   const addData = async () => {
     await getDocs(collection(db, "products")).then((response) => {
       const responsedData = response.docs.map((doc) => ({
@@ -44,10 +50,16 @@ const Admin = () => {
       navigate("/admin/login");
     }
   }, []);
+
+  useEffect(() => {
+    Aos.init({ duration: 2000 });
+  }, []);
+
   return (
     loggedin && (
       <div className="relative">
-        <div className="fixed w-screen h-screen bg-[rgba(0,0,0,.3)] z-10">{edit && <Edit productId={productId} />}</div>
+        <wc-toast></wc-toast>
+        {edit && <Edit productId={productId} handleCloseUpdateModal={handleCloseUpdateModal} />}
         <div className="container bg-slate-50 min-h-screen mx-auto">
           <h1 className="w-full text-center uppercase font-medium text-xl py-2 text-[#ee4d2d]">
             Admin Dashboard

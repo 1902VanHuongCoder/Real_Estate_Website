@@ -13,7 +13,7 @@ export default function NavbarWithDropdown({
   const navigate = useNavigate();
   const handleRedirectToOrderHistory = () => {
     navigate("/orderhistory", {
-      state: { username: username, isLogged: isLogged },
+      state: { username: username, isLogged: isLogged},
     });
   };
   return (
@@ -55,7 +55,6 @@ export default function NavbarWithDropdown({
             </Dropdown.Item>
           )}
           <Link to="/login">
-            {" "}
             <Dropdown.Item>Use another account</Dropdown.Item>
           </Link>
           <Dropdown.Divider />
@@ -67,17 +66,15 @@ export default function NavbarWithDropdown({
       </div>
       <Navbar.Collapse>
         <Link to="/">
-          <Navbar.Link active>
-            <p>Home</p>
-          </Navbar.Link>
+          <p className="pl-3 hover:text-[#ee4d2d]">Home</p>
         </Link>
         {isLogged && (
-          <Navbar.Link
+          <p
             onClick={handleRedirectToOrderHistory}
-            className="cursor-pointer"
+            className="cursor-pointer hover:text-[#ee4d2d]"
           >
             Order History
-          </Navbar.Link>
+          </p>
         )}
         {!isLogged && (
           <Link to="/login">

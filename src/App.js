@@ -9,6 +9,7 @@ import AdminLogin from "./components/Admin/AdminLogin";
 import AdminSigninForm from "./components/Admin/AdminSignin";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import OrderHistory from "./components/OrderHistory";
+import SearchResult from "./components/SearchResult";
 function App() {
   return (
     <BrowserRouter>
@@ -23,6 +24,8 @@ function App() {
         <Route path="/admin/login" element={<AdminLogin />}></Route>
         <Route path="/admin/signin" element={<AdminSigninForm />}></Route>
         <Route path="/orderhistory" element={<OrderHistory />}></Route>
+        <Route path="/searchresult" element={<SearchResult />}></Route>
+      
       </Routes>
     </BrowserRouter>
   );

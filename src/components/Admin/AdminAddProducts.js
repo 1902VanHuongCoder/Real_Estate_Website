@@ -3,6 +3,7 @@ import { db } from "../../firebase_setup/firebase";
 import { addDoc, collection } from "firebase/firestore";
 import UploadImage from "./UploadImage";
 import { useForm } from "react-hook-form";
+import { toast } from "https://cdn.skypack.dev/wc-toast";
 const colorsobj = [
   "Blue",
   "Yellow",
@@ -51,6 +52,8 @@ const AdminAddProducts = () => {
       imageURL: url,
       productColors: productColors,
     });
+    toast.success("Add product success");
+    window.location.reload(true);
   };
 
   const handleAddProductColor = () => {
@@ -75,7 +78,7 @@ const AdminAddProducts = () => {
           type="number"
           placeholder="stt"
           id="stt"
-          name="stt"
+          // name="stt"
           {...register("stt", {
             required: "* This field is required!",
           })}
@@ -92,7 +95,7 @@ const AdminAddProducts = () => {
           type="text"
           placeholder="product name"
           id="productName"
-          name="productName"
+          // name="productName"
           {...register("productName", {
             required: "* This field is required!",
             maxLength: {
@@ -117,7 +120,7 @@ const AdminAddProducts = () => {
           type="text"
           placeholder="product type"
           id="productType"
-          name="productType"
+          // name="productType"
           {...register("productType", {
             required: "* This field is required!",
             maxLength: {
@@ -142,7 +145,7 @@ const AdminAddProducts = () => {
           type="number"
           placeholder="product price"
           id="productPrice"
-          name="productPrice"
+          // name="productPrice"
           {...register("productPrice", {
             required: "* This field is required!",
           })}
@@ -156,8 +159,9 @@ const AdminAddProducts = () => {
         <h2>5. Choose colors of product</h2>
         {colors.map((color, i) => {
           return (
-            <label key={i} className="mr-5">
+            <label key={i} className="mr-5" htmlFor={i + color}>
               <input
+                id={i + color}
                 value={color}
                 type="checkbox"
                 onChange={handleChooseColorsForProduct}
@@ -169,6 +173,7 @@ const AdminAddProducts = () => {
         <div className="bg-slate-100 my-5 sm:flex sm:flex-row items-center sm:gap-4 p-3 justify-center ">
           <label htmlFor="addColor">Enter the color of product</label>
           <input
+            id="addColor"
             type="text"
             placeholder="Color..."
             className="w-full sm:w-[206px]"

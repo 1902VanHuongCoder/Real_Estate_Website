@@ -14,8 +14,6 @@ const Order = () => {
   const [totalAmount, setTotalAmount] = useState();
   const [transportFee, setTransportFee] = useState(10);
   const [colorIsChoosed, setColorIsChoosed] = useState([]);
-  console.log(colorIsChoosed);
-  console.log("1");
   const [deliveryMethod, setDeliveryMethod] = useState("On delivery");
 
   // Choose amount of products ==> //

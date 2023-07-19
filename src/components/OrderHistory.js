@@ -8,8 +8,8 @@ import { BsFillEmojiLaughingFill  } from "react-icons/bs";
 import Footer from "./Home/Footer";
 const OrderHistory = () => {
   const { state } = useLocation();
+  console.log(state)
   const [orderHistory, setOrderHistory] = useState([]);
-  console.log(orderHistory);
   //Retrieve user's order history from database ===>
   const getOrderedHistory = async () => {
     const collection_ref = collection(db, "orders");

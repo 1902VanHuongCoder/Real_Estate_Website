@@ -23,7 +23,6 @@ const AdminSigninForm = () => {
   const onSubmit = async (data) => {
     const icRef = doc(db, "admin", "fUiBzoGCBaf2TP3xyNTD");
     const ic = await getDoc(icRef);
-    console.log(ic.data());
     if (data.password === data.confirmpassword && data.ic === ic.data().ic) {
       await addUserAccount(data.email, data.password);
       reset();
