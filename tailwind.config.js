@@ -21,6 +21,9 @@ module.exports = {
           950: "#172554",
         },
       },
+      backgroundImage: {
+        'yellowandblackstripe': "url('../../assets/yellowandblackstripe.jpg')",
+      }
     },
     fontFamily: {
       body: [

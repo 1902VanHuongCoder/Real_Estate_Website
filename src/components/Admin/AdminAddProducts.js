@@ -68,8 +68,7 @@ const AdminAddProducts = () => {
   };
   return (
     <div
-      className="p-5 rounded-lg 
-    shadow-lg "
+      className="p-5 rounded-lg shadow-lg"
     >
       <div className="w-full mb-5 sm:mb-1 sm:w-[60%] sm:flex justify-between items-center mx-auto ">
         <label htmlFor="stt">1. STT</label>

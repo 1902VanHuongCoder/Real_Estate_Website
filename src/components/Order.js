@@ -8,6 +8,7 @@ import NavbarWithDropdown from "./Home/Navbar";
 import { toast } from "https://cdn.skypack.dev/wc-toast";
 const Order = () => {
   const { state } = useLocation();
+  console.log(state);
   const [phone, setPhone] = useState("");
   const [amount, setAmount] = useState(1);
   const [address, setAddress] = useState("");
@@ -59,7 +60,7 @@ const Order = () => {
         productId: uuidv4(),
         productAmount: amount,
         totalAmount: totalAmount,
-        username: state[1].username,
+        username: state[1],
         imageURL: state[0].imageURL,
         productColors: colorIsChoosed,
         deliveryMethod: deliveryMethod,

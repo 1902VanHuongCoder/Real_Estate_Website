@@ -71,7 +71,7 @@ const Home = () => {
       <Banner data={data} username={username.username} isLogged={isLogin} />
       <ShoppingCart
         products={shoppingCartData}
-        user={username}
+        user={username.username}
         handleRemoveProductOutOfShoppingCart={
           handleRemoveProductOutOfShoppingCart
         }

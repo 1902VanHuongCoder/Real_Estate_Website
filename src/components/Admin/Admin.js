@@ -6,6 +6,7 @@ import AdminAddProducts from "./AdminAddProducts";
 import { useLocation, useNavigate } from "react-router-dom";
 import Aos from "aos";
 import "aos/dist/aos.css";
+import ManageOrders from "./ManageOrders";
 const Admin = () => {
   const { state } = useLocation();
 
@@ -133,6 +134,8 @@ const Admin = () => {
 
             <h2 className="font-medium py-5 px-5 mt-5"># Add products</h2>
             <AdminAddProducts />
+            <h2 className="font-medium py-5 px-5 mt-5"># Orders</h2>
+            <ManageOrders />
           </div>
         </div>
       </div>
