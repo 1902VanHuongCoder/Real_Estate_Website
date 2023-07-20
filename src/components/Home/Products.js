@@ -9,12 +9,12 @@ const Products = ({ data, handleAddProduct }) => {
         <h2 className="text-[1rem] sm:text-[1.5rem] text-[#ee4d2d] p-1 sm:p-4 font-bold mb-[1rem]">
           # T-Shirt & Polo
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 ">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
           {data?.map((data, i) => {
             if (data.productType === "shirt") {
               return (
                 <div
-                  className="p-2 max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 w-fit hover:shadow-lg"
+                  className="p-2 max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 w-[250px] hover:shadow-lg"
                   key={i}
                 >
                   <div className="w-full flex justify-center items-center">
@@ -81,7 +81,7 @@ const Products = ({ data, handleAddProduct }) => {
         <h2 className="text-[1rem] sm:text-[1.5rem] text-[#ee4d2d] p-1 sm:p-4 font-bold mb-[1rem]">
           # Short And Long Pants
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 ">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
           {data?.map((data, i) => {
             if (data.productType === "pant") {
               return (
@@ -153,7 +153,7 @@ const Products = ({ data, handleAddProduct }) => {
         <h2 className="text-[1rem] sm:text-[1.5rem] text-[#ee4d2d] p-1 sm:p-4 font-bold mb-[1rem]">
           # Hats & Others
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 ">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
           {data?.map((data, i) => {
             if (data.productType === "hat") {
               return (

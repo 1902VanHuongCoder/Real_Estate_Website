@@ -71,7 +71,7 @@ export default function NavbarWithDropdown({
         {isLogged && (
           <p
             onClick={handleRedirectToOrderHistory}
-            className="cursor-pointer hover:text-[#ee4d2d]"
+            className="cursor-pointer hover:text-[#ee4d2d] ml-3"
           >
             Order History
           </p>

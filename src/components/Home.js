@@ -68,7 +68,7 @@ const Home = () => {
     <div className="relative">
       <wc-toast></wc-toast>
       <NavbarWithDropdown username={username.username} isLogged={isLogin} handleSignOut={handleSignOut} />
-      <Banner data={data} />
+      <Banner data={data} username={username.username} isLogged={isLogin} />
       <ShoppingCart
         products={shoppingCartData}
         user={username}

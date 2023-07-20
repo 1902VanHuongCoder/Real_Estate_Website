@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import woman from "../../assets/woman.png";
 import { BsSearch } from "react-icons/bs";
 import shoes1 from "../../assets/shoes1.png";
@@ -11,45 +11,82 @@ import shirt1 from "../../assets/shirt1.png";
 import shirt2 from "../../assets/shirt2.png";
 import shirt3 from "../../assets/shirt3.png";
 import { useNavigate } from "react-router-dom";
-const Banner = ({ data }) => {
+const Banner = ({ data, username, isLogged }) => {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
-
   const handleType = (e) => {
     setSearch(e.target.value);
   };
 
-  const handleSearch = () => {
+  const handleSearch = (search) => {
     if (search !== "" && search.toLowerCase() === "shirt") {
       const resultFiltered = data.filter(
         (product) => product.productType === "shirt"
       );
       navigate("/searchresult", {
-        state: resultFiltered,
+        state: {
+          products: resultFiltered,
+          username: username,
+          isLogged: isLogged,
+          queryContent: search,
+        },
       });
     } else if (search !== "" && search.toLowerCase() === "pant") {
       const resultFiltered = data.filter(
         (product) => product.productType === "pant"
       );
       navigate("/searchresult", {
-        state: resultFiltered,
+        state: {
+          products: resultFiltered,
+          username: username,
+          isLogged: isLogged,
+          queryContent: search,
+        },
       });
     } else if (search !== "" && search.toLowerCase() === "hat") {
       const resultFiltered = data.filter(
         (product) => product.productType === "hat"
       );
       navigate("/searchresult", {
-        state: resultFiltered,
+        state: {
+          products: resultFiltered,
+          username: username,
+          isLogged: isLogged,
+          queryContent: search,
+        },
       });
     } else if (search !== "") {
       const resultFiltered = data.filter((product) =>
         product.productName.toLowerCase().includes(search)
       );
       navigate("/searchresult", {
-        state: resultFiltered,
+        state: {
+          products: resultFiltered,
+          username: username,
+          isLogged: isLogged,
+          queryContent: search,
+        },
       });
+    } else {
+      console.log("Last condition runnn");
     }
   };
+
+  // useEffect(() => {
+  //   const keyDownHandler = (event) => {
+  //     if (event.key === "Enter") {
+  //       event.preventDefault();
+  //       handleSearch(search);
+  //     }
+  //   };
+
+  //   document.addEventListener("keydown", keyDownHandler);
+
+  //   return () => {
+  //     document.removeEventListener("keydown", keyDownHandler);
+  //   };
+  // }, [search]);
+
   return (
     <div className="flex relative w-full bg-gradient-to-r from-violet-200 to-pink-200 h-[400px]">
       <div className="lg:w-1/2 w-full flex flex-col gap-y-4 justify-center items-center h-full lg:items-start lg:pl-[20px] xl:pl-[60px] 2xl:pl-[80px]">
@@ -60,9 +97,10 @@ const Banner = ({ data }) => {
         <p className="sm:text-xl text-sm font-semibold drop-shadow-xl text-[#ee4d2d]">
           You can find anything here
         </p>
-        <div className="relative w-fit">
+        <form className="relative w-fit" onSubmit={() => handleSearch(search)}>
           <button
-            onClick={handleSearch}
+            type="submit"
+            onClick={() => handleSearch(search)}
             className="absolute right-[10px] top-[5px] bg-[#e4e4e5] p-2 rounded-full"
           >
             <BsSearch />
@@ -71,10 +109,11 @@ const Banner = ({ data }) => {
             id="search"
             className="outline-none rounded-lg h-10 w-[280px] border-[rgba(0,0,0,.2)]"
             type="text"
+            autoComplete="on"
             placeholder="Product name..."
             onChange={handleType}
           />
-        </div>
+        </form>
       </div>
       <div className="w-1/2 h-full relative lg:block hidden">
         <div className="w-[300px] h-[70px] bg-white rounded-lg shadow-lg absolute -left-[110px] top-[50px] flex">
