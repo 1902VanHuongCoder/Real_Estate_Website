@@ -8,13 +8,13 @@ import NavbarWithDropdown from "./Home/Navbar";
 import { toast } from "https://cdn.skypack.dev/wc-toast";
 const Order = () => {
   const { state } = useLocation();
-  console.log(state);
   const [phone, setPhone] = useState("");
   const [amount, setAmount] = useState(1);
   const [address, setAddress] = useState("");
   const [totalAmount, setTotalAmount] = useState();
   const [transportFee, setTransportFee] = useState(10);
   const [colorIsChoosed, setColorIsChoosed] = useState([]);
+  console.log(colorIsChoosed);
   const [deliveryMethod, setDeliveryMethod] = useState("On delivery");
 
   // Choose amount of products ==> //
@@ -54,6 +54,7 @@ const Order = () => {
     if (address === "" || phone === "" || colorIsChoosed.length < 0) {
       toast.error("Order isn't success! Check your order");
     } else {
+      let date = new Date();
       await addDoc(collection(db, "orders"), {
         phone: phone,
         address: address,
@@ -65,7 +66,9 @@ const Order = () => {
         productColors: colorIsChoosed,
         deliveryMethod: deliveryMethod,
         productName: state[0].productName,
-        deliveryState: ['Wait confirming for boss'],
+        deliveryState: [
+          { state: "Wait confirming of boss", date: date.toDateString()},
+        ],
       });
       toast.success("Order success");
     }

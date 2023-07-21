@@ -4,11 +4,11 @@ import { db } from "../firebase_setup/firebase";
 import { useLocation } from "react-router-dom";
 import NavbarWithDropdown from "./Home/Navbar";
 import { AiFillShopping } from "react-icons/ai";
-import { BsFillEmojiLaughingFill  } from "react-icons/bs";
+import { BsFillBox2Fill, BsFillEmojiLaughingFill } from "react-icons/bs";
 import Footer from "./Home/Footer";
+import { FcShipped } from "react-icons/fc";
 const OrderHistory = () => {
   const { state } = useLocation();
-  console.log(state)
   const [orderHistory, setOrderHistory] = useState([]);
   //Retrieve user's order history from database ===>
   const getOrderedHistory = async () => {
@@ -35,88 +35,172 @@ const OrderHistory = () => {
   //<====
   return (
     <>
-       <div className="relative min-h-screen">
-      <NavbarWithDropdown username={state.username} isLogged={state.isLogged} />
-      <div className="mt-6 w-10/12 bg-slate-100 mx-auto rounded large p-3 h-fit mb-7">
-        <h1 className="py-4 px-10 font-medium text-[#ee4d2d] text-2xl">
-          Order history
-        </h1>
-        {orderHistory.length > 0 ? (
-          orderHistory?.map((order, i) => {
-            return (
-              <div key={i} className="bg-white rounded-lg mb-4 p-3">
-                <h1 className="flex items-center gap-1 font-medium">
-                  <span className="text-[#ee4d2d] text-xl">
-                    <AiFillShopping />
-                  </span>
-                  <span>Order {i + 1}</span>
-                </h1>
-                <div className="flex justify-start items-center">
-                  <h2 className="font-medium py-5 px-5"># Product Name</h2>
-                  <p className="text-xl">{order.productName}</p>
+      <div className="relative min-h-screen">
+        <NavbarWithDropdown
+          username={state.username}
+          isLogged={state.isLogged}
+        />
+        <div className="mt-6 w-10/12 bg-slate-100 mx-auto rounded large p-3 h-fit mb-7">
+          <h1 className="py-4 px-10 font-medium text-[#ee4d2d] text-2xl">
+            Order history
+          </h1>
+          {orderHistory.length > 0 ? (
+            orderHistory?.map((order, i) => {
+              return (
+                <div key={i} className="bg-white rounded-lg mb-4 p-3">
+                  <h1 className="flex items-center gap-1 font-medium">
+                    <span className="text-[#ee4d2d] text-xl">
+                      <AiFillShopping />
+                    </span>
+                    <span>Order {i + 1}</span>
+                  </h1>
+                  <div className="flex justify-start items-center">
+                    <h2 className="font-medium py-5 px-5"># Product Name</h2>
+                    <p className="text-xl">{order.productName}</p>
+                  </div>
+                  <h2 className="font-medium py-5 px-5"># Product Image</h2>
+                  <div className="w-full flex justify-center items-center">
+                    <img
+                      src={order.imageURL}
+                      alt={order.productName}
+                      width={200}
+                      height={200}
+                    />
+                  </div>
+                  <div className="flex justify-start items-center">
+                    <h2 className="font-medium py-5 px-5">
+                      # Amount of products
+                    </h2>
+                    <p>{order.productAmount}</p>
+                  </div>
+                  <div className="flex justify-start items-center">
+                    <h2 className="font-medium py-5 px-5"># Product Color</h2>
+                    <p>
+                      {order.productColors.map((color, index) => {
+                        return (
+                          <span
+                            className="px-2 bg-[#cb90f3] py-2 rounded-lg font-normal"
+                            key={index}
+                          >
+                            {color}
+                          </span>
+                        );
+                      })}
+                    </p>
+                  </div>
+                  <div className="flex justify-start items-center">
+                    <h2 className="font-medium py-5 px-5">
+                      # Customer's address
+                    </h2>
+                    <p>{order.address}</p>
+                  </div>
+                  <div className="flex justify-start items-center">
+                    <h2 className="font-medium py-5 px-5"># Product ID</h2>
+                    <p className="px-2 bg-slate-200 rounded-sm">
+                      {order.productId}
+                    </p>
+                  </div>
+                  <h2 className="font-medium py-5 px-5"># Order State</h2>
+                  <ol className="items-center sm:flex px-4">
+                    <li className="relative mb-6 sm:mb-0">
+                      <div className="flex items-center">
+                        <div className="z-10 flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full ring-0 ring-white dark:bg-blue-900 sm:ring-8 dark:ring-gray-900 shrink-0">
+                          {/* <FcShipped />
+                           */}
+                          <BsFillBox2Fill />
+                        </div>
+                        <div className="hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"></div>
+                      </div>
+                      <div className="mt-3 sm:pr-8">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                          Flowbite Library v1.0.0
+                        </h3>
+                        <time className="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
+                          Released on December 2, 2021
+                        </time>
+                        <p className="text-base font-normal text-gray-500 dark:text-gray-400">
+                          Get started with dozens of web components and
+                          interactive elements.
+                        </p>
+                      </div>
+                    </li>
+                    <li className="relative mb-6 sm:mb-0">
+                      <div className="flex items-center">
+                        <div className="z-10 flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full ring-0 ring-white dark:bg-blue-900 sm:ring-8 dark:ring-gray-900 shrink-0">
+                          <svg
+                            className="w-2.5 h-2.5 text-blue-800 dark:text-blue-300"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                          </svg>
+                        </div>
+                        <div className="hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"></div>
+                      </div>
+                      <div className="mt-3 sm:pr-8">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                          Flowbite Library v1.2.0
+                        </h3>
+                        <time className="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
+                          Released on December 23, 2021
+                        </time>
+                        <p className="text-base font-normal text-gray-500 dark:text-gray-400">
+                          Get started with dozens of web components and
+                          interactive elements.
+                        </p>
+                      </div>
+                    </li>
+                    <li className="relative mb-6 sm:mb-0">
+                      <div className="flex items-center">
+                        <div className="z-10 flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full ring-0 ring-white dark:bg-blue-900 sm:ring-8 dark:ring-gray-900 shrink-0">
+                          <svg
+                            className="w-2.5 h-2.5 text-blue-800 dark:text-blue-300"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                          </svg>
+                        </div>
+                        <div className="hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"></div>
+                      </div>
+                      <div className="mt-3 sm:pr-8">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                          Flowbite Library v1.3.0
+                        </h3>
+                        <time className="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
+                          Released on January 5, 2022
+                        </time>
+                        <p className="text-base font-normal text-gray-500 dark:text-gray-400">
+                          Get started with dozens of web components and
+                          interactive elements.
+                        </p>
+                      </div>
+                    </li>
+                  </ol>
+
+                  <div className="flex justify-start items-center">
+                    <h2 className="font-semibold py-5 px-5 text-[#ee4d2d] text-2xl">
+                      # Total
+                    </h2>
+                    <p className="text-2xl">${order.totalAmount}</p>
+                  </div>
                 </div>
-                <h2 className="font-medium py-5 px-5"># Product Image</h2>
-                <div className="w-full flex justify-center items-center">
-                  <img
-                    src={order.imageURL}
-                    alt={order.productName}
-                    width={200}
-                    height={200}
-                  />
-                </div>
-                <div className="flex justify-start items-center">
-                  <h2 className="font-medium py-5 px-5">
-                    # Amount of products
-                  </h2>
-                  <p>{order.productAmount}</p>
-                </div>
-                <div className="flex justify-start items-center">
-                  <h2 className="font-medium py-5 px-5"># Product Color</h2>
-                  <p>
-                    {order.productColors.map((color, index) => {
-                      return (
-                        <span
-                          className="px-2 bg-[#cb90f3] py-2 rounded-lg font-normal"
-                          key={index}
-                        >
-                          {color}
-                        </span>
-                      );
-                    })}
-                  </p>
-                </div>
-                <div className="flex justify-start items-center">
-                  <h2 className="font-medium py-5 px-5">
-                    # Customer's address
-                  </h2>
-                  <p>{order.address}</p>
-                </div>
-                <div className="flex justify-start items-center">
-                  <h2 className="font-medium py-5 px-5"># Product ID</h2>
-                  <p className="px-2 bg-slate-200 rounded-sm">
-                    {order.productId}
-                  </p>
-                </div>
-                <div className="flex justify-start items-center">
-                  <h2 className="font-semibold py-5 px-5 text-[#ee4d2d] text-2xl">
-                    # Total
-                  </h2>
-                  <p className="text-2xl">${order.totalAmount}</p>
-                </div>
-              </div>
-            );
-          })
-        ) : (
-          <div className="flex gap-2 justify-center items-center h-[40vh] border-2 border-[#7c7474] border-dashed w-[80%] mx-auto mt-3 text-[#ee4d2d] mb-5">
-            <BsFillEmojiLaughingFill />
-            <h1>You haven't bought anything!</h1>
-          </div>
-        )}
+              );
+            })
+          ) : (
+            <div className="flex gap-2 justify-center items-center h-[40vh] border-2 border-[#7c7474] border-dashed w-[80%] mx-auto mt-3 text-[#ee4d2d] mb-5">
+              <BsFillEmojiLaughingFill />
+              <h1>You haven't bought anything!</h1>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
-    <Footer/>
+      <Footer />
     </>
-  
   );
 };
 

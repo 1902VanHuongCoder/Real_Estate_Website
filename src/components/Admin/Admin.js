@@ -38,6 +38,12 @@ const Admin = () => {
     setOrderId(id);
     setShowUpdateOrderStateModal(true);
   };
+
+  const handleCloseUpdateOrderStateModal = (e) => {
+    e.stopPropagation();
+    setShowUpdateOrderStateModal(false);
+  };
+
   const addData = async () => {
     await getDocs(collection(db, "products")).then((response) => {
       const responsedData = response.docs.map((doc) => ({
@@ -74,7 +80,12 @@ const Admin = () => {
             handleCloseUpdateModal={handleCloseUpdateModal}
           />
         )}
-        {showUpdateOrderStateModal && <UpdateOderState orderId={orderId} />}
+        {showUpdateOrderStateModal && (
+          <UpdateOderState
+            orderId={orderId}
+            handleCloseUpdateOrderStateModal={handleCloseUpdateOrderStateModal}
+          />
+        )}
         <div className="container bg-slate-50 min-h-screen mx-auto">
           <h1 className="w-full text-center uppercase font-medium text-xl py-2 text-[#ee4d2d]">
             Admin Dashboard
