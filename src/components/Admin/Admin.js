@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Aos from "aos";
 import "aos/dist/aos.css";
 import ManageOrders from "./ManageOrders";
+import UpdateOderState from "./AdminUpdateOrderState";
 const Admin = () => {
   const { state } = useLocation();
 
@@ -14,12 +15,15 @@ const Admin = () => {
   const [edit, setEdit] = useState(false);
   const [productId, setProductId] = useState();
   const [loggedin, setLoggedIn] = useState(false);
+  const [showUpdateOrderStateModal, setShowUpdateOrderStateModal] =
+    useState(false);
+  const [orderId, setOrderId] = useState();
 
   const navigate = useNavigate();
 
   const handleEdit = (id) => {
-      setProductId(id);
-      setEdit(true);
+    setProductId(id);
+    setEdit(true);
   };
 
   const handleDelete = async (id) => {
@@ -29,7 +33,11 @@ const Admin = () => {
 
   const handleCloseUpdateModal = () => {
     setEdit(false);
-  }
+  };
+  const handleShowUpdateOrderStateModal = (id) => {
+    setOrderId(id);
+    setShowUpdateOrderStateModal(true);
+  };
   const addData = async () => {
     await getDocs(collection(db, "products")).then((response) => {
       const responsedData = response.docs.map((doc) => ({
@@ -60,7 +68,13 @@ const Admin = () => {
     loggedin && (
       <div className="relative">
         <wc-toast></wc-toast>
-        {edit && <Edit productId={productId} handleCloseUpdateModal={handleCloseUpdateModal} />}
+        {edit && (
+          <Edit
+            productId={productId}
+            handleCloseUpdateModal={handleCloseUpdateModal}
+          />
+        )}
+        {showUpdateOrderStateModal && <UpdateOderState orderId={orderId} />}
         <div className="container bg-slate-50 min-h-screen mx-auto">
           <h1 className="w-full text-center uppercase font-medium text-xl py-2 text-[#ee4d2d]">
             Admin Dashboard
@@ -135,7 +149,9 @@ const Admin = () => {
             <h2 className="font-medium py-5 px-5 mt-5"># Add products</h2>
             <AdminAddProducts />
             <h2 className="font-medium py-5 px-5 mt-5"># Orders</h2>
-            <ManageOrders />
+            <ManageOrders
+              showUpdateOrderStateModal={handleShowUpdateOrderStateModal}
+            />
           </div>
         </div>
       </div>

@@ -65,6 +65,7 @@ const Order = () => {
         productColors: colorIsChoosed,
         deliveryMethod: deliveryMethod,
         productName: state[0].productName,
+        deliveryState: ['Wait confirming for boss'],
       });
       toast.success("Order success");
     }

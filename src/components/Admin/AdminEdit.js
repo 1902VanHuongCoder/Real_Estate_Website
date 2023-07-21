@@ -24,7 +24,7 @@ function Edit({ productId, handleCloseUpdateModal }) {
   };
 
   return (
-    <div className="fixed w-screen h-screen bg-[rgba(0,0,0,.3)] z-10 flex justify-center items-center">
+    <div className="fixed w-screen h-screen bg-[rgba(0,0,0,.3)] z-20 flex justify-center items-center">
       <div
         className="relative bg-white w-[250px] sm:w-[350px] h-fit rounded-lg overflow-hidden"
         data-aos="zoom-in"

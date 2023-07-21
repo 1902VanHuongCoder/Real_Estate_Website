@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { db } from "../../firebase_setup/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import "aos/dist/aos.css";
-const ManageOrders = () => {
+import yellowandblackstripe from "../../assets/yellowandblackstripe.jpg";
+const ManageOrders = ({showUpdateOrderStateModal}) => {
   const [data, setData] = useState();
   const addData = async () => {
     await getDocs(collection(db, "orders")).then((response) => {
@@ -14,38 +15,93 @@ const ManageOrders = () => {
     });
   };
 
+  const handleShowUpdateOrderState = (e, orderId) => {
+      if(e.target.checked){
+        showUpdateOrderStateModal(orderId);
+      }
+  }
   useEffect(() => {
     addData();
   }, []);
 
-  return <div className="p-5 rounded-lg shadow-lg">
-    {data?.map((order, index) => {
-        return(
-            <div key={index} className="p-4 md:flex mb-4 hover:shadow-lg bg-gradient-to-tr from-pink-300 via-purple-300 to-indigo-400 rounded-lg transition-shadow duration-150">
-                <div className="flex-1 sm:basis-[60%] text-slate-800 flex flex-col gap-1">
-                    <h1>Product name: <b>{order.productName}</b></h1>
-                    <p>Product price: <b>${order.totalAmount}</b></p>
-                    <p>Amount: <b>{order.productAmount}</b></p>
-                    <p>Colors: <b>{order.productColors.map((color, i) => {
-                        return(
-                            <span className="px-1 bg-white py-1 mr-2 rounded-lg" key={i}>{color}</span>
-                        )
-                    })}</b></p>
-                    <p>Delivery method: <b>{order.deliveryMethod}</b></p>
-                    <p>Customer:<b> {order.username}</b></p>
-                    <p>Address: <b>{order.address}</b></p>
-                    <p>Phone:  <b>{order.phone}</b></p>
-                    <p>Product ID: <span className="bg-slate-100 px-2 py-1 rounded-sm"> {order.productId}</span></p>
-                </div>
-                <div className="hidden w-full basis-[40%] md:flex justify-center items-center">
-                        <div className="w-[200px] h-[200px]">
-                        <img src={order.imageURL} alt={order.productName} className="w-full h-full"/>
-                        </div>
-                </div>
+  return (
+    <div className="p-5 rounded-lg shadow-lg">
+      {data?.map((order, index) => {
+        return (
+          <div className="relative sm:h-[306px] md:h-[344px] lg:h-[313px] mb-12 sm:mb-8" key={index}>
+            <div className="absolute left-[50%] top-[-35px] sm:top-[-18px] rounded-sm translate-x-[-50%] z-10 px-5 py-3 bg-gradient-to-r from-pink-300 via-purple-300 to-indigo-400 flex justify-center items-center gap-1">
+              <input id="delivered" type="checkbox" onChange={(e) => handleShowUpdateOrderState(e, order.id)}/>
+              <label htmlFor="delivered">Update Order State</label>
             </div>
-        )
-    })}
-  </div>;
+            <img
+              className="hidden sm:block w-full h-full opacity-200"
+              src={yellowandblackstripe}
+              alt="yellowandblackstripe"
+            />
+            <div
+              key={index}
+              className="rounded-lg sm:rounded-none bg-[#f7e2e2] shadow-lg sm:shadow-none sm:bg-white sm:absolute sm:top-[50%] sm:left-[50%] sm:translate-x-[-50%] sm:translate-y-[-50%] p-4 md:flex w-full sm:w-[95%] "
+            >
+              <div className="flex-1 sm:basis-[60%] text-slate-800 flex flex-col gap-1">
+                <h1>
+                  Product name: <b>{order.productName}</b>
+                </h1>
+                <p>
+                  Product price: <b>${order.totalAmount}</b>
+                </p>
+                <p>
+                  Amount: <b>{order.productAmount}</b>
+                </p>
+                <p>
+                  Colors:{" "}
+                  <b>
+                    {order.productColors.map((color, i) => {
+                      return (
+                        <span
+                          className="px-1 bg-white py-1 mr-2 rounded-lg"
+                          key={i}
+                        >
+                          {color}
+                        </span>
+                      );
+                    })}
+                  </b>
+                </p>
+                <p>
+                  Delivery method: <b>{order.deliveryMethod}</b>
+                </p>
+                <p>
+                  Customer:<b> {order.username}</b>
+                </p>
+                <p>
+                  Address: <b>{order.address}</b>
+                </p>
+                <p>
+                  Phone: <b>{order.phone}</b>
+                </p>
+                <p>
+                  Product ID:{" "}
+                  <span className="bg-slate-100 px-2 py-1 rounded-sm">
+                    {" "}
+                    {order.productId}
+                  </span>
+                </p>
+              </div>
+              <div className="hidden w-full basis-[40%] md:flex justify-center items-center">
+                <div className="w-[200px] h-[200px]">
+                  <img
+                    src={order.imageURL}
+                    alt={order.productName}
+                    className="w-full h-full"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
 };
 
 export default ManageOrders;
