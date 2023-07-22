@@ -22,8 +22,8 @@ module.exports = {
         },
       },
       backgroundImage: {
-        'yellowandblackstripe': "url('../../assets/yellowandblackstripe.jpg')",
-      }
+        yellowandblackstripe: "url('../../assets/yellowandblackstripe.jpg')",
+      },
     },
     fontFamily: {
       body: [

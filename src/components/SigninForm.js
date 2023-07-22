@@ -1,9 +1,10 @@
 import logo from "../assets/logo.png";
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import signinimg from "../assets/signinimg.jpg";
 import { db } from "../firebase_setup/firebase";
+import RingLoader from "react-spinners/RingLoader";
 import { toast } from "https://cdn.skypack.dev/wc-toast";
 import { collection, addDoc, getDocs, where, query } from "firebase/firestore";
 const SigninForm = () => {
@@ -13,7 +14,7 @@ const SigninForm = () => {
     formState: { errors },
     reset,
   } = useForm();
-
+  const [loading, setLoading] = useState(false);
   const addUserAccount = async (username, password) => {
     await addDoc(collection(db, "users_account"), {
       username: username,
@@ -22,6 +23,7 @@ const SigninForm = () => {
   };
 
   const handleSignin = async (data) => {
+    setLoading(true);
     if (data.password === data.confirmpassword) {
       const collection_ref = collection(db, "users_account");
       const q = query(collection_ref, where("username", "==", data.email));
@@ -44,16 +46,17 @@ const SigninForm = () => {
     } else {
       toast.error("Password and confirm password are invalid");
     }
+    setLoading(false);
   };
   return (
     <div className="w-full min-h-screen bg-slate-50 flex items-center justify-center">
       <wc-toast></wc-toast>
       <div className="max-w-[1240px] w-full lg:w-10/12 min-h-screen flex lg:mt-5 lg:rounded-lg overflow-hidden shadow-lg">
-        <div className="bg-[#FED3CA] w-full lg:w-1/2 flex flex-col items-center justify-center gap-y-5">
+        <div className="bg-[#FED3CA] w-full xl:w-1/2 flex flex-col items-center justify-center gap-y-5">
           <img src={logo} className="w-16 h-16" alt="logo" />
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8 bg-white w-[80%] rounded-lg">
             <h1 className="text-center text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-              Sign In
+              Sign Up
             </h1>
             <form className="space-y-4 md:space-y-6" action="#">
               <div>
@@ -136,7 +139,7 @@ const SigninForm = () => {
                 type="submit"
                 className="w-full text-black bg-[#FED3CA] hover:bg-[#fcb2a3] focus:ring-4 focus:outline-none focus:ring-[#FED3CA] font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
               >
-                Sign In
+             {loading ? <RingLoader color="#e67af3" size={38} /> : "Sign Up"}
               </button>
             </form>
             <p className="text-sm font-light text-gray-500 dark:text-gray-400">
@@ -149,8 +152,8 @@ const SigninForm = () => {
             </p>
           </div>
         </div>
-        <div className="w-1/2 h-full overflow-hidden hidden lg:block">
-          <img src={signinimg} alt="logoIMG" />
+        <div className="w-1/2 h-full overflow-hidden hidden xl:block">
+          <img src={signinimg} alt="logoIMG"/>
         </div>
       </div>
     </div>

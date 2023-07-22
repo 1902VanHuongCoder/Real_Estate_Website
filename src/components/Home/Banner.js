@@ -71,22 +71,6 @@ const Banner = ({ data, username, isLogged }) => {
       console.log("Last condition runnn");
     }
   };
-
-  // useEffect(() => {
-  //   const keyDownHandler = (event) => {
-  //     if (event.key === "Enter") {
-  //       event.preventDefault();
-  //       handleSearch(search);
-  //     }
-  //   };
-
-  //   document.addEventListener("keydown", keyDownHandler);
-
-  //   return () => {
-  //     document.removeEventListener("keydown", keyDownHandler);
-  //   };
-  // }, [search]);
-
   return (
     <div className="flex relative w-full bg-gradient-to-r from-violet-200 to-pink-200 h-[400px]">
       <div className="lg:w-1/2 w-full flex flex-col gap-y-4 justify-center items-center h-full lg:items-start lg:pl-[20px] xl:pl-[60px] 2xl:pl-[80px]">

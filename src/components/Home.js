@@ -5,17 +5,21 @@ import NavbarWithDropdown from "./Home/Navbar";
 import ShoppingCart from "./Home/ShoppingCart";
 import { db } from "../firebase_setup/firebase";
 import React, { useEffect, useState } from "react";
-import { collection, getDocs} from "firebase/firestore";
-import { useLocation} from "react-router-dom";
+import { collection, getDocs } from "firebase/firestore";
+import { useLocation } from "react-router-dom";
 import { toast } from "https://cdn.skypack.dev/wc-toast";
+import Loading from "./Loading";
+
 const Home = () => {
   const { state } = useLocation();
   const [data, setData] = useState();
   const [shoppingCartData, setShoppingCartData] = useState([]);
   const [isLogin, setIsLogin] = useState(false);
   const [username, setUserName] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const fetchData = async () => {
+    setLoading(true);
     await getDocs(collection(db, "products")).then((response) => {
       const dataResponsed = response.docs.map((doc) => ({
         ...doc.data(),
@@ -23,6 +27,7 @@ const Home = () => {
       }));
       setData(dataResponsed);
     });
+    setLoading(false);
   };
   useEffect(() => {
     fetchData();
@@ -45,10 +50,10 @@ const Home = () => {
   };
 
   const handleSignOut = () => {
-      setIsLogin(false);
-      localStorage.removeItem('loggedInAccount');
-      window.location.reload(true);
-  }
+    setIsLogin(false);
+    localStorage.removeItem("loggedInAccount");
+    window.location.reload(true);
+  };
   useEffect(() => {
     if (state) {
       setIsLogin(true);
@@ -63,23 +68,32 @@ const Home = () => {
       setUserName(loggedInAccount);
     }
   }, []);
-
   return (
-    <div className="relative">
-      <wc-toast></wc-toast>
-      <NavbarWithDropdown username={username.username} isLogged={isLogin} handleSignOut={handleSignOut} />
-      <Banner data={data} username={username.username} isLogged={isLogin} />
-      <ShoppingCart
-        products={shoppingCartData}
-        user={username.username}
-        handleRemoveProductOutOfShoppingCart={
-          handleRemoveProductOutOfShoppingCart
-        }
-        isLogin={isLogin}
-      />
-      <Products data={data} handleAddProduct={handleAddProduct} />
-      <Footer />
-    </div>
+    <>
+      {loading ? (
+        <Loading />
+      ) : (
+        <div className="relative max-w-[1200px] mx-auto">
+          <wc-toast></wc-toast>
+          <NavbarWithDropdown
+            username={username.username}
+            isLogged={isLogin}
+            handleSignOut={handleSignOut}
+          />
+          <Banner data={data} username={username.username} isLogged={isLogin} />
+          <ShoppingCart
+            products={shoppingCartData}
+            user={username.username}
+            handleRemoveProductOutOfShoppingCart={
+              handleRemoveProductOutOfShoppingCart
+            }
+            isLogin={isLogin}
+          />
+          <Products data={data} handleAddProduct={handleAddProduct} />
+          <Footer />
+        </div>
+      )}
+    </>
   );
 };
 export default Home;
