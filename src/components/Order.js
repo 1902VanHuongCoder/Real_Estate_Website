@@ -67,7 +67,7 @@ const Order = () => {
         deliveryMethod: deliveryMethod,
         productName: state[0].productName,
         deliveryState: [
-          { state: "Wait confirming of boss", date: date.toDateString()},
+          { state: "Wait confirming of boss", date: date.toDateString() },
         ],
       });
       toast.success("Order success");

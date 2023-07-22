@@ -4,7 +4,7 @@ import { updateDoc, doc, getDoc } from "firebase/firestore";
 import { useForm } from "react-hook-form";
 import { toast } from "https://cdn.skypack.dev/wc-toast";
 import { IoMdCloseCircle } from "react-icons/io";
-function UpdateOderState({ orderId, handleCloseUpdateOrderStateModal}) {
+function UpdateOderState({ orderId, handleCloseUpdateOrderStateModal }) {
   const {
     register,
     handleSubmit,
@@ -19,7 +19,7 @@ function UpdateOderState({ orderId, handleCloseUpdateOrderStateModal}) {
         orderstate.push(state);
       })
     );
-    orderstate.push(dt.orderstate);
+    orderstate.push({ state: dt.orderstate, date: new Date().toDateString() });
     await updateDoc(doc(db, "orders", orderId), {
       deliveryState: orderstate,
     });
@@ -29,7 +29,10 @@ function UpdateOderState({ orderId, handleCloseUpdateOrderStateModal}) {
   };
 
   return (
-    <div onClick={handleCloseUpdateOrderStateModal} className="fixed w-screen h-screen bg-[rgba(0,0,0,.3)] z-20 flex justify-center items-center">
+    <div
+      onClick={handleCloseUpdateOrderStateModal}
+      className="fixed w-screen h-screen bg-[rgba(0,0,0,.3)] z-20 flex justify-center items-center"
+    >
       <div
         onClick={(e) => e.stopPropagation()}
         className="relative bg-white w-[250px] sm:w-[350px] h-fit rounded-lg overflow-hidden"
@@ -37,7 +40,7 @@ function UpdateOderState({ orderId, handleCloseUpdateOrderStateModal}) {
         data-aos-duration="500"
       >
         <div
-            onClick={handleCloseUpdateOrderStateModal}
+          onClick={handleCloseUpdateOrderStateModal}
           className="absolute top-3 right-3 text-2xl text-[red]"
         >
           <IoMdCloseCircle />
