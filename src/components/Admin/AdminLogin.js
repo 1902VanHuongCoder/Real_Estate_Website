@@ -3,7 +3,6 @@ import logo from "../../assets/logo.png";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { db } from "../../firebase_setup/firebase";
-import { toast } from "https://cdn.skypack.dev/wc-toast";
 import { collection, getDocs, query, where } from "firebase/firestore";
 const AdminLogin = () => {
   const {
@@ -28,21 +27,20 @@ const AdminLogin = () => {
 
 
     if (res[0]?.email === data.email && res[0]?.password !== data.password) {
-      toast.error("Password is wrong!");
+      // toast.error("Password is wrong!");
     } else if (res[0]?.email !== data.email) {
-      toast.error("Check your email");
+      // toast.error("Check your email");
     } else if (
       res[0]?.email === data.email &&
       res[0]?.password === data.password
     ) {
-      toast.success("Login success");
+      // toast.success("Login success");
       navigate("/admin", { state: {loggedin: true} });
     }
   };
 
   return (
     <>
-      <wc-toast></wc-toast>
       <section className="bg-gray-50 dark:bg-gray-900">
         <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
           <Link to="/">

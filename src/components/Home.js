@@ -7,7 +7,6 @@ import { db } from "../firebase_setup/firebase";
 import React, { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { useLocation } from "react-router-dom";
-import { toast } from "https://cdn.skypack.dev/wc-toast";
 import Loading from "./Loading";
 
 const Home = () => {
@@ -38,9 +37,9 @@ const Home = () => {
     if (!haveProduct) {
       const product = data.filter((item) => item.id === id);
       setShoppingCartData([...shoppingCartData, product[0]]);
-      toast.success("You have just added this product into shopping cart");
+      // toast.success("You have just added this product into shopping cart");
     } else {
-      toast.error("This product has already been shopping cart!");
+      // toast.error("This product has already been shopping cart!");
     }
   };
 
@@ -74,7 +73,6 @@ const Home = () => {
         <Loading />
       ) : (
         <div className="relative max-w-[1200px] mx-auto">
-          <wc-toast></wc-toast>
           <NavbarWithDropdown
             username={username.username}
             isLogged={isLogin}

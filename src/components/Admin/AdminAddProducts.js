@@ -3,7 +3,6 @@ import { db } from "../../firebase_setup/firebase";
 import { addDoc, collection } from "firebase/firestore";
 import UploadImage from "./UploadImage";
 import { useForm } from "react-hook-form";
-import { toast } from "https://cdn.skypack.dev/wc-toast";
 const colorsobj = [
   "Blue",
   "Yellow",
@@ -52,7 +51,7 @@ const AdminAddProducts = () => {
       imageURL: url,
       productColors: productColors,
     });
-    toast.success("Add product success");
+   
     window.location.reload(true);
   };
 

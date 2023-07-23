@@ -97,7 +97,6 @@ const Admin = () => {
     <Loading loading={loading} />
   ) : (
     <div className="relative">
-      <wc-toast></wc-toast>
       {edit && (
         <Edit
           productId={productId}

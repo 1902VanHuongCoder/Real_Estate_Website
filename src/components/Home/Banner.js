@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import woman from "../../assets/woman.png";
 import { BsSearch } from "react-icons/bs";
 import shoes1 from "../../assets/shoes1.png";

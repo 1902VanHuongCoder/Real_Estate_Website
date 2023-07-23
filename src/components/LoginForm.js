@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import loginimg from "../assets/loginimg.jpg";
 import { useNavigate } from "react-router-dom";
 import { db } from "../firebase_setup/firebase";
-import { toast } from "https://cdn.skypack.dev/wc-toast";
 import RingLoader from "react-spinners/RingLoader";
 import { collection, getDocs, query, where } from "firebase/firestore";
 const LoginForm = () => {
@@ -31,14 +30,14 @@ const LoginForm = () => {
     });
 
     if (res[0]?.username === data.email && res[0]?.password !== data.password) {
-      toast.error("Password is wrong!");
+      // toast.error("Password is wrong!");
     } else if (res[0]?.username !== data.email) {
-      toast.error("You haven't been account yet");
+      // toast.error("You haven't been account yet");
     } else if (
       res[0]?.username === data.email &&
       res[0]?.password === data.password
     ) {
-      toast.success("Login success");
+      // toast.success("Login success");
       if (remember) {
         let accountJSON = JSON.stringify({
           username: data.email,
@@ -56,7 +55,6 @@ const LoginForm = () => {
 
   return (
     <>
-      <wc-toast></wc-toast>
       <div className="w-full min-h-screen bg-slate-50 flex items-center justify-center">
         <div className="max-w-[1240px] w-full lg:w-10/12 min-h-screen flex lg:mt-5 lg:rounded-lg overflow-hidden shadow-lg">
           <div className="w-1/2 h-full overflow-hidden hidden xl:block">

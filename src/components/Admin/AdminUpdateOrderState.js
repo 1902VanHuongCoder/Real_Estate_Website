@@ -2,7 +2,6 @@ import React from "react";
 import { db } from "../../firebase_setup/firebase";
 import { updateDoc, doc, getDoc } from "firebase/firestore";
 import { useForm } from "react-hook-form";
-import { toast } from "https://cdn.skypack.dev/wc-toast";
 import { IoMdCloseCircle } from "react-icons/io";
 function UpdateOderState({ orderId, handleCloseUpdateOrderStateModal }) {
   const {
@@ -23,7 +22,7 @@ function UpdateOderState({ orderId, handleCloseUpdateOrderStateModal }) {
     await updateDoc(doc(db, "orders", orderId), {
       deliveryState: orderstate,
     });
-    toast.success("Update product success");
+    // toast.success("Update product success");
     reset();
     window.location.reload(true);
   };

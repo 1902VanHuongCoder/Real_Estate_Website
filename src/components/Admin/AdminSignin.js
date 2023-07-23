@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import { useForm } from "react-hook-form";
 import { db } from "../../firebase_setup/firebase";
-import { toast } from "https://cdn.skypack.dev/wc-toast";
 import { collection, addDoc, getDoc, doc } from "firebase/firestore";
 const AdminSigninForm = () => {
   const {
@@ -26,27 +25,26 @@ const AdminSigninForm = () => {
     if (data.password === data.confirmpassword && data.ic === ic.data().ic) {
       await addUserAccount(data.email, data.password);
       reset();
-      toast.success("Sign in success");
+      // toast.success("Sign in success");
     } else if (
       data.password === data.confirmpassword &&
       data.ic !== ic.data().ic
     ) {
-      toast.error("Introduction Code is wrong");
+      // toast.error("Introduction Code is wrong");
     } else if (
       data.password !== data.confirmpassword &&
       data.ic === ic.data().ic
     ) {
-      toast.error("Password and Confirm Password are invalid");
+      // toast.error("Password and Confirm Password are invalid");
     } else if (
       data.password !== data.confirmpassword &&
       data.ic !== ic.data().ic
     ) {
-      toast.error("Confirm password or introduction code is wrong");
+      // toast.error("Confirm password or introduction code is wrong");
     }
   };
   return (
     <>
-      <wc-toast></wc-toast>
       <section className="bg-gray-50 dark:bg-gray-900">
         <div className="flex flex-col items-center justify-center px-6 py-[30px] mx-auto md:min-h-screen">
           <Link to="/">

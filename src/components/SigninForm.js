@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import signinimg from "../assets/signinimg.jpg";
 import { db } from "../firebase_setup/firebase";
 import RingLoader from "react-spinners/RingLoader";
-import { toast } from "https://cdn.skypack.dev/wc-toast";
 import { collection, addDoc, getDocs, where, query } from "firebase/firestore";
 const SigninForm = () => {
   const {
@@ -37,20 +36,19 @@ const SigninForm = () => {
       });
 
       if (res.length > 0) {
-        toast.error("Sign in fail! This account has already signed in");
+        // toast.error("Sign in fail! This account has already signed in");
       } else {
         addUserAccount(data.email, data.password);
-        toast.success("Sign in success");
+        // toast.success("Sign in success");
         reset();
       }
     } else {
-      toast.error("Password and confirm password are invalid");
+      // toast.error("Password and confirm password are invalid");
     }
     setLoading(false);
   };
   return (
     <div className="w-full min-h-screen bg-slate-50 flex items-center justify-center">
-      <wc-toast></wc-toast>
       <div className="max-w-[1240px] w-full lg:w-10/12 min-h-screen flex lg:mt-5 lg:rounded-lg overflow-hidden shadow-lg">
         <div className="bg-[#FED3CA] w-full xl:w-1/2 flex flex-col items-center justify-center gap-y-5">
           <img src={logo} className="w-16 h-16" alt="logo" />

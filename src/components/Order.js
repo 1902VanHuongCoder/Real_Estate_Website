@@ -4,8 +4,6 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import NavbarWithDropdown from "./Home/Navbar";
-
-import { toast } from "https://cdn.skypack.dev/wc-toast";
 const Order = () => {
   const { state } = useLocation();
   const [phone, setPhone] = useState("");
@@ -52,7 +50,7 @@ const Order = () => {
   // When user hit submit, will set these datas to database (firestore - firebase) ===>
   const order = async () => {
     if (address === "" || phone === "" || colorIsChoosed.length < 0) {
-      toast.error("Order isn't success! Check your order");
+      // toast.error("Order isn't success! Check your order");
     } else {
       let date = new Date();
       await addDoc(collection(db, "orders"), {
@@ -70,14 +68,13 @@ const Order = () => {
           { state: "Wait confirming of boss", date: date.toDateString() },
         ],
       });
-      toast.success("Order success");
+      // toast.success("Order success");
     }
   };
   // <===
 
   return (
     <>
-      <wc-toast></wc-toast>
       <NavbarWithDropdown username={state[1].username} isLogged={state[2]} />
       <div className="w-10/12 bg-slate-100 mx-auto rounded large">
         <h1 className="py-4 px-10 font-medium text-[#ee4d2d] text-2xl">

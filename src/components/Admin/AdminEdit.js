@@ -2,7 +2,6 @@ import React from "react";
 import { db } from "../../firebase_setup/firebase";
 import { updateDoc, doc } from "firebase/firestore";
 import { useForm } from "react-hook-form";
-import { toast } from "https://cdn.skypack.dev/wc-toast";
 import { IoMdCloseCircle } from "react-icons/io";
 function Edit({ productId, handleCloseUpdateModal }) {
   const {
@@ -18,7 +17,8 @@ function Edit({ productId, handleCloseUpdateModal }) {
       productType: data.uproductType,
       productPrice: data.uproductPrice,
     });
-    toast.success("Update product success");
+    // toast.success("Update product success");
+    // Here will show user success notifications
     reset();
     window.location.reload(true);
   };
