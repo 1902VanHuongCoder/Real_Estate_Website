@@ -3,6 +3,7 @@ import { db } from "../../firebase_setup/firebase";
 import { updateDoc, doc } from "firebase/firestore";
 import { useForm } from "react-hook-form";
 import { IoMdCloseCircle } from "react-icons/io";
+import { useToast } from "rc-toastr";
 function Edit({ productId, handleCloseUpdateModal }) {
   const {
     register,
@@ -10,15 +11,14 @@ function Edit({ productId, handleCloseUpdateModal }) {
     formState: { errors },
     reset,
   } = useForm();
-
+  const { toast } = useToast();
   const update = async (data) => {
     await updateDoc(doc(db, "products", productId), {
       productName: data.uproductName,
       productType: data.uproductType,
       productPrice: data.uproductPrice,
     });
-    // toast.success("Update product success");
-    // Here will show user success notifications
+    toast("Update product success");
     reset();
     window.location.reload(true);
   };

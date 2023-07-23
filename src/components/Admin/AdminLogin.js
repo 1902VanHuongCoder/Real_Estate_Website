@@ -4,7 +4,9 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { db } from "../../firebase_setup/firebase";
 import { collection, getDocs, query, where } from "firebase/firestore";
+import { useToast } from "rc-toastr";
 const AdminLogin = () => {
+  const { toast } = useToast();
   const {
     register,
     handleSubmit,
@@ -25,17 +27,16 @@ const AdminLogin = () => {
       });
     });
 
-
     if (res[0]?.email === data.email && res[0]?.password !== data.password) {
-      // toast.error("Password is wrong!");
+      toast("Password is wrong!");
     } else if (res[0]?.email !== data.email) {
-      // toast.error("Check your email");
+      toast("Check your email");
     } else if (
       res[0]?.email === data.email &&
       res[0]?.password === data.password
     ) {
-      // toast.success("Login success");
-      navigate("/admin", { state: {loggedin: true} });
+      toast("Login success");
+      navigate("/admin", { state: { loggedin: true } });
     }
   };
 

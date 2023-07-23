@@ -4,7 +4,9 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import NavbarWithDropdown from "./Home/Navbar";
+import { useToast } from "rc-toastr";
 const Order = () => {
+  const { toast } = useToast();
   const { state } = useLocation();
   const [phone, setPhone] = useState("");
   const [amount, setAmount] = useState(1);
@@ -12,7 +14,6 @@ const Order = () => {
   const [totalAmount, setTotalAmount] = useState();
   const [transportFee, setTransportFee] = useState(10);
   const [colorIsChoosed, setColorIsChoosed] = useState([]);
-  console.log(colorIsChoosed);
   const [deliveryMethod, setDeliveryMethod] = useState("On delivery");
 
   // Choose amount of products ==> //
@@ -50,7 +51,7 @@ const Order = () => {
   // When user hit submit, will set these datas to database (firestore - firebase) ===>
   const order = async () => {
     if (address === "" || phone === "" || colorIsChoosed.length < 0) {
-      // toast.error("Order isn't success! Check your order");
+      toast("Order isn't success! Check your order");
     } else {
       let date = new Date();
       await addDoc(collection(db, "orders"), {
@@ -68,19 +69,19 @@ const Order = () => {
           { state: "Wait confirming of boss", date: date.toDateString() },
         ],
       });
-      // toast.success("Order success");
+      toast("Order success");
     }
   };
   // <===
 
   return (
-    <>
-      <NavbarWithDropdown username={state[1].username} isLogged={state[2]} />
-      <div className="w-10/12 bg-slate-100 mx-auto rounded large">
+    <div className="relative max-w-[1200px] mx-auto">
+      <NavbarWithDropdown username={state[1]} isLogged={state[2]} />
+      <div className="w-full sm:w-10/12 bg-slate-100 mx-auto rounded large">
         <h1 className="py-4 px-10 font-medium text-[#ee4d2d] text-2xl">
           Order
         </h1>
-        <div className="w-[90%] bg-white mx-auto rounded-lg">
+        <div className="w-full sm:w-[90%] bg-white mx-auto rounded-lg">
           <h2 className="font-medium py-5 px-5"># Product Image</h2>
           <div className="w-full flex justify-center items-center">
             <img
@@ -98,9 +99,9 @@ const Order = () => {
             <h2 className="font-medium py-5 px-5"># Product Price</h2>
             <p>${state[0].productPrice}</p>
           </div>
-          <div className="flex justify-start items-center">
+          <div className="sm:flex justify-start items-center">
             <h2 className="font-medium py-5 px-5"># Amount of products</h2>
-            <div>
+            <div className="w-full sm:w-fit flex justify-center items-center">
               <button
                 className="w-[2.5rem] h-fit border border-solid border-gray-400"
                 onClick={handleDecreAmount}
@@ -116,9 +117,9 @@ const Order = () => {
               </button>
             </div>
           </div>
-          <div className="flex justify-start items-center">
+          <div className="sm:flex justify-start items-center">
             <h2 className="font-medium py-5 px-5"># Choose Color </h2>
-            <div className="flex items-center justify-center gap-4">
+            <div className="w-full sm:w-fit sm:p-0 px-5 flex items-center gap-4 flex-wrap ">
               {state[0].productColors.map((item, i) => {
                 return (
                   <div
@@ -196,7 +197,7 @@ const Order = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

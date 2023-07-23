@@ -8,8 +8,10 @@ import React, { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { useLocation } from "react-router-dom";
 import Loading from "./Loading";
+import { useToast } from "rc-toastr";
 
 const Home = () => {
+  const { toast } = useToast();
   const { state } = useLocation();
   const [data, setData] = useState();
   const [shoppingCartData, setShoppingCartData] = useState([]);
@@ -37,9 +39,9 @@ const Home = () => {
     if (!haveProduct) {
       const product = data.filter((item) => item.id === id);
       setShoppingCartData([...shoppingCartData, product[0]]);
-      // toast.success("You have just added this product into shopping cart");
+      toast("You have just added this product into shopping cart");
     } else {
-      // toast.error("This product has already been shopping cart!");
+      toast("This product has already been shopping cart!");
     }
   };
 

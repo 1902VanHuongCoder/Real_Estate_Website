@@ -1,6 +1,6 @@
 {
   "name": "crudapp",
-  "homepage": "http://1902VanHuongCoder.github.io/Crud-app-with-firebase",
+  "homepage": "http://1902VanHuongCoder.github.io/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -14,6 +14,7 @@
     "firebase": "^10.0.0",
     "flowbite": "^1.7.0",
     "flowbite-react": "^0.4.11",
+    "rc-toastr": "^1.3.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.45.1",

@@ -3,17 +3,26 @@ import { useNavigate } from "react-router-dom";
 import { FaShoppingBag } from "react-icons/fa";
 import { BsFillEmojiLaughingFill } from "react-icons/bs";
 import { AiFillBell } from "react-icons/ai";
+import { useToast } from "rc-toastr";
+
 const ShoppingCart = ({
   products,
   user,
   handleRemoveProductOutOfShoppingCart,
   isLogin,
 }) => {
+  const { toast } = useToast();
   const navigate = useNavigate();
   const [showShoppingCart, setShowShoppingCart] = useState(false);
   const handleBuyProduct = (id) => {
-    const product = products.filter((item) => item.id === id);
-    navigate("/order", { state: [product[0], user, isLogin] });
+    console.log(isLogin);
+    if (!isLogin) {
+      toast("Log in please!");
+      return;
+    } else {
+      const product = products.filter((item) => item.id === id);
+      navigate("/order", { state: [product[0], user, isLogin] });
+    }
   };
   return (
     <div className="bg-[#4b4949] py-6 px-4">

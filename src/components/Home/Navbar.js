@@ -13,7 +13,7 @@ export default function NavbarWithDropdown({
   const navigate = useNavigate();
   const handleRedirectToOrderHistory = () => {
     navigate("/orderhistory", {
-      state: { username: username, isLogged: isLogged},
+      state: { username: username, isLogged: isLogged },
     });
   };
   return (
@@ -28,40 +28,45 @@ export default function NavbarWithDropdown({
         <a href="http://localhost:3000/" className="hidden sm:block">
           <img src={messenger} alt="messenger" width={40} height={40} />
         </a>
-        <a href="http://localhost:3000/" className="hidden sm:block">
+        <a
+          href="https://github.com/1902VanHuongCoder"
+          className="hidden sm:block"
+        >
           <img src={github} alt="github" width={40} height={40} />
         </a>
         <a href="http://localhost:3000/" className="hidden sm:block">
           <img src={instagram} alt="instagram" width={40} height={40} />
         </a>
-        <Dropdown
-          inline
-          label={
-            <div className="w-[40px] h-[40px] rounded-full bg-[#e9e9e9] flex justify-center items-center">
-              <FaUserAlt alt="User settings" />
-            </div>
-          }
-        >
-          <Dropdown.Header>
-            {isLogged ? (
-              <span className="block text-sm">{username}</span>
-            ) : (
-              <span className="block text-sm">Customer</span>
+        {isLogged && (
+          <Dropdown
+            inline
+            label={
+              <div className="w-[40px] h-[40px] rounded-full bg-[#e9e9e9] flex justify-center items-center">
+                <FaUserAlt alt="User settings" />
+              </div>
+            }
+          >
+            <Dropdown.Header>
+              {isLogged ? (
+                <span className="block text-sm">{username}</span>
+              ) : (
+                <span className="block text-sm">Customer</span>
+              )}
+            </Dropdown.Header>
+            {isLogged && (
+              <Dropdown.Item onClick={handleRedirectToOrderHistory}>
+                Order History
+              </Dropdown.Item>
             )}
-          </Dropdown.Header>
-          {isLogged && (
-            <Dropdown.Item onClick={handleRedirectToOrderHistory}>
-              Order History
-            </Dropdown.Item>
-          )}
-          <Link to="/login">
-            <Dropdown.Item>Use another account</Dropdown.Item>
-          </Link>
-          <Dropdown.Divider />
-          {isLogged && (
-            <Dropdown.Item onClick={handleSignOut}>Sign out</Dropdown.Item>
-          )}
-        </Dropdown>
+            <Link to="/login">
+              <Dropdown.Item>Use another account</Dropdown.Item>
+            </Link>
+            <Dropdown.Divider />
+            {isLogged && (
+              <Dropdown.Item onClick={handleSignOut}>Sign out</Dropdown.Item>
+            )}
+          </Dropdown>
+        )}
         <Navbar.Toggle />
       </div>
       <Navbar.Collapse>

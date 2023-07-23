@@ -5,8 +5,10 @@ import loginimg from "../assets/loginimg.jpg";
 import { useNavigate } from "react-router-dom";
 import { db } from "../firebase_setup/firebase";
 import RingLoader from "react-spinners/RingLoader";
+import { useToast } from "rc-toastr";
 import { collection, getDocs, query, where } from "firebase/firestore";
 const LoginForm = () => {
+  const { toast } = useToast();
   const [remember, setRemember] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -30,14 +32,29 @@ const LoginForm = () => {
     });
 
     if (res[0]?.username === data.email && res[0]?.password !== data.password) {
-      // toast.error("Password is wrong!");
+      toast("Password is wrong!");
     } else if (res[0]?.username !== data.email) {
-      // toast.error("You haven't been account yet");
+      toast("You haven't been account yet");
     } else if (
       res[0]?.username === data.email &&
-      res[0]?.password === data.password
+      res[0]?.password === data.password &&
+      res[0]?.role === "admin"
     ) {
-      // toast.success("Login success");
+      toast("Admin has successfully logged in");
+      if (remember) {
+        let accountJSON = JSON.stringify({
+          username: data.email,
+          password: data.password,
+        });
+        localStorage.setItem("loggedInAccount", accountJSON);
+      }
+      navigate("/admin", { state: { loggedin: true } });
+    } else if (
+      res[0]?.username === data.email &&
+      res[0]?.password === data.password &&
+      res[0]?.role === "user"
+    ) {
+      toast("Log in success");
       if (remember) {
         let accountJSON = JSON.stringify({
           username: data.email,
@@ -62,7 +79,7 @@ const LoginForm = () => {
           </div>
           <div className="bg-[#FED3CA] w-full xl:w-1/2 flex flex-col items-center justify-center gap-y-5">
             <img src={logo} className="w-16 h-16" alt="logo" />
-            <div className="p-6 space-y-4 md:space-y-6 sm:p-8 bg-white w-[80%] rounded-lg">
+            <div className="sm:w-[450px] p-6 space-y-4 md:space-y-6 sm:p-8 bg-white w-[90%] rounded-lg">
               <h1 className="text-center text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                 Login
               </h1>

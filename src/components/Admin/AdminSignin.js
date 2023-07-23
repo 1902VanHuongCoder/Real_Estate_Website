@@ -3,8 +3,10 @@ import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import { useForm } from "react-hook-form";
 import { db } from "../../firebase_setup/firebase";
+import { useToast } from "rc-toastr";
 import { collection, addDoc, getDoc, doc } from "firebase/firestore";
 const AdminSigninForm = () => {
+  const { toast } = useToast();
   const {
     register,
     handleSubmit,
@@ -25,22 +27,22 @@ const AdminSigninForm = () => {
     if (data.password === data.confirmpassword && data.ic === ic.data().ic) {
       await addUserAccount(data.email, data.password);
       reset();
-      // toast.success("Sign in success");
+      toast("Sign in success");
     } else if (
       data.password === data.confirmpassword &&
       data.ic !== ic.data().ic
     ) {
-      // toast.error("Introduction Code is wrong");
+      toast("Introduction Code is wrong");
     } else if (
       data.password !== data.confirmpassword &&
       data.ic === ic.data().ic
     ) {
-      // toast.error("Password and Confirm Password are invalid");
+      toast("Password and Confirm Password are invalid");
     } else if (
       data.password !== data.confirmpassword &&
       data.ic !== ic.data().ic
     ) {
-      // toast.error("Confirm password or introduction code is wrong");
+      toast("Confirm password or introduction code is wrong");
     }
   };
   return (

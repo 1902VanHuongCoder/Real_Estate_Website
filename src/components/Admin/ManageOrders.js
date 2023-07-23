@@ -9,7 +9,7 @@ const ManageOrders = ({ showUpdateORDER_STATEModal, handleShowModal }) => {
     await getDocs(collection(db, "orders")).then((response) => {
       const responsedData = response.docs.map((doc) => ({
         ...doc.data(),
-        id: doc.id,
+        id: doc.id, 
       }));
       setData(responsedData);
     });

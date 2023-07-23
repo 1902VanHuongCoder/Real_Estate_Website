@@ -85,7 +85,7 @@ const Admin = () => {
     if (state) {
       setLoggedIn(true);
     } else {
-      navigate("/admin/login");
+      navigate("/login");
     }
   }, []);
 
@@ -208,7 +208,7 @@ const Admin = () => {
             showUpdateORDER_STATEModal={handleShowUpdateORDER_STATEModal}
             handleShowModal={(id) => {
               setProductId(id);
-              setShowAcceptingDeleting_PRODUCT_Modal(true);
+              setShowAcceptingDeleting_ORDER_Modal(true);
             }}
           />
         </div>
