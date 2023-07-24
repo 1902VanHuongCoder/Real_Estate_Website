@@ -9,6 +9,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { useLocation } from "react-router-dom";
 import Loading from "./Loading";
 import { useToast } from "rc-toastr";
+import Feeback from "./Home/Feeback";
 
 const Home = () => {
   const { toast } = useToast();
@@ -90,6 +91,7 @@ const Home = () => {
             isLogin={isLogin}
           />
           <Products data={data} handleAddProduct={handleAddProduct} />
+          <Feeback />
           <Footer />
         </div>
       )}
