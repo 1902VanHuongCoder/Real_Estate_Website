@@ -1,19 +1,38 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import NavbarWithDropdown from "./Home/Navbar";
-
+import { useToast } from "rc-toastr";
+import { useContext } from "react";
+import { LoginContext } from "./Context/LoginContext";
 const SearchResult = () => {
+
+  const { isLogin, func } = useContext(LoginContext);
+  const { toast } = useToast();
   const navigate = useNavigate();
   const { state } = useLocation();
-
   const handleBuyProduct = (id) => {
-    const product = state.products.filter((item) => item.id === id);
-    navigate("/order", { state: [product[0], state.username, state.isLogged] });
+    if (state.isLogged) {
+      const product = state.products.filter((item) => item.id === id);
+      navigate("/order", {
+        state: [product[0], state.username, state.isLogged],
+      });
+    } else {
+      toast("Log in please!");
+      return;
+    }
   };
 
   return (
     <div>
-      <NavbarWithDropdown username={state.username} isLogged={state.isLogged} />
+      <NavbarWithDropdown
+        username={state.username}
+        isLogged={state.isLogged}
+        handleSignOut={() => {
+          func(false);
+          localStorage.removeItem("loggedInAccount");
+          navigate("/");
+        }}
+      />
       <div className="container bg-slate-100 mx-auto min-h-screen mt-5 rounded-lg">
         <h2 className="font-medium py-5 px-5"># Search Result</h2>
         {state.products.length > 0 ? (

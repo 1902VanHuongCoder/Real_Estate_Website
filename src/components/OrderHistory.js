@@ -1,14 +1,18 @@
 import Footer from "./Home/Footer";
 import { FcShipped } from "react-icons/fc";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import NavbarWithDropdown from "./Home/Navbar";
 import { db } from "../firebase_setup/firebase";
+import { useContext } from "react";
+import { LoginContext } from "./Context/LoginContext";
 import React, { useState, useEffect } from "react";
 import { AiOutlineCheckCircle, AiFillShopping } from "react-icons/ai";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { BsFillBox2Fill, BsFillEmojiLaughingFill } from "react-icons/bs";
 import Loading from "./Loading";
 const OrderHistory = () => {
+  const navigate = useNavigate();
+  const { isLogin, func } = useContext(LoginContext);
   const { state } = useLocation();
   const [orderHistory, setOrderHistory] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -47,6 +51,11 @@ const OrderHistory = () => {
             <NavbarWithDropdown
               username={state.username}
               isLogged={state.isLogged}
+              handleSignOut={() => {
+                func(false);
+                localStorage.removeItem("loggedInAccount");
+                navigate("/");
+              }}
             />
             <div className="mt-6 w-10/12 bg-slate-100 mx-auto rounded large p-3 h-fit mb-7">
               <h1 className="py-4 px-10 font-medium text-[#ee4d2d] text-2xl">

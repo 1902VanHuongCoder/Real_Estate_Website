@@ -11,12 +11,14 @@ import Loading from "./Loading";
 import { useToast } from "rc-toastr";
 import Feeback from "./Home/Feeback";
 
+import { useContext } from "react";
+import { LoginContext } from "./Context/LoginContext";
 const Home = () => {
+  const { isLogin, func } = useContext(LoginContext);
   const { toast } = useToast();
   const { state } = useLocation();
   const [data, setData] = useState();
   const [shoppingCartData, setShoppingCartData] = useState([]);
-  const [isLogin, setIsLogin] = useState(false);
   const [username, setUserName] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -52,13 +54,13 @@ const Home = () => {
   };
 
   const handleSignOut = () => {
-    setIsLogin(false);
+    func(false);
     localStorage.removeItem("loggedInAccount");
     window.location.reload(true);
   };
   useEffect(() => {
     if (state) {
-      setIsLogin(true);
+      func(true);
       setUserName(state);
     }
   }, []);
@@ -66,7 +68,7 @@ const Home = () => {
   useEffect(() => {
     const loggedInAccount = JSON.parse(localStorage.getItem("loggedInAccount"));
     if (loggedInAccount) {
-      setIsLogin(true);
+      func(true);
       setUserName(loggedInAccount);
     }
   }, []);
@@ -91,7 +93,7 @@ const Home = () => {
             isLogin={isLogin}
           />
           <Products data={data} handleAddProduct={handleAddProduct} />
-          <Feeback />
+          <Feeback username={username.username} isLogged={isLogin} />
           <Footer />
         </div>
       )}

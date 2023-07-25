@@ -1,11 +1,15 @@
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../firebase_setup/firebase";
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import NavbarWithDropdown from "./Home/Navbar";
 import { useToast } from "rc-toastr";
+import { useContext } from "react";
+import { LoginContext } from "./Context/LoginContext";
 const Order = () => {
+  const navigate = useNavigate("/");
+  const { isLogin, func } = useContext(LoginContext);
   const { toast } = useToast();
   const { state } = useLocation();
   const [phone, setPhone] = useState("");
@@ -76,7 +80,15 @@ const Order = () => {
 
   return (
     <div className="relative max-w-[1200px] mx-auto">
-      <NavbarWithDropdown username={state[1]} isLogged={state[2]} />
+      <NavbarWithDropdown
+        username={state[1]}
+        isLogged={state[2]}
+        handleSignOut={() => {
+          func(false);
+          localStorage.removeItem("loggedInAccount");
+          navigate("/");
+        }}
+      />
       <div className="w-full sm:w-10/12 bg-slate-100 mx-auto rounded large">
         <h1 className="py-4 px-10 font-medium text-[#ee4d2d] text-2xl">
           Order
@@ -137,9 +149,12 @@ const Order = () => {
               })}
             </div>
           </div>
-          <div className="flex justify-start items-center">
+          <div className="flex flex-col sm:flex-row justify-start sm:items-center">
             <h2 className="font-medium py-5 px-5"># Choose Delivery Method</h2>
-            <select onChange={(e) => setDeliveryMethod(e.target.value)}>
+            <select
+              className="w-1/2 ml-4 sm:ml-0"
+              onChange={(e) => setDeliveryMethod(e.target.value)}
+            >
               <option value="On delivery">On delivery</option>
               <option value="Bank">Bank</option>
             </select>

@@ -10,6 +10,7 @@ import UpdateOderState from "./AdminUpdateOrderState";
 import { useLocation, useNavigate } from "react-router-dom";
 import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
 import Loading from "../Loading";
+import AdminFeedback from "./AdminFeedback";
 const Admin = () => {
   const { state } = useLocation(); // Contain Admin's login infomations
   const [data, setData] = useState(); // retrieve datas from firebase
@@ -27,6 +28,11 @@ const Admin = () => {
     showAcceptingDeleting_ORDER_Modal,
     setShowAcceptingDeleting_ORDER_Modal,
   ] = useState(false);
+
+  const [
+    showAcceptingDeleting_FEEDBACK_Modal,
+    setShowAcceptingDeleting_FEEDBACK_Modal,
+  ] = useState(false);
   const [orderId, setOrderId] = useState();
 
   const navigate = useNavigate();
@@ -38,6 +44,16 @@ const Admin = () => {
 
   const handleDelete = async (id) => {
     await deleteDoc(doc(db, "products", id));
+    window.location.reload(true);
+  };
+
+  const handleDeleteFeedback = async (id) => {
+    await deleteDoc(doc(db, "feedbacks", id));
+    window.location.reload(true);
+  };
+
+  const handleDeleteOrder = async (id) => {
+    await deleteDoc(doc(db, "orders", id));
     window.location.reload(true);
   };
 
@@ -54,16 +70,15 @@ const Admin = () => {
     setShowUpdateORDER_STATEModal(false);
   };
 
-  const handleDeleteOrder = async (id) => {
-    await deleteDoc(doc(db, "orders", id));
-    window.location.reload(true);
-  };
-
   const handleCloseAcceptingDeleting_ORDER_Modal = () => {
     setShowAcceptingDeleting_ORDER_Modal(false);
   };
   const handleCloseAcceptingDeleting_PRODUCT_Modal = () => {
     setShowAcceptingDeleting_PRODUCT_Modal(false);
+  };
+
+  const handleCloseAcceptingDeleting_FEEDBACK_Modal = () => {
+    setShowAcceptingDeleting_FEEDBACK_Modal(false);
   };
   const addData = async () => {
     setLoading(true);
@@ -121,6 +136,13 @@ const Admin = () => {
           modalname="Do you want to delete?"
           handleAccept={() => handleDelete(productId)}
           handleCloseModal={handleCloseAcceptingDeleting_PRODUCT_Modal}
+        />
+      )}
+      {showAcceptingDeleting_FEEDBACK_Modal && (
+        <Modal
+          modalname="Do you want to delete?"
+          handleAccept={() => handleDeleteFeedback(productId)}
+          handleCloseModal={handleCloseAcceptingDeleting_FEEDBACK_Modal}
         />
       )}
       <div className="container bg-slate-50 min-h-screen mx-auto">
@@ -209,6 +231,13 @@ const Admin = () => {
             handleShowModal={(id) => {
               setProductId(id);
               setShowAcceptingDeleting_ORDER_Modal(true);
+            }}
+          />
+          <h2 className="font-medium py-5 px-5 mt-5"># Feedbacks</h2>
+          <AdminFeedback
+            handleShowModal={(id) => {
+              setProductId(id);
+              setShowAcceptingDeleting_FEEDBACK_Modal(true);
             }}
           />
         </div>
