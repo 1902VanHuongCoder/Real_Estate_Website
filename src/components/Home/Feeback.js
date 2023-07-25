@@ -44,7 +44,7 @@ const Feeback = ({ username, isLogged}) => {
   }, []);
 
   return (
-    <div className="w-full sm:w-[80%] h-fit border-[rgba(0,0,0,.1)] border border-solid mx-auto  p-5 mt-5">
+    <div className="w-full sm:w-[95%] h-fit border-[rgba(0,0,0,.1)] border border-solid mx-auto  p-5 mt-5">
       <div className="w-full flex justify-start items-center gap-x-2 sm:gap-x-5">
         <div className="w-10 h-10 hidden bg-slate-100 sm:flex justify-center items-center rounded-full text-2xl">
           <BiSolidUserCircle />

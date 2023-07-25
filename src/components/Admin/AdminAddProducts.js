@@ -3,6 +3,7 @@ import { db } from "../../firebase_setup/firebase";
 import { addDoc, collection } from "firebase/firestore";
 import UploadImage from "./UploadImage";
 import { useForm } from "react-hook-form";
+import { useToast } from "rc-toastr";
 const colorsobj = [
   "Blue",
   "Yellow",
@@ -16,6 +17,7 @@ const colorsobj = [
   "Green",
 ];
 const AdminAddProducts = () => {
+  const {toast} = useToast();
   const {
     register,
     handleSubmit,
@@ -50,9 +52,9 @@ const AdminAddProducts = () => {
       productPrice: data.productPrice,
       imageURL: url,
       productColors: productColors,
+      details: data.productDetails.split('*')
     });
-   
-    window.location.reload(true);
+    toast("Add product success");
   };
 
   const handleAddProductColor = () => {
@@ -66,9 +68,7 @@ const AdminAddProducts = () => {
     }
   };
   return (
-    <div
-      className="p-5 rounded-lg shadow-lg"
-    >
+    <div className="p-5 rounded-lg shadow-lg">
       <div className="w-full mb-5 sm:mb-1 sm:w-[60%] sm:flex justify-between items-center mx-auto ">
         <label htmlFor="stt">1. STT</label>
         <input
@@ -153,8 +153,20 @@ const AdminAddProducts = () => {
         {errors.productPrice && errors.productPrice.message}
       </div>
 
+      <div className="w-full mb-1 sm:mb-1 sm:w-[60%] sm:flex justify-between items-center mx-auto ">
+        <label htmlFor="productPrice">4. Product Details</label>
+        <textarea id="productDetails" placeholder="Details..." className="w-full sm:w-[300px]"  {...register("productDetails", {
+            required: "* This field is required!",
+          })}>
+
+        </textarea>
+      </div>
+      <div className="text-[red] py-2 w-full sm:w-[60%] text-right mx-auto">
+        {errors.productDetails && errors.productDetails.message}
+      </div>
+
       <div>
-        <h2>5. Choose colors of product</h2>
+        <h2>6. Choose colors of product</h2>
         {colors.map((color, i) => {
           return (
             <label key={i} className="mr-5" htmlFor={i + color}>

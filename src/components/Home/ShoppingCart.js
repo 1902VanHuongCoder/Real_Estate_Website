@@ -28,26 +28,24 @@ const ShoppingCart = ({
     <div className="bg-[#4b4949] py-6 px-4">
       <div className="flex justify-start items-center gap-2">
         {" "}
-        <FaShoppingBag className="text-[#ee4d2d]" />{" "}
-        <h1 className="text-white">| Shopping Cart</h1>
-        <div className="relative">
-          <button
-            onClick={() => setShowShoppingCart(!showShoppingCart)}
-            type="button"
-            className="text-white bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-4 focus:ring-yellow-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:focus:ring-yellow-900"
-          >
-            {showShoppingCart ? "Hidden" : "Show"} Shopping Cart
-          </button>
-          {products.length > 0 && (
-            <span className="text-white text-xl absolute right-2 -top-1 animate-wiggle-more animate-infinite">
-              <AiFillBell />
-            </span>
-          )}
-        </div>
+        <FaShoppingBag className="text-[#ee4d2d]" /> <span className="text-white">|</span>
+        <h1 className="text-white sm:block hidden"> Shopping Cart</h1>
+        <button
+          onClick={() => setShowShoppingCart(!showShoppingCart)}
+          type="button"
+          className="text-white bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-4 focus:ring-yellow-300 font-medium rounded-full text-sm px-5 py-2.5 text-center dark:focus:ring-yellow-900"
+        >
+          {showShoppingCart ? "Hidden" : "Show"} Shopping Cart
+        </button>
+        {products.length > 0 && (
+          <span className="text-white text-xl right-2 -top-1 animate-wiggle-more animate-infinite">
+            <AiFillBell />
+          </span>
+        )}
       </div>
       {showShoppingCart &&
         (products.length > 0 ? (
-          <div className="rounded-lg md:w-[85%] sm:w-[70%] sm:mx-auto bg-slate-50 grid md:grid-cols-3 sm:grid-cols-2 p-4 gap-3 justify-items-center">
+          <div className="grid-cols-1 w-full rounded-lg sm:w-[95%] sm:mx-auto bg-slate-50 grid lg:grid-cols-4 sm:grid-cols-3 p-4 gap-3 justify-items-center mt-6">
             {products?.map((item, i) => {
               return (
                 <div
@@ -103,7 +101,7 @@ const ShoppingCart = ({
             })}
           </div>
         ) : (
-          <div className="flex gap-2 justify-center items-center h-12 border-2 border-white border-dashed w-[80%] mx-auto mt-3 text-white">
+          <div className="flex gap-2 justify-center items-center h-12 border-2 border-white border-dashed w-[80%] mx-auto mt-6 text-white">
             <BsFillEmojiLaughingFill />
             <h1>You haven't bought anything!</h1>
           </div>

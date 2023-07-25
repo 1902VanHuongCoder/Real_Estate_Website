@@ -40,7 +40,7 @@ const UploadImage = ({ setUrl }) => {
   };
   return (
     <div>
-      <h2>6. Upload your image: </h2>
+      <h2>7. Upload your image: </h2>
       <div className="py-3 px-5 flex justify-between sm:items-center flex-col sm:flex-row">
         <input type="file" onChange={handleImage} />
         <button
