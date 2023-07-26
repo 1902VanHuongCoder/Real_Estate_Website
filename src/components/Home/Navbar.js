@@ -9,6 +9,7 @@ export default function NavbarWithDropdown({
   username,
   isLogged,
   handleSignOut,
+  isAdmin
 }) {
   const navigate = useNavigate();
   const handleRedirectToOrderHistory = () => {
@@ -85,6 +86,9 @@ export default function NavbarWithDropdown({
           <Link to="/login">
             <p className="ml-3">Login</p>
           </Link>
+        )}
+        {isAdmin === 'admin' && (
+          <Link to='/admin'><p className="ml-3">Admin Dashboard</p></Link>
         )}
       </Navbar.Collapse>
     </Navbar>

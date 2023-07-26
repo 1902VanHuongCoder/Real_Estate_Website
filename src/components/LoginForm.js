@@ -37,22 +37,7 @@ const LoginForm = () => {
       toast("You haven't been account yet");
     } else if (
       res[0]?.username === data.email &&
-      res[0]?.password === data.password &&
-      res[0]?.role === "admin"
-    ) {
-      toast("Admin has successfully logged in");
-      if (remember) {
-        let accountJSON = JSON.stringify({
-          username: data.email,
-          password: data.password,
-        });
-        localStorage.setItem("loggedInAccount", accountJSON);
-      }
-      navigate("/admin", { state: { loggedin: true } });
-    } else if (
-      res[0]?.username === data.email &&
-      res[0]?.password === data.password &&
-      res[0]?.role === "user"
+      res[0]?.password === data.password 
     ) {
       toast("Log in success");
       if (remember) {

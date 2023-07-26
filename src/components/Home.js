@@ -17,6 +17,7 @@ const Home = () => {
   const { isLogin, func } = useContext(LoginContext);
   const { toast } = useToast();
   const { state } = useLocation();
+  console.log(state);
   const [data, setData] = useState();
   const [shoppingCartData, setShoppingCartData] = useState([]);
   const [username, setUserName] = useState("");
@@ -82,6 +83,7 @@ const Home = () => {
             username={username.username}
             isLogged={isLogin}
             handleSignOut={handleSignOut}
+            isAdmin={state.role}
           />
           <Banner data={data} username={username.username} isLogged={isLogin} />
           <ShoppingCart
