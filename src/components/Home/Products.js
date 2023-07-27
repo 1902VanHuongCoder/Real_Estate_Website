@@ -3,8 +3,11 @@ import { useNavigate } from "react-router-dom";
 const Products = ({ data, handleAddProduct }) => {
   const navigate = useNavigate();
   const handleRedirectProductDetailsPage = (id) => {
-      navigate(`/details/${id}`);
-  }
+    const product = data.filter((product, i) => product.id === id);
+    navigate(`/details/${id}`, {
+      state: product,
+    });
+  };
   return (
     <div className="mt-6">
       <h1 className="text-[1.5rem] mx-auto p-4 text-center uppercase text-[#ee4d2d] font-bold sm:text-[2rem]">
@@ -25,9 +28,7 @@ const Products = ({ data, handleAddProduct }) => {
                   <div className="relative group w-full flex justify-center items-center border-solid border-[rgba(0,0,0,.2)] border rounded-lg overflow-hidden">
                     <div
                       className={`absolute w-full h-full ${
-                        i % 2 === 0
-                          ? "-translate-x-full"
-                          : "-translate-y-full"
+                        i % 2 === 0 ? "-translate-x-full" : "-translate-y-full"
                       }
                       ${
                         i % 2 === 0
@@ -38,7 +39,9 @@ const Products = ({ data, handleAddProduct }) => {
                       <button
                         type="button"
                         className="rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-center text-sm font-medium text-gray-700 shadow-sm transition-all hover:bg-gray-100 focus:ring focus:ring-gray-100 disabled:cursor-not-allowed disabled:border-gray-100 disabled:bg-gray-50 disabled:text-gray-400"
-                        onClick={() => handleRedirectProductDetailsPage(data.id)}
+                        onClick={() =>
+                          handleRedirectProductDetailsPage(data.id)
+                        }
                       >
                         Details
                       </button>
@@ -108,9 +111,7 @@ const Products = ({ data, handleAddProduct }) => {
                   <div className="relative group w-full border-solid border-[rgba(0,0,0,.2)] border rounded-lg overflow-hidden">
                     <div
                       className={`absolute w-full h-full ${
-                        i % 2 === 0
-                          ? "-translate-x-full"
-                          : "-translate-y-full"
+                        i % 2 === 0 ? "-translate-x-full" : "-translate-y-full"
                       }
                       ${
                         i % 2 === 0
@@ -121,6 +122,9 @@ const Products = ({ data, handleAddProduct }) => {
                       <button
                         type="button"
                         className="rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-center text-sm font-medium text-gray-700 shadow-sm transition-all hover:bg-gray-100 focus:ring focus:ring-gray-100 disabled:cursor-not-allowed disabled:border-gray-100 disabled:bg-gray-50 disabled:text-gray-400"
+                        onClick={() =>
+                          handleRedirectProductDetailsPage(data.id)
+                        }
                       >
                         Details
                       </button>
@@ -181,7 +185,7 @@ const Products = ({ data, handleAddProduct }) => {
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-items-center">
           {data?.map((data, i) => {
-            if (data.productType !== "pant" && data.productType !== 'shirt') {
+            if (data.productType !== "pant" && data.productType !== "shirt") {
               return (
                 <div
                   className="relative p-2 pb-[36px] max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 w-[170px] sm:w-[250px] hover:shadow-lg"
@@ -190,9 +194,7 @@ const Products = ({ data, handleAddProduct }) => {
                   <div className="relative group w-full flex justify-center items-center border-solid border-[rgba(0,0,0,.2)] border rounded-lg overflow-hidden">
                     <div
                       className={`absolute w-full h-full ${
-                        i % 2 === 0
-                          ? "-translate-x-full"
-                          : "-translate-y-full"
+                        i % 2 === 0 ? "-translate-x-full" : "-translate-y-full"
                       }
                       ${
                         i % 2 === 0
@@ -203,6 +205,9 @@ const Products = ({ data, handleAddProduct }) => {
                       <button
                         type="button"
                         className="rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-center text-sm font-medium text-gray-700 shadow-sm transition-all hover:bg-gray-100 focus:ring focus:ring-gray-100 disabled:cursor-not-allowed disabled:border-gray-100 disabled:bg-gray-50 disabled:text-gray-400"
+                        onClick={() =>
+                          handleRedirectProductDetailsPage(data.id)
+                        }
                       >
                         Details
                       </button>
