@@ -5,17 +5,25 @@ import { Dropdown, Navbar } from "flowbite-react";
 import messenger from "../../assets/messenger.png";
 import instagram from "../../assets/instagram.png";
 import { Link, useNavigate } from "react-router-dom";
-export default function NavbarWithDropdown({
-  username,
-  isLogged,
-  handleSignOut,
-  isAdmin
-}) {
+import { useContext } from "react";
+import { AppContext } from "../Context/AppContext";
+import { LoginContext } from "../Context/LoginContext";
+import { useToast } from "rc-toastr";
+export default function NavbarWithDropdown() {
+  const { toast } = useToast();
+  const { account, setAccount } = useContext(AppContext);
+  const { isLogin, func } = useContext(LoginContext);
   const navigate = useNavigate();
   const handleRedirectToOrderHistory = () => {
-    navigate("/orderhistory", {
-      state: { username: username, isLogged: isLogged },
-    });
+    navigate("/orderhistory");
+  };
+
+  const handleLogOut = () => {
+    func(false);
+    setAccount({});
+    toast("Log out success");
+    localStorage.removeItem("loggedInAccount");
+    window.location.reload(true);
   };
   return (
     <Navbar fluid rounded>
@@ -38,7 +46,7 @@ export default function NavbarWithDropdown({
         <a href="http://localhost:3000/" className="hidden sm:block">
           <img src={instagram} alt="instagram" width={40} height={40} />
         </a>
-        {isLogged && (
+        {isLogin && (
           <Dropdown
             inline
             label={
@@ -48,13 +56,13 @@ export default function NavbarWithDropdown({
             }
           >
             <Dropdown.Header>
-              {isLogged ? (
-                <span className="block text-sm">{username}</span>
+              {isLogin ? (
+                <span className="block text-sm">{account.username}</span>
               ) : (
                 <span className="block text-sm">Customer</span>
               )}
             </Dropdown.Header>
-            {isLogged && (
+            {isLogin && (
               <Dropdown.Item onClick={handleRedirectToOrderHistory}>
                 Order History
               </Dropdown.Item>
@@ -63,8 +71,8 @@ export default function NavbarWithDropdown({
               <Dropdown.Item>Use another account</Dropdown.Item>
             </Link>
             <Dropdown.Divider />
-            {isLogged && (
-              <Dropdown.Item onClick={handleSignOut}>Sign out</Dropdown.Item>
+            {isLogin && (
+              <Dropdown.Item onClick={handleLogOut}>Log out</Dropdown.Item>
             )}
           </Dropdown>
         )}
@@ -74,7 +82,7 @@ export default function NavbarWithDropdown({
         <Link to="/">
           <p className="pl-3 hover:text-[#ee4d2d]">Home</p>
         </Link>
-        {isLogged && (
+        {isLogin && (
           <p
             onClick={handleRedirectToOrderHistory}
             className="cursor-pointer hover:text-[#ee4d2d] ml-3"
@@ -82,13 +90,15 @@ export default function NavbarWithDropdown({
             Order History
           </p>
         )}
-        {!isLogged && (
+        {!isLogin && (
           <Link to="/login">
             <p className="ml-3">Login</p>
           </Link>
         )}
-        {isAdmin === 'admin' && (
-          <Link to='/admin'><p className="ml-3">Admin Dashboard</p></Link>
+        {account.role === "admin" && (
+          <Link to="/admin">
+            <p className="ml-3">Admin Dashboard</p>
+          </Link>
         )}
       </Navbar.Collapse>
     </Navbar>

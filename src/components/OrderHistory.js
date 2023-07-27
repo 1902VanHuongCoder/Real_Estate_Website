@@ -1,41 +1,48 @@
 import Footer from "./Home/Footer";
 import { FcShipped } from "react-icons/fc";
-import { useLocation, useNavigate } from "react-router-dom";
 import NavbarWithDropdown from "./Home/Navbar";
 import { db } from "../firebase_setup/firebase";
 import { useContext } from "react";
 import { LoginContext } from "./Context/LoginContext";
+import { AppContext } from "./Context/AppContext";
 import React, { useState, useEffect } from "react";
 import { AiOutlineCheckCircle, AiFillShopping } from "react-icons/ai";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { BsFillBox2Fill, BsFillEmojiLaughingFill } from "react-icons/bs";
 import Loading from "./Loading";
 const OrderHistory = () => {
-  const navigate = useNavigate();
-  const { isLogin, func } = useContext(LoginContext);
-  const { state } = useLocation();
+  const { isLogin } = useContext(LoginContext);
+  const { account } = useContext(AppContext);
   const [orderHistory, setOrderHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   //Retrieve user's order history from database ===>
   const getOrderedHistory = async () => {
-    setLoading(true);
-    const collection_ref = collection(db, "orders");
-    const q = query(collection_ref, where("username", "==", state.username));
-    const doc_ref = await getDocs(q);
+    if (isLogin) {
+      setLoading(true);
+      const collection_ref = collection(db, "orders");
+      const q = query(
+        collection_ref,
+        where("username", "==", account.username)
+      );
+      const doc_ref = await getDocs(q);
 
-    const res = [];
-    doc_ref.forEach((order) => {
-      res.push({
-        ...order.data(),
+      const res = [];
+      doc_ref.forEach((order) => {
+        res.push({
+          ...order.data(),
+        });
       });
-    });
 
-    if (res.length > 0) {
-      setOrderHistory(res);
-    } else {
-      setOrderHistory([]);
+      if (res.length > 0) {
+        setOrderHistory(res);
+      } else {
+        setOrderHistory([]);
+      }
+      setLoading(false);
+    }else{
+      setLoading(false);
+      return;
     }
-    setLoading(false);
   };
   useEffect(() => {
     getOrderedHistory();
@@ -48,15 +55,7 @@ const OrderHistory = () => {
       ) : (
         <>
           <div className="relative min-h-screen">
-            <NavbarWithDropdown
-              username={state.username}
-              isLogged={state.isLogged}
-              handleSignOut={() => {
-                func(false);
-                localStorage.removeItem("loggedInAccount");
-                navigate("/");
-              }}
-            />
+            <NavbarWithDropdown />
             <div className="mt-6 w-10/12 bg-slate-100 mx-auto rounded large p-3 h-fit mb-7">
               <h1 className="py-4 px-10 font-medium text-[#ee4d2d] text-2xl">
                 Order history

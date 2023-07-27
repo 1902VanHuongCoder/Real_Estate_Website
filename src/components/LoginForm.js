@@ -7,7 +7,12 @@ import { db } from "../firebase_setup/firebase";
 import RingLoader from "react-spinners/RingLoader";
 import { useToast } from "rc-toastr";
 import { collection, getDocs, query, where } from "firebase/firestore";
+import { useContext } from "react";
+import { AppContext } from "./Context/AppContext";
+import { LoginContext } from "./Context/LoginContext";
 const LoginForm = () => {
+  const {setAccount} = useContext(AppContext);
+  const {func} = useContext(LoginContext);
   const { toast } = useToast();
   const [remember, setRemember] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -44,10 +49,13 @@ const LoginForm = () => {
         let accountJSON = JSON.stringify({
           username: data.email,
           password: data.password,
+          role:'user'
         });
         localStorage.setItem("loggedInAccount", accountJSON);
       }
-      navigate("/", { state: res[0] });
+      setAccount(res[0]);
+      func(true);
+      navigate("/");
     }
     setLoading(false);
   };

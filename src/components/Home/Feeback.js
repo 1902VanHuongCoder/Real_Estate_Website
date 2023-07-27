@@ -1,20 +1,24 @@
-import React from "react";
+import React, { useContext } from "react";
 import { BiSolidUserCircle } from "react-icons/bi";
 import logo from "../../assets/logo.png";
 import { useState, useEffect } from "react";
 import { db } from "../../firebase_setup/firebase";
 import { collection, addDoc, getDocs } from "firebase/firestore";
 import { useToast } from "rc-toastr";
-const Feeback = ({ username, isLogged}) => {
+import { AppContext } from "../Context/AppContext";
+import { LoginContext } from "../Context/LoginContext";
+const Feeback = () => {
+  const {account} = useContext(AppContext);
+  const {isLogin} = useContext(LoginContext);
   const { toast } = useToast();
   const [feedback, setFeedback] = useState();
   const [feedbacksWereResponsed, setFeedbacksWereResponsed] = useState();
   const handleSendFeedback = async () => {
-    if(isLogged){
+    if(isLogin){
       if (feedback !== "") {
         await addDoc(collection(db, "feedbacks"), {
           content: feedback,
-          user: username,
+          user: account.username,
           response: null,
           date: new Date().toDateString(),
           public: false,

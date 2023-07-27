@@ -1,5 +1,10 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 const Products = ({ data, handleAddProduct }) => {
+  const navigate = useNavigate();
+  const handleRedirectProductDetailsPage = (id) => {
+      navigate(`/details/${id}`);
+  }
   return (
     <div className="mt-6">
       <h1 className="text-[1.5rem] mx-auto p-4 text-center uppercase text-[#ee4d2d] font-bold sm:text-[2rem]">
@@ -33,6 +38,7 @@ const Products = ({ data, handleAddProduct }) => {
                       <button
                         type="button"
                         className="rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-center text-sm font-medium text-gray-700 shadow-sm transition-all hover:bg-gray-100 focus:ring focus:ring-gray-100 disabled:cursor-not-allowed disabled:border-gray-100 disabled:bg-gray-50 disabled:text-gray-400"
+                        onClick={() => handleRedirectProductDetailsPage(data.id)}
                       >
                         Details
                       </button>

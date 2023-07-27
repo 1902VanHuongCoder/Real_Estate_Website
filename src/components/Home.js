@@ -6,21 +6,20 @@ import ShoppingCart from "./Home/ShoppingCart";
 import { db } from "../firebase_setup/firebase";
 import React, { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
-import { useLocation } from "react-router-dom";
 import Loading from "./Loading";
 import { useToast } from "rc-toastr";
 import Feeback from "./Home/Feeback";
 
 import { useContext } from "react";
 import { LoginContext } from "./Context/LoginContext";
+import { AppContext } from "./Context/AppContext";
 const Home = () => {
+  const { account, setAccount } = useContext(AppContext);
   const { isLogin, func } = useContext(LoginContext);
+
   const { toast } = useToast();
-  const { state } = useLocation();
-  console.log(state);
   const [data, setData] = useState();
   const [shoppingCartData, setShoppingCartData] = useState([]);
-  const [username, setUserName] = useState("");
   const [loading, setLoading] = useState(true);
 
   const fetchData = async () => {
@@ -54,48 +53,35 @@ const Home = () => {
     setShoppingCartData(filterdData);
   };
 
-  const handleSignOut = () => {
-    func(false);
-    localStorage.removeItem("loggedInAccount");
-    window.location.reload(true);
-  };
-  useEffect(() => {
-    if (state) {
-      func(true);
-      setUserName(state);
-    }
-  }, []);
 
   useEffect(() => {
-    const loggedInAccount = JSON.parse(localStorage.getItem("loggedInAccount"));
-    if (loggedInAccount) {
-      func(true);
-      setUserName(loggedInAccount);
+    if (!isLogin) {
+      const loggedInAccount = JSON.parse(
+        localStorage.getItem("loggedInAccount")
+      );
+      if (loggedInAccount) {
+        func(true);
+        setAccount(loggedInAccount);
+      }
     }
-  }, []);
+  }, [isLogin]);
+
   return (
     <>
       {loading ? (
         <Loading />
       ) : (
         <div className="relative max-w-[1200px] mx-auto">
-          <NavbarWithDropdown
-            username={username.username}
-            isLogged={isLogin}
-            handleSignOut={handleSignOut}
-            isAdmin={state.role}
-          />
-          <Banner data={data} username={username.username} isLogged={isLogin} />
+          <NavbarWithDropdown />
+          <Banner data={data} />
           <ShoppingCart
             products={shoppingCartData}
-            user={username.username}
             handleRemoveProductOutOfShoppingCart={
               handleRemoveProductOutOfShoppingCart
             }
-            isLogin={isLogin}
           />
           <Products data={data} handleAddProduct={handleAddProduct} />
-          <Feeback username={username.username} isLogged={isLogin} />
+          <Feeback />
           <Footer />
         </div>
       )}

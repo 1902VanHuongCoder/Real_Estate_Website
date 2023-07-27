@@ -1,18 +1,18 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaShoppingBag } from "react-icons/fa";
 import { BsFillEmojiLaughingFill } from "react-icons/bs";
 import { AiFillBell } from "react-icons/ai";
 import { useToast } from "rc-toastr";
+import { LoginContext } from "../Context/LoginContext";
 
 const ShoppingCart = ({
   products,
-  user,
   handleRemoveProductOutOfShoppingCart,
-  isLogin,
 }) => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const {isLogin} = useContext(LoginContext);
   const [showShoppingCart, setShowShoppingCart] = useState(false);
   const handleBuyProduct = (id) => {
     console.log(isLogin);
@@ -21,14 +21,15 @@ const ShoppingCart = ({
       return;
     } else {
       const product = products.filter((item) => item.id === id);
-      navigate("/order", { state: [product[0], user, isLogin] });
+      navigate("/order", { state: product[0] });
     }
   };
   return (
     <div className="bg-[#4b4949] py-6 px-4">
       <div className="flex justify-start items-center gap-2">
         {" "}
-        <FaShoppingBag className="text-[#ee4d2d]" /> <span className="text-white">|</span>
+        <FaShoppingBag className="text-[#ee4d2d]" />{" "}
+        <span className="text-white">|</span>
         <h1 className="text-white sm:block hidden"> Shopping Cart</h1>
         <button
           onClick={() => setShowShoppingCart(!showShoppingCart)}

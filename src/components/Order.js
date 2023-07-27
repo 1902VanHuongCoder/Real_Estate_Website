@@ -7,9 +7,11 @@ import NavbarWithDropdown from "./Home/Navbar";
 import { useToast } from "rc-toastr";
 import { useContext } from "react";
 import { LoginContext } from "./Context/LoginContext";
+import { AppContext } from "./Context/AppContext";
 const Order = () => {
   const navigate = useNavigate("/");
-  const { isLogin, func } = useContext(LoginContext);
+  const { account } = useContext(AppContext);
+  const { isLogin } = useContext(LoginContext);
   const { toast } = useToast();
   const { state } = useLocation();
   const [phone, setPhone] = useState("");
@@ -48,47 +50,44 @@ const Order = () => {
 
   // Calculate total money automatically ==>
   useEffect(() => {
-    setTotalAmount(state[0].productPrice * amount + transportFee);
+    setTotalAmount(state.productPrice * amount + transportFee);
   }, [amount, transportFee, state]);
   //<===
 
   // When user hit submit, will set these datas to database (firestore - firebase) ===>
   const order = async () => {
-    if (address === "" || phone === "" || colorIsChoosed.length < 0) {
-      toast("Order isn't success! Check your order");
-    } else {
-      let date = new Date();
-      await addDoc(collection(db, "orders"), {
-        phone: phone,
-        address: address,
-        productId: uuidv4(),
-        productAmount: amount,
-        totalAmount: totalAmount,
-        username: state[1],
-        imageURL: state[0].imageURL,
-        productColors: colorIsChoosed,
-        deliveryMethod: deliveryMethod,
-        productName: state[0].productName,
-        deliveryState: [
-          { state: "Wait confirming of boss", date: date.toDateString() },
-        ],
-      });
-      toast("Order success");
+    if (isLogin) {
+      if (address === "" || phone === "" || colorIsChoosed.length < 0) {
+        toast("Order isn't success! Check your order");
+      } else {
+        let date = new Date();
+        await addDoc(collection(db, "orders"), {
+          phone: phone,
+          address: address,
+          productId: uuidv4(),
+          productAmount: amount,
+          totalAmount: totalAmount,
+          username: account.username,
+          imageURL: state.imageURL,
+          productColors: colorIsChoosed,
+          deliveryMethod: deliveryMethod,
+          productName: state.productName,
+          deliveryState: [
+            { state: "Wait confirming of boss", date: date.toDateString() },
+          ],
+        });
+        toast("Order success");
+      }
+    }else{
+      toast("Log in please!");
+      return;
     }
   };
   // <===
 
   return (
     <div className="relative max-w-[1200px] mx-auto">
-      <NavbarWithDropdown
-        username={state[1]}
-        isLogged={state[2]}
-        handleSignOut={() => {
-          func(false);
-          localStorage.removeItem("loggedInAccount");
-          navigate("/");
-        }}
-      />
+      <NavbarWithDropdown />
       <div className="w-full sm:w-10/12 bg-slate-100 mx-auto rounded large">
         <h1 className="py-4 px-10 font-medium text-[#ee4d2d] text-2xl">
           Order
@@ -97,19 +96,19 @@ const Order = () => {
           <h2 className="font-medium py-5 px-5"># Product Image</h2>
           <div className="w-full flex justify-center items-center">
             <img
-              src={state[0].imageURL}
-              alt={state[0].productName}
+              src={state.imageURL}
+              alt={state.productName}
               width={200}
               height={200}
             />
           </div>
           <div className="flex justify-start items-center">
             <h2 className="font-medium py-5 px-5"># Product Name</h2>
-            <p>{state[0].productName}</p>
+            <p>{state.productName}</p>
           </div>
           <div className="flex justify-start items-center">
             <h2 className="font-medium py-5 px-5"># Product Price</h2>
-            <p>${state[0].productPrice}</p>
+            <p>${state.productPrice}</p>
           </div>
           <div className="sm:flex justify-start items-center">
             <h2 className="font-medium py-5 px-5"># Amount of products</h2>
@@ -132,7 +131,7 @@ const Order = () => {
           <div className="sm:flex justify-start items-center">
             <h2 className="font-medium py-5 px-5"># Choose Color </h2>
             <div className="w-full sm:w-fit sm:p-0 px-5 flex items-center gap-4 flex-wrap ">
-              {state[0].productColors.map((item, i) => {
+              {state.productColors.map((item, i) => {
                 return (
                   <div
                     key={i}

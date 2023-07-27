@@ -5,16 +5,16 @@ import { useToast } from "rc-toastr";
 import { useContext } from "react";
 import { LoginContext } from "./Context/LoginContext";
 const SearchResult = () => {
-
-  const { isLogin, func } = useContext(LoginContext);
+  const { isLogin } = useContext(LoginContext);
   const { toast } = useToast();
   const navigate = useNavigate();
   const { state } = useLocation();
+
   const handleBuyProduct = (id) => {
-    if (state.isLogged) {
+    if (isLogin) {
       const product = state.products.filter((item) => item.id === id);
       navigate("/order", {
-        state: [product[0], state.username, state.isLogged],
+        state: product[0],
       });
     } else {
       toast("Log in please!");
@@ -24,15 +24,7 @@ const SearchResult = () => {
 
   return (
     <div>
-      <NavbarWithDropdown
-        username={state.username}
-        isLogged={state.isLogged}
-        handleSignOut={() => {
-          func(false);
-          localStorage.removeItem("loggedInAccount");
-          navigate("/");
-        }}
-      />
+      <NavbarWithDropdown />
       <div className="container bg-slate-100 mx-auto min-h-screen mt-5 rounded-lg">
         <h2 className="font-medium py-5 px-5"># Search Result</h2>
         {state.products.length > 0 ? (
@@ -44,9 +36,9 @@ const SearchResult = () => {
                   className="w-[250px] bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 hover:shadow-xl"
                 >
                   <div className="w-full flex justify-center items-center">
-                    <div className="w-[250px] h-[200px] p-2">
+                    <div className="w-[250px] h-[250px] p-2 flex justify-center items-center">
                       <img
-                        className="w-full h-full"
+                        className="w-[60%] h-full"
                         src={item.imageURL}
                         alt={item.productName}
                       />

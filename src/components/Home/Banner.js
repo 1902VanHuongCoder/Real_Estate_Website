@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import woman from "../../assets/woman.png";
 import { BsSearch } from "react-icons/bs";
 import shoes1 from "../../assets/shoes1.png";
@@ -11,7 +11,7 @@ import shirt1 from "../../assets/shirt1.png";
 import shirt2 from "../../assets/shirt2.png";
 import shirt3 from "../../assets/shirt3.png";
 import { useNavigate } from "react-router-dom";
-const Banner = ({ data, username, isLogged }) => {
+const Banner = ({ data }) => {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const handleType = (e) => {
@@ -26,8 +26,6 @@ const Banner = ({ data, username, isLogged }) => {
       navigate("/searchresult", {
         state: {
           products: resultFiltered,
-          username: username,
-          isLogged: isLogged,
           queryContent: search,
         },
       });
@@ -38,20 +36,16 @@ const Banner = ({ data, username, isLogged }) => {
       navigate("/searchresult", {
         state: {
           products: resultFiltered,
-          username: username,
-          isLogged: isLogged,
           queryContent: search,
         },
       });
     } else if (search !== "" && search.toLowerCase() === "hat") {
       const resultFiltered = data.filter(
-        (product) => product.productType === "hat"
+        (product) => product.productType === "hats"
       );
       navigate("/searchresult", {
         state: {
           products: resultFiltered,
-          username: username,
-          isLogged: isLogged,
           queryContent: search,
         },
       });
@@ -62,8 +56,6 @@ const Banner = ({ data, username, isLogged }) => {
       navigate("/searchresult", {
         state: {
           products: resultFiltered,
-          username: username,
-          isLogged: isLogged,
           queryContent: search,
         },
       });
