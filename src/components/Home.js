@@ -16,6 +16,7 @@ import { AppContext } from "./Context/AppContext";
 import Navbar1 from "./Home/Navbar1";
 import Sidebar from "./Home/Sidebar";
 import UserBox from "./Home/UserBox";
+import Hero from "./Home/Hero";
 const Home = () => {
   const { account, setAccount } = useContext(AppContext);
   const { isLogin, func } = useContext(LoginContext);
@@ -77,6 +78,7 @@ const Home = () => {
           <Navbar1 />
           <Sidebar />
           <UserBox />
+          <Hero />
           <NavbarWithDropdown />
           <Banner data={data} />
           <ShoppingCart

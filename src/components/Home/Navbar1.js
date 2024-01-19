@@ -32,7 +32,7 @@ const saleItems = [
 const resortItems = ["Cao ốc văn phòng", "Khu đô thị mới", "Khu phức hợp"];
 
 const Navbar1 = () => {
-  const {isOpen, setIsOpen} = useContext(AppContext);
+  const {isOpen, setIsOpen, openUserBox, setOpenUserBox} = useContext(AppContext);
   return (
     <div className="sticky top-0 w-full px-5 md:px-10 py-5 flex justify-between items-center z-[11] bg-white">
       <div className="flex gap-x-2">
@@ -91,9 +91,9 @@ const Navbar1 = () => {
         <li className="flex gap-x-1 items-center">Tin tức</li>
       </ul>
       <div className="flex items-center gap-x-4 md:gap-x-7">
-        <div className="w-[50px] h-[50px] flex justify-center items-center bg-[#F0EDCF] rounded-full">
+        <button onClick={() => {setOpenUserBox(!openUserBox)}} className="w-[50px] h-[50px] flex justify-center items-center bg-[#F0EDCF] rounded-full">
           <CiUser />
-        </div>
+        </button>
         <button className="block lg:hidden" onClick={() => {setIsOpen(!isOpen)}}>
           <TiThMenu className="text-2xl"/>
         </button>
