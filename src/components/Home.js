@@ -13,6 +13,9 @@ import Feeback from "./Home/Feeback";
 import { useContext } from "react";
 import { LoginContext } from "./Context/LoginContext";
 import { AppContext } from "./Context/AppContext";
+import Navbar1 from "./Home/Navbar1";
+import Sidebar from "./Home/Sidebar";
+import UserBox from "./Home/UserBox";
 const Home = () => {
   const { account, setAccount } = useContext(AppContext);
   const { isLogin, func } = useContext(LoginContext);
@@ -53,7 +56,6 @@ const Home = () => {
     setShoppingCartData(filterdData);
   };
 
-
   useEffect(() => {
     if (!isLogin) {
       const loggedInAccount = JSON.parse(
@@ -72,6 +74,9 @@ const Home = () => {
         <Loading />
       ) : (
         <div className="relative max-w-[1200px] mx-auto">
+          <Navbar1 />
+          <Sidebar />
+          <UserBox />
           <NavbarWithDropdown />
           <Banner data={data} />
           <ShoppingCart
