@@ -13,6 +13,7 @@ const ImageContainer = () => {
   const { showImage, setShowImage } = useContext(AppContext);
   const handleChangeImage = (index) => {
     setCurrentImg(index);
+    console.log(currentImg);
   };
   
   return (
