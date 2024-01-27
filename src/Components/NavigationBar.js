@@ -28,7 +28,6 @@ const saleItems = [
   "Bán trang trại, khu nghĩ dưỡng",
 ];
 
-const resortItems = ["Cao ốc văn phòng", "Khu đô thị mới", "Khu phức hợp"];
 
 const NavigationBar = () => {
   const { isOpen, setIsOpen, openUserBox, setOpenUserBox } =
@@ -74,17 +73,6 @@ const NavigationBar = () => {
             </span>
             <ul className="absolute hidden bg-white shadow-lg top-[30px] w-[320px] p-5 z-10 border-[1px] border-solid border-slate-200 group-hover:block">
               {saleItems.map((item, index) => {
-                return <NavItems key={index} content={item} />;
-              })}
-            </ul>
-          </li>
-          <li className="relative group flex gap-x-1 items-center cursor-pointer">
-            Dự án{" "}
-            <span className="group-hover:rotate-180 transition-transform">
-              <IoIosArrowDown />
-            </span>
-            <ul className="absolute hidden bg-white shadow-lg top-[30px] w-[280px] p-5 z-10 border-[1px] border-solid border-slate-200 group-hover:block">
-              {resortItems.map((item, index) => {
                 return <NavItems key={index} content={item} />;
               })}
             </ul>
