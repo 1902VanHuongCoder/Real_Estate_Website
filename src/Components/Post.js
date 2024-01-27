@@ -91,19 +91,6 @@ const Post = () => {
                   max={300}
                 />
               </div>
-              <div className="flex flex-col gap-y-2 pb-5 ">
-                <label className="text-xl text-slate-400" htmlFor="toilets">
-                  Số toilet
-                </label>
-                <input
-                  className="text-xl pl-5 h-[50px] border-[1px] border-solid border-slate-400 rounded-none outline-none focus:border-[#0B60B0] "
-                  type="number"
-                  name="toilets"
-                  id="toilets"
-                  min={0}
-                  max={300}
-                />
-              </div>
               <div className="flex flex-col gap-y-2 pb-5">
                 <label className="text-xl text-slate-400" htmlFor="postTitle">
                   Hướng
@@ -150,6 +137,19 @@ const Post = () => {
                   max={300}
                 />
               </div>
+              <div className="flex flex-col gap-y-2 pb-5 ">
+                <label className="text-xl text-slate-400" htmlFor="toilets">
+                  Số toilet
+                </label>
+                <input
+                  className="text-xl pl-5 h-[50px] border-[1px] border-solid border-slate-400 rounded-none outline-none focus:border-[#0B60B0] "
+                  type="number"
+                  name="toilets"
+                  id="toilets"
+                  min={0}
+                  max={300}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -157,18 +157,22 @@ const Post = () => {
           <p className="pb-5 text-lg">Chọn hình ảnh</p>
           <div>
             <label className="text-xl text-slate-400">Chọn ảnh tiêu đề</label>
-            <div className="flex flex-col justify-center items-center w-3/5 h-[300px] mx-auto border-[1px] border-solid border-slate-400">
+            <div className="my-5 flex flex-col justify-center items-center w-4/5 h-[300px] mx-auto border-[1px] border-solid border-slate-400">
               <p> Kéo các ảnh vào đây</p> <input type="file" />
             </div>
           </div>
-          <div className="mt-5">
-            <label className="text-xl text-slate-400">Chọn các hình ảnh tài sản</label>
-            <div className="flex flex-col justify-center items-center w-3/5 h-[300px] mx-auto border-[1px] border-solid border-slate-400">
+          <div className="mt-10">
+            <label className="text-xl text-slate-400">
+              Chọn các hình ảnh tài sản
+            </label>
+            <div className="my-5 flex flex-col justify-center items-center w-4/5 h-[300px] mx-auto border-[1px] border-solid border-slate-400">
               <p> Kéo các ảnh vào đây</p> <input type="file" />
             </div>
           </div>
         </div>
-        <button className="self-center ml-1 text-white bg-[#0B60B0] h-[40px] px-5 w-[150px] hover:opacity-80" >Đăng bài</button>
+        <button className="self-center ml-1 text-white bg-[#0B60B0] h-[40px] px-5 w-[150px] hover:opacity-80">
+          Đăng bài
+        </button>
       </form>
     </div>
   );
