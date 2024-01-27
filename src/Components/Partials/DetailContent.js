@@ -14,7 +14,10 @@ import {
 import { GiMultiDirections } from "react-icons/gi";
 import { PiToiletFill } from "react-icons/pi";
 import { AppContext } from "../../Context/AppContext";
-import Post from "../Post";
+import Post from '../Post'
+import SignUp from "../SignUp";
+import Login from "../Login";
+import AdminDashboard from "../AdminDashboard";
 const images = [nhaRieng01, nhaRieng02, nhaRieng03, nhaRieng04];
 const DetailContent = () => {
   const [mainImage, setMainImage] = useState(nhaRieng01);
@@ -24,7 +27,7 @@ const DetailContent = () => {
   };
   return (
     <div>
-      <Post />
+      <AdminDashboard />
       <div className="flex gap-x-5 lg:flex-row flex-col">
         <div
           className="relative lg:basis-[70%] w-full h-[400px] bg-red-200 bg-cover bg-center bg-no-repeat"

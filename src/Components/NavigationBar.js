@@ -77,7 +77,6 @@ const NavigationBar = () => {
               })}
             </ul>
           </li>
-          <li className="flex gap-x-1 items-center">Tin tức</li>
         </ul>
         <div className="relative flex items-center gap-x-4 md:gap-x-7">
           <button
