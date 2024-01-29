@@ -23,7 +23,6 @@ const saleItems = [
   "Bán trang trại, khu nghĩ dưỡng",
 ];
 
-const resortItems = ["Cao ốc văn phòng", "Khu đô thị mới", "Khu phức hợp"];
 
 const Footer = () => {
   return (
@@ -54,14 +53,6 @@ const Footer = () => {
             <p className="text-xl font-medium">Thuê nhà đất</p>
             <ul className="mt-4 sm:mt-5">
               {rentItems.map((item, index) => {
-                return <li className="cursor-pointer" key={index}>{item}</li>;
-              })}
-            </ul>
-          </div>
-          <div>
-            <p className="text-xl font-medium">Căn hộ chung cư</p>
-            <ul className="mt-4 sm:mt-5">
-              {resortItems.map((item, index) => {
                 return <li className="cursor-pointer" key={index}>{item}</li>;
               })}
             </ul>

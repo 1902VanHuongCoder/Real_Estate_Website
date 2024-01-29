@@ -4,6 +4,7 @@ import { GoDotFill } from "react-icons/go";
 import { FaBook, FaUser } from "react-icons/fa";
 import { SiBookstack } from "react-icons/si";
 import nharieng01 from "../assets/images/Nha+Rieng+Image+01.jpg";
+import WaitingPosts from "./Partials/WaitingPosts";
 const AdminDashboard = () => {
   return (
     <div className="w-full h-fit">
@@ -21,11 +22,22 @@ const AdminDashboard = () => {
       {/* Navigation */}
       <div className="mt-5 w-full rounded-lg h-[60px] border-[1px] border-solid border-slate-200 overflow-hidden">
         <ul className="flex h-full">
-          <li className="px-5 bg-[#0B60B0] rounded-r-full flex justify-center items-center text-white">Danh sách bài đăng</li>
-          <li className="px-5 rounded-r-full flex justify-center items-center">Danh sách tài khoản</li>
-          <li className="px-5 rounded-r-full flex justify-center items-center">Danh sách chờ duyệt</li>
+          <li className="px-5 bg-[#0B60B0] rounded-r-full flex justify-center items-center text-white">
+            Thông tin chung
+          </li>
+          <li className="px-5 flex justify-center items-center text-black">
+            Danh sách bài đăng
+          </li>
+          <li className="px-5 rounded-r-full flex justify-center items-center">
+            Danh sách tài khoản
+          </li>
+          <li className="px-5 rounded-r-full flex justify-center items-center">
+            Danh sách chờ duyệt
+          </li>
         </ul>
       </div>
+
+      <WaitingPosts />
 
       <div className="p-5 border-[1px] border-solid border-slate-200 mt-5 rounded-t-xl">
         {/* General infomations */}
