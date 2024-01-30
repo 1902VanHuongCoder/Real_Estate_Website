@@ -21,32 +21,28 @@ const images = [
   "./images/Nha+Rieng+Image+05.jpg",
 ];
 
-const test = [1, 2, 3, 4, 5, 6];
 const DetailContent = () => {
-  const [mainImage, setMainImage] = useState("./images/Nha+Rieng+Image+02.jpg");
 
   const [currentImg, setCurrentImg] = useState(0);
 
   const { setShowImage } = useContext(AppContext);
-  const handleShowImage = (value) => {
-    setMainImage(value);
-  };
+
   return (
     <div>
+      
       <div className="flex gap-x-5 lg:flex-row flex-col">
-        <div className="relative lg:basis-[70%] w-full h-[400px]">
+        <div className="relative lg:basis-[70%] w-full h-[400px] overflow-hidden">
           <div className="w-full h-full flex">
-            {test.map((item, index) => {
+            {images.map((item, index) => {
               return (
                 <div
+                key={index}
                   className={`relative -translate-x-[${
                     currentImg * 100
-                  }%] transition-transform w-full h-full bg-green-${
-                    item * 100
-                  } shrink-0`}
-                >
-                  {/* ${currentImg * 100} */}
-                </div>
+                  }%] transition-transform duration-500 w-full h-full 
+                   shrink-0 bg-cover bg-center bg-no-repeat`}
+                  style={{ backgroundImage: `url("${item}")` }}
+                ></div>
               );
             })}
           </div>
@@ -64,62 +60,18 @@ const DetailContent = () => {
             </div>
           </div>
         </div>
-        {/* <div
-          className="relative lg:basis-[70%] w-full h-[400px] bg-red-200 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url("${mainImage}")` }}
-        >
-          <div
-            onClick={() => {
-              setShowImage(true);
-            }}
-            className="absolute bottom-5 left-5 flex justify-center items-center rounded-md hover:opacity-80 cursor-pointer w-[50px] h-[50px] bg-[rgba(0,0,0,.7)] text-white text-2xl"
-          >
-            <MdOutlineZoomOutMap />
-          </div>
-          <div className="absolute bottom-5 right-5 flex justify-center items-center rounded-md hover:opacity-80 cursor-pointer w-[50px] h-[50px] bg-[rgba(0,0,0,.7)] text-white text-xl">
-            1/{images.length}
-          </div>
-        </div> */}
         <div className="flex gap-x-3 lg:grid grid-cols-1 gap-y-5 p-2 sm:p-5 border-l-[1px] border-l-solid border-l-slate-200 basis-[25%] w-full h-[400px] overflow-x-scroll sm:overflow-x-hidden sm:overflow-y-scroll">
           {images.map((item, index) => {
             return (
               <div
                 key={index}
-                onClick={() => handleShowImage(item)}
+                onClick={() => setCurrentImg(index)}
                 className="hover:opacity-70 w-full h-[60px] sm:h-[150px] bg-red-400 bg-cover bg-center bg-no-repeat"
                 style={{ backgroundImage: `url("${item}")` }}
               ></div>
             );
           })}
         </div>
-      </div>
-
-      <div className="w-full h-[500px] bg-slate-100 flex justify-center items-center flex-col">
-        <div className="relative w-[200px] h-[200px] bg-red-400 border-[5px] border-solid border-slate-500 flex">
-          {test.map((item, index) => {
-            return (
-              <div
-                className={`relative -translate-x-[${
-                  currentImg * 100
-                }%] transition-transform w-full h-full bg-green-${
-                  item * 100
-                } shrink-0`}
-              >
-                {/* ${currentImg * 100} */}
-              </div>
-            );
-          })}
-        </div>
-        {test.map((item, index) => {
-          return (
-            <button
-              className="bg-red-400 w-[60px] h-[50px]"
-              onClick={() => setCurrentImg(index)}
-            >
-              {item}
-            </button>
-          );
-        })}
       </div>
 
       <div className="flex lg:flex-row flex-col">
