@@ -1,32 +1,23 @@
+// import hooks
 import React, { useContext, useState } from "react";
-import logo from "../assets/images/logo.png";
+
+// import icons
 import { FaArrowLeft } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
-import { motion } from "framer-motion";
-import { AppContext } from "../Context/AppContext";
-import NavItems from "./Partials/NavItems";
-const rentItems = [
-  "Thuê căn hộ chung cư",
-  "Thuê văn phòng",
-  "Thuê nhà riêng",
-  "Thuê biệt thự, liền kề",
-  "Thuê nhà mặt phố",
-  "Thuê shophouse, nhà phố thương mại",
-  "Thuê kho nhà xưởng, đất",
-  "Thuê nhà trọ phòng trọ",
-];
-const saleItems = [
-  "Bán căn hộ chung cư",
-  "Bán văn phòng",
-  "Bán nhà riêng",
-  "Bán biệt thự, liền kề",
-  "Bán nhà mặt phố",
-  "Bán shophouse, nhà phố thương mại",
-  "Bán kho nhà xưởng, đất",
-  "Bán nhà trọ phòng trọ",
-  "Bán trang trại, khu nghĩ dưỡng",
-];
 
+// import Framer Motion Library 
+import { motion } from "framer-motion";
+
+// import Context
+import { AppContext } from "../Context/AppContext";
+
+// import components
+import { NavItems } from "./Middle";
+
+// import datas
+import { rentItems, saleItems} from '../datas/navdatas';
+
+// create variants to creat animation for sidebar
 const toggleMenu = {
   open: {
     height: "fit-content",
@@ -59,20 +50,19 @@ const sideBarAnimate = {
         }
     }
 }
-const resortItems = ["Cao ốc văn phòng", "Khu đô thị mới", "Khu phức hợp"];
+
 const Sidebar = () => {
   const [toggle, setToggle] = useState({
     item1: false,
     item2: false,
-    item3: false,
   });
 
-  const {isOpen, setIsOpen} = useContext(AppContext);
+  const {sideBarOpen, setSideBarOpen} = useContext(AppContext);
 
   return (
-    <motion.div animate={isOpen ? "open" : "close"} variants={sideBarAnimate} className="w-90 md:w-2/4 fixed top-0 left-0 px-10 py-10 bg-[#40A2D8] h-screen z-[12] overflow-y-scroll">
+    <motion.div animate={sideBarOpen ? "open" : "close"} variants={sideBarAnimate} className="w-90 md:w-2/4 fixed top-[146px] left-0 px-10 py-10 bg-[#40A2D8] h-screen z-[12] overflow-y-scroll">
       <div className="flex gap-x-1 md:gap-x-4 border-b-[1px] border-b-solid border-b-white pb-5">
-        <img src={logo} alt="logo" className="mr-3 h-20" />
+        <img src="./images/logo.png" alt="logo" className="mr-3 h-20" />
         <span className="self-end whitespace-nowrap text-white text-xl md:text-2xl font-semibold dark:text-white">
           BDS Văn Hưởng
         </span>
@@ -123,32 +113,9 @@ const Sidebar = () => {
               })}
             </motion.ul>
           </li>
-          <li className="relative flex flex-col gap-x-1 items-start">
-          <span
-              onClick={() => {
-                setToggle({ ...toggle, item3: !toggle.item3 });
-              }}
-              className="flex items-center gap-x-2"
-            >
-              Dự án{" "}
-              <span>
-                <IoIosArrowDown />
-              </span>
-            </span>
-            <motion.ul
-              animate={toggle.item3 ? "open" : "close"}
-              variants={toggleMenu}
-              className="pl-3 pt-2 overflow-hidden"
-            >
-              {resortItems.map((item, index) => {
-                return <NavItems key={index} content={item} />;
-              })}
-            </motion.ul>
-          </li>
-          <li className="flex gap-x-1 items-center">Tin tức</li>
         </ul>
       </div>
-      <button onClick={() => setIsOpen(!isOpen)} className="absolute top-5 right-10 w-[50px] h-[50px] flex justify-center items-center border-[1px] border-solid border-white rounded-full hover:opacity-80">
+      <button onClick={() => setSideBarOpen(!sideBarOpen)} className="absolute top-5 right-10 w-[50px] h-[50px] flex justify-center items-center border-[1px] border-solid border-white rounded-full hover:opacity-80">
         <FaArrowLeft className="text-white" />
       </button>
     </motion.div>

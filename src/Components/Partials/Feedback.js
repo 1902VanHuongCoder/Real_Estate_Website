@@ -1,6 +1,10 @@
+// import hooks
 import React, { useState } from "react";
+// import icons
 import { LuMessageSquare } from "react-icons/lu";
 import { VscFeedback } from "react-icons/vsc";
+
+// import motion library
 import { motion } from "framer-motion";
 const Feedback = () => {
   const feedbackVariants = {

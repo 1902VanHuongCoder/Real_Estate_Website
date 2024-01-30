@@ -1,4 +1,7 @@
+// import hooks
 import React from "react";
+
+// import icons 
 import { FaArrowUp } from "react-icons/fa";
 const ToTop = () => {
   return (

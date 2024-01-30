@@ -1,10 +1,12 @@
-import Footer from "./Components/Footer";
-import Hero from "./Components/Hero";
-import MainContent from "./Components/MainContent";
-import NavigationBar from "./Components/NavigationBar"
-import Feedback from "./Components/Partials/Feedback";
-import ToTop from "./Components/Partials/ToTop";
-import Sidebar from "./Components/Sidebar";
+import {
+  NavigationBar,
+  Sidebar,
+  Hero,
+  MainContent,
+  Footer,
+  Feedback,
+  ToTop,
+} from "./Components/Middle";
 const Home = () => {
   return (
     <div className="relative max-w-[1200px] mx-auto overflow-hidden">

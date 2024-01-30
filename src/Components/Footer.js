@@ -1,5 +1,4 @@
 import React from "react";
-import logo from "../assets/images/logo.png";
 
 const rentItems = [
   "Thuê căn hộ chung cư",
@@ -29,7 +28,7 @@ const Footer = () => {
     <div className="w-full bg-[#40A2D8] h-fit mt-5 py-5 px-5 lg:px-10">
       <div className="flex flex-col gap-y-5 sm:flex-row">
         <div className="flex flex-col gap-y-5 basis-[100%] sm:basis-[30%]">
-          <img className="w-[100px] sm:w-[150px] lg:w-[200px]" src={logo} alt="logo" />
+          <img className="w-[100px] sm:w-[150px] lg:w-[200px]" src="./images/logo.png" alt="logo" />
           <div className="flex flex-col gap-y-2 text-white">
             <p className="text-2xl text-[#F0EDCF]">
               Công ty TNHH MTV Bất động sản Văn Hưởng
