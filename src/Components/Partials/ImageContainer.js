@@ -44,7 +44,7 @@ const ImageContainer = () => {
           return (
             <div
               key={index}
-              className={`relative -translate-x-[${currentImg * 100}%] transition-transform duration-500 shrink-0 w-full h-full flex justify-center items-center`}
+              className={`-translate-x-[${currentImg * 100}%] transition-transform duration-500 shrink-0 w-full h-full flex justify-center items-center`}
             >
                 <ImageZoom src={item} alt="It's up to you" zoom="200" className=""/>
             </div>

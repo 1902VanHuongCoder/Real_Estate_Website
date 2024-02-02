@@ -19,12 +19,12 @@ const Filter = () => {
           <span className="text-xl font-medium">Diện tích</span>
         </p>
         <ul className="text-lg pl-5 mt-3 flex flex-col gap-y-2">
-          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-200">
+          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-100">
             <span>
               Dưới 40 m<sup>2</sup>
             </span>
           </li>
-          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-300">
+          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-100">
             <span>
               40 m<sup>2</sup>
             </span>
@@ -33,7 +33,7 @@ const Filter = () => {
               60 m<sup>2</sup>
             </span>
           </li>
-          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-300">
+          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-100">
             <span>
               61 m<sup>2</sup>
             </span>{" "}
@@ -42,7 +42,7 @@ const Filter = () => {
               80 m<sup>2</sup>
             </span>
           </li>
-          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-300">
+          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-100">
             <span>
               81 m<sup>2</sup>
             </span>{" "}
@@ -51,7 +51,7 @@ const Filter = () => {
               100 m<sup>2</sup>
             </span>
           </li>
-          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-300">
+          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-100">
             <span>
               Trên 100 m<sup>2</sup>
             </span>
@@ -66,42 +66,42 @@ const Filter = () => {
           <span className="text-xl font-medium">Hướng nhà</span>
         </p>
         <ul className="text-lg pl-5 mt-3 flex flex-col gap-y-2">
-          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-300">
+          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-100">
             <span>
               Đông
             </span>
           </li>
-          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-300">
+          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-100">
             <span>
               Đông - Nam
             </span>
           </li>
-          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-300">
+          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-100">
             <span>
               Đông - Bắc
             </span>
           </li>
-          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-300">
+          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-100">
             <span>
               Nam
             </span>
           </li>
-          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-300">
+          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-100">
             <span>
               Tây - Nam
             </span>
           </li>
-          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-300">
+          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-100">
             <span>
               Tây
             </span>
           </li>
-          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-300">
+          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-100">
             <span>
               Tây - Bắc
             </span>
           </li>
-          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-300">
+          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-100">
             <span>
               Bắc
             </span>
@@ -116,37 +116,37 @@ const Filter = () => {
           <span className="text-xl font-medium">Số tầng</span>
         </p>
         <ul className="text-lg pl-5 mt-3 flex flex-col gap-y-2">
-          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-300">
+          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-100">
             <span>
               1 tầng
             </span>
           </li>
-          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-300">
+          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-100">
             <span>
               2 tầng
             </span>
           </li>
-          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-300">
+          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-100">
             <span>
               3 tầng
             </span>
           </li>
-          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-300">
+          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-100">
             <span>
               4 tầng
             </span>
           </li>
-          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-300">
+          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-100">
             <span>
               5 tầng
             </span>
           </li>
-          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-300">
+          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-100">
             <span>
               6 tầng
             </span>
           </li>
-          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-300">
+          <li className="cursor-pointer hover:text-xl pb-2 border-b-[1px] border-b-solid border-b-slate-100">
             <span>
               Nhiều hơn 6 tầng
             </span>

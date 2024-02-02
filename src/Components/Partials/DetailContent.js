@@ -20,26 +20,52 @@ const images = [
   "./images/Nha+Rieng+Image+04.jpg",
   "./images/Nha+Rieng+Image+05.jpg",
 ];
-
+const test = [1, 2, 3, 4, 5,6,7,8,9,10];
 const DetailContent = () => {
-
+  
   const [currentImg, setCurrentImg] = useState(0);
-
   const { setShowImage } = useContext(AppContext);
 
+  var translate = `-translate-x-[${parseInt(currentImg * 100)}%]`;
   return (
     <div>
-      
+      {/* <div className="w-full bg-amber-500 h-[400px] flex justify-center items-center flex-col ">
+        <div className="relative w-[100px] h-[100px] border-4 border-solid border-slate-800">
+          <div className={`relative ${translate} w-full h-full flex`}>
+            {test.map((item, index) => {
+              return (
+                <div
+                  key={index}
+                  className={`w-full h-full bg-purple-400 shrink-0`}
+                >
+                  {item}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        <div className="flex gap-x-1">
+          {test.map((item, index) => {
+            return (
+              <button
+                onClick={() => setTest1(index)}
+                key={index}
+                className="w-[80px] h-[60px] bg-green-400"
+              >
+                {item}
+              </button>
+            );
+          })}
+        </div>
+      </div> */}
       <div className="flex gap-x-5 lg:flex-row flex-col">
         <div className="relative lg:basis-[70%] w-full h-[400px] overflow-hidden">
           <div className="w-full h-full flex">
             {images.map((item, index) => {
               return (
                 <div
-                key={index}
-                  className={`relative -translate-x-[${
-                    currentImg * 100
-                  }%] transition-transform duration-500 w-full h-full 
+                  key={index}
+                  className={`relative ${translate} transition-transform duration-500 w-full h-full 
                    shrink-0 bg-cover bg-center bg-no-repeat`}
                   style={{ backgroundImage: `url("${item}")` }}
                 ></div>
