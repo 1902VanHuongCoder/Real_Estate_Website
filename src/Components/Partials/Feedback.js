@@ -43,8 +43,10 @@ const Feedback = () => {
           <span className="basis-[65%]">Phản hồi</span>
         </p>
         <form className="mt-5" action="/" method="POST">
-          <label className="text-base">Nhập nội dung phản hồi của bạn</label>
+          <label htmlFor="feedback" className="text-base">Nhập nội dung phản hồi của bạn</label>
           <textarea
+            id="feedback"
+            name="feedback"
             maxLength={2000}
             className="border-[1px] border-solid border-slate-300 focus:outline-none focus:border-[#0B60B0] w-full h-[200px] text-base font-normal mt-5 p-2"
           ></textarea>

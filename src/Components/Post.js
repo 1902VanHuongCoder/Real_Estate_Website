@@ -9,16 +9,62 @@ import { yupResolver } from "@hookform/resolvers/yup";
 // import icons
 import { IoIosWarning } from "react-icons/io";
 import { FaCloudUploadAlt } from "react-icons/fa";
+
 const Post = () => {
   const schema = yup.object().shape({
-    email: yup.string().email().required(),
-    password: yup.string().min(8).max(32).required(),
+    // schema to validate form datas
+    postTitle: yup
+      .string()
+      .max(100, "Tối đa 100 ký tự")
+      .min(20, "Ít nhất 20 kí tự")
+      .required("Trường này được yêu cầu"),
+    address: yup
+      .string()
+      .max(100, "Tối đa 100 ký tự")
+      .min(20, "Ít nhất 20 kí tự")
+      .required("Trường này được yêu cầu"),
+    price: yup
+      .string()
+      .max(15, "Tối đa 15 ký tự")
+      .min(3, "Ít nhất 3 kí tự")
+      .required("Trường này được yêu cầu"),
+    descriptions: yup
+      .string()
+      .max(1500, "Tối đa 1500 ký tự")
+      .min(5, "Ít nhất 5 kí tự")
+      .required("Trường này được yêu cầu"),
+
+    acreage: yup
+      .number()
+      .typeError("Trường này phải là 1 số nguyên dương")
+      .required("Trường này được yêu cầu"),
+    facade: yup
+      .number()
+      .typeError("Trường này phải là 1 số nguyên dương")
+      .required("Trường này được yêu cầu"),
+    floors: yup
+      .number()
+      .typeError("Trường này phải là 1 số nguyên dương")
+      .required("Trường này được yêu cầu"),
+    livingrooms: yup
+      .number()
+      .typeError("Trường này phải là 1 số nguyên dương")
+      .required("Trường này được yêu cầu"),
+    bedrooms: yup
+      .number()
+      .typeError("Trường này phải là 1 số nguyên dương")
+      .required("Trường này được yêu cầu"),
+    toilets: yup
+      .number()
+      .typeError("Trường này phải là 1 số nguyên dương")
+      .required("Trường này được yêu cầu"),
   });
+
+  // use useForm() hook and combine with YUP library to validate form datas
   const {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm({
     resolver: yupResolver(schema),
   });
@@ -28,13 +74,14 @@ const Post = () => {
   };
 
   return (
-    <div className="w-4/5 p-5 mx-auto">
+    <div className="w-4/5 sm:p-5 mx-auto">
       <h1 className="w-full text-center text-4xl font-md pt-10 mb-10 ">
         <span className="border-b-[5px] border-solid border-[#0B60B0] pb-2">
           ĐĂNG BÀI
         </span>
       </h1>
       <form
+        id="post_form"
         className="w-full h-fit flex flex-col gap-y-3"
         action="/"
         method="POST"
@@ -50,10 +97,11 @@ const Post = () => {
             Tiêu đề bài đăng
           </label>
           <input
-            className="text-2xl pl-5 h-[50px] border-[1px] border-solid border-slate-400 rounded-none outline-none focus:border-[#0B60B0] "
+            className={` ${errors.postTitle ? "border-red-500" : "border-slate-400"} text-xl sm:text-2xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
             type="text"
             name="postTitle"
             id="postTitle"
+            autoComplete="on"
             {...register("postTitle")}
           />
           {errors.postTitle && (
@@ -70,10 +118,11 @@ const Post = () => {
             Địa chỉ
           </label>
           <input
-            className="text-xl pl-5 h-[50px] border-[1px] border-solid border-slate-400 rounded-none outline-none focus:border-[#0B60B0] "
+            className={`${errors.address ? "border-red-500" : "border-slate-400"} text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
             type="text"
             name="address"
             id="address"
+            autoComplete="on"
             {...register("address")}
           />
           {errors.address && (
@@ -90,10 +139,11 @@ const Post = () => {
             Giá khởi điểm
           </label>
           <input
-            className="text-xl pl-5 h-[50px] border-[1px] border-solid border-slate-400 rounded-none outline-none focus:border-[#0B60B0] "
+            className={`${errors.price ? "border-red-500" : "border-slate-400"} text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
             type="text"
             name="price"
             id="price"
+            autoComplete="on"
             {...register("price")}
           />
           {errors.price && (
@@ -105,23 +155,28 @@ const Post = () => {
             </p>
           )}
         </div>
-        <div className="flex gap-x-5 pb-10 border-b-[1px] border-solid border-slate-200">
+        <div className="flex flex-col gap-y-5 sm:flex-row gap-x-5 pb-10 border-b-[1px] border-solid border-slate-200">
           <div className="text-base basis-1/2 flex flex-col gap-y-1">
-            <label className="text-slate-500">Chọn loại tài sản</label>
+            <label htmlFor="typeOfProperty" className="text-slate-500">
+              Chọn loại tài sản
+            </label>
             <select
               id="typeOfProperty"
-              className="h-[50px] border-[1px] border-solid border-slate-400 px-3 outline-none"
+              name="typeOfProperty"
+              className="h-[50px] border-[1px] border-solid px-3 outline-none"
               {...register("typeOfProperty")}
             >
-              <option value="east">Căn hộ chung cư</option>
-              <option value="southeast">Văn phòng</option>
-              <option value="northeast">Nhà riêng</option>
-              <option value="northwest">Biệt thự, liền kề</option>
-              <option value="north">Nhà mặt phố</option>
-              <option value="south">Shop house, nhà phố thương mại</option>
-              <option value="southwest">Kho, nhà xưởng</option>
-              <option value="west">Nhà phòng trọ</option>
-              <option value="west">Trang trại, khu nghĩ dưỡng</option>
+              <option value="apartment">Căn hộ chung cư</option>
+              <option value="office">Văn phòng</option>
+              <option value="private_house">Nhà riêng</option>
+              <option value="villa_and_nextto">Biệt thự, liền kề</option>
+              <option value="town_house">Nhà mặt phố</option>
+              <option value="shop_house">Shop house, nhà phố thương mại</option>
+              <option value="warehouse">Kho, nhà xưởng</option>
+              <option value="boarding_house">Nhà phòng trọ</option>
+              <option value="farm_and_resort">
+                Trang trại, khu nghĩ dưỡng
+              </option>
             </select>
           </div>
           <div className="text-base basis-1/2 flex flex-col gap-y-4">
@@ -130,19 +185,19 @@ const Post = () => {
               <label className="flex items-center gap-x-1">
                 Nhà đất cho thuê
                 <input
-                  type="radio"
-                  id="postMethod"
-                  name="postMethod"
-                  {...register("postMethod")}
+                  type="checkbox"
+                  id="post_method_reding_house"
+                  name="post_method_reding_house"
+                  {...register("post_method_reding_house")}
                 />
               </label>
               <label className="flex items-center gap-x-1">
                 Nhà đất bán
                 <input
-                  type="radio"
-                  id="postMethod1"
-                  name="postMethod"
-                  {...register("postMethod")}
+                  type="checkbox"
+                  id="post_method_selling_house"
+                  name="post_method_selling_house"
+                  {...register("post_method_selling_house")}
                 />
               </label>
             </div>
@@ -160,13 +215,14 @@ const Post = () => {
                 </label>
                 <div className="relative">
                   <input
-                    className="w-full text-xl pl-5 h-[50px] border-[1px] border-solid border-slate-400 rounded-none outline-none focus:border-[#0B60B0] "
-                    type="text"
+                    className={`${errors.acreage ? "border-red-500" : "border-slate-400"} w-full text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                    type="number"
                     name="acreage"
                     id="acreage"
+                    autoComplete="on"
                     {...register("acreage")}
                   />
-                  <span className="absolute h-[50px] w-[70px] flex justify-center items-center bg-slate-200 right-0 top-0 border-l-0 border-[1px] border-solid border-slate-400">
+                  <span className="absolute h-[50px] w-[70px] flex justify-center items-center bg-slate-200 right-0 top-0 border-l-0 border-[1px] border-solid">
                     m<sup>2</sup>
                   </span>
                 </div>
@@ -185,13 +241,14 @@ const Post = () => {
                 </label>
                 <div className="relative">
                   <input
-                    className="w-full text-xl pl-5 h-[50px] border-[1px] border-solid border-slate-400 rounded-none outline-none focus:border-[#0B60B0] "
-                    type="text"
+                    className={` ${errors.facade ? "border-red-500" : "border-slate-400"} w-full text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                    type="number"
                     name="facade"
                     id="facade"
+                    autoComplete="on"
                     {...register("facade")}
                   />
-                  <span className="absolute h-[50px] w-[70px] flex justify-center items-center bg-slate-200 right-0 top-0 border-l-0 border-[1px] border-solid border-slate-400">
+                  <span className="absolute h-[50px] w-[70px] flex justify-center items-center bg-slate-200 right-0 top-0 border-l-0 border-[1px] border-solid">
                     m<sup>2</sup>
                   </span>
                 </div>
@@ -209,12 +266,13 @@ const Post = () => {
                   Số tầng
                 </label>
                 <input
-                  className="text-xl pl-5 h-[50px] border-[1px] border-solid border-slate-400 rounded-none outline-none focus:border-[#0B60B0] "
+                  className={`${errors.floors ? "border-red-500" : "border-slate-400"} text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
                   type="number"
                   name="floors"
                   id="floors"
                   min={0}
                   max={300}
+                  autoComplete="on"
                   {...register("floors")}
                 />
                 {errors.floors && (
@@ -233,7 +291,7 @@ const Post = () => {
                 <select
                   id="direction"
                   name="direction"
-                  className="h-[50px] border-[1px] border-solid border-slate-400 px-3 outline-none"
+                  className="h-[50px] border-[1px] border-solid px-3 outline-none"
                   {...register("direction")}
                 >
                   <option value="east">Đông</option>
@@ -253,12 +311,13 @@ const Post = () => {
                   Số phòng khách
                 </label>
                 <input
-                  className="text-xl pl-5 h-[50px] border-[1px] border-solid border-slate-400 rounded-none outline-none focus:border-[#0B60B0] "
+                  className={`${errors.livingrooms ? "border-red-500" : "border-slate-400"} text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
                   type="number"
                   name="livingrooms"
                   id="livingrooms"
                   min={0}
                   max={300}
+                  autoComplete="on"
                   {...register("livingrooms")}
                 />
                 {errors.livingrooms && (
@@ -275,12 +334,13 @@ const Post = () => {
                   Số phòng ngủ
                 </label>
                 <input
-                  className="text-xl pl-5 h-[50px] border-[1px] border-solid border-slate-400 rounded-none outline-none focus:border-[#0B60B0] "
+                  className={`${errors.bedrooms ? "border-red-500" : "border-slate-400"} text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
                   type="number"
                   name="bedrooms"
                   id="bedrooms"
                   min={0}
                   max={300}
+                  autoComplete="on"
                   {...register("bedrooms")}
                 />
                 {errors.bedrooms && (
@@ -297,12 +357,13 @@ const Post = () => {
                   Số toilet
                 </label>
                 <input
-                  className="text-xl pl-5 h-[50px] border-[1px] border-solid border-slate-400 rounded-none outline-none focus:border-[#0B60B0] "
+                  className={`${errors.toilets ? "border-red-500" : "border-slate-400"} text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
                   type="number"
                   name="toilets"
                   id="toilets"
                   min={0}
                   max={300}
+                  autoComplete="on"
                   {...register("toilets")}
                 />
                 {errors.toilets && (
@@ -317,8 +378,21 @@ const Post = () => {
             </div>
           </div>
           <div className="flex flex-col gap-y-2">
-                <label className="text-slate-400">Thông tin mô tả cụ thể</label>
-                <textarea className="px-2 w-full min-h-[300px] border-[2px] border-solid border-slate-200 outline-none focus:border-[#0B60B0]"></textarea>
+            <label htmlFor="descriptions" className="text-slate-400">Thông tin mô tả cụ thể</label>
+            <textarea
+              name="descriptions"
+              id="descriptions"
+              {...register("descriptions")}
+              className={`${errors.descriptions ? "border-red-500" : "border-slate-400"} px-2 w-full min-h-[300px] border-[1px] border-solid outline-none focus:border-[#0B60B0]`}
+            ></textarea>
+            {errors.descriptions && (
+              <p className="flex items-center gap-x-1 text-red-500">
+                <span>
+                  <IoIosWarning />
+                </span>
+                <span>{errors.descriptions.message}</span>
+              </p>
+            )}
           </div>
         </div>
 
@@ -327,8 +401,8 @@ const Post = () => {
             Chọn hình ảnh
           </p>
           <div>
-            <label className="text-slate-500">Chọn ảnh cho phần tiêu đề</label>
-            <div className="my-5 flex flex-col justify-center items-center w-4/5 h-[300px] mx-auto border-[2px] border-dashed border-slate-400">
+            <label htmlFor="titleImage" className="text-slate-500">Chọn ảnh cho phần tiêu đề</label>
+            <div className="my-5 flex flex-col justify-center items-center w-full sm:w-4/5 h-[300px] mx-auto border-[2px] border-dashed border-slate-400">
               <label className="flex gap-x-1" htmlFor="titleImage">
                 <span>Kéo ảnh vào đây hoặc </span>
                 <span className="flex gap-x-1 items-center text-[#0B60B0]">
@@ -343,7 +417,7 @@ const Post = () => {
                 className="invisible"
                 name="titleImage"
                 id="titleImage"
-                {...register("typeOfProperty")}
+                {...register("titleImage")}
               />
             </div>
             {errors.titleImage && (
@@ -356,10 +430,10 @@ const Post = () => {
             )}
           </div>
           <div className="mt-10">
-            <label className="text-slate-500">
+            <label htmlFor="listOfImages" className="text-slate-500">
               Chọn các hình ảnh tài sản còn lại
             </label>
-            <div className="my-5 flex flex-col justify-center items-center w-4/5 h-[300px] mx-auto border-[2px] border-dashed border-slate-400">
+            <div className="my-5 flex flex-col justify-center items-center w-full sm:w-4/5 h-[300px] mx-auto border-[2px] border-dashed border-slate-400">
               <label className="flex gap-x-1" htmlFor="listOfImages">
                 <span>Kéo ảnh vào đây hoặc </span>
                 <span className="flex gap-x-1 items-center text-[#0B60B0]">
@@ -387,12 +461,20 @@ const Post = () => {
             )}
           </div>
         </div>
-        <button
-          type="submit"
-          className="self-end ml-1 text-white bg-[#0B60B0] h-[40px] px-5 w-[150px] hover:opacity-80 uppercase"
-        >
-          Đăng bài
-        </button>
+        <div className="flex justify-end">
+          <button
+            type="reset"
+            className="ml-1 text-white bg-red-400 h-[40px] px-5 w-[150px] hover:opacity-80 uppercase"
+          >
+            Reset
+          </button>
+          <button
+            type="submit"
+            className="ml-1 text-white bg-[#0B60B0] h-[40px] px-5 w-[150px] hover:opacity-80 uppercase"
+          >
+            Đăng bài
+          </button>
+        </div>
       </form>
     </div>
   );
