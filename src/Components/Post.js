@@ -1,16 +1,23 @@
 // import hooks
-import React from "react";
+import React, { useState } from "react";
 
 // import packages
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 // import icons
 import { IoIosWarning } from "react-icons/io";
 import { FaCloudUploadAlt } from "react-icons/fa";
 
 const Post = () => {
+  const [value, setValue] = useState(""); // value of Editor
+
+  const [titleImage, setTitleImage] = useState(null); // titleImage
+
+  const [listOfImages, setListOfImages] = useState([]); // list of images
   const schema = yup.object().shape({
     // schema to validate form datas
     postTitle: yup
@@ -28,12 +35,6 @@ const Post = () => {
       .max(15, "Tối đa 15 ký tự")
       .min(3, "Ít nhất 3 kí tự")
       .required("Trường này được yêu cầu"),
-    descriptions: yup
-      .string()
-      .max(1500, "Tối đa 1500 ký tự")
-      .min(5, "Ít nhất 5 kí tự")
-      .required("Trường này được yêu cầu"),
-
     acreage: yup
       .number()
       .typeError("Trường này phải là 1 số nguyên dương")
@@ -64,15 +65,38 @@ const Post = () => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
   });
 
   const handleToPost = (data) => {
+    if (value === "<p><br></p>") {
+      return;
+    }
+    console.log(value);
     console.log(data);
   };
 
+  const handleUploadTitleImage = (event) => {
+    const url = URL.createObjectURL(event.target.files[0]);
+    setTitleImage(url);
+    console.log(URL.createObjectURL(event.target.files[0]));
+  };
+
+  const handleUploadMultipleImages = (evnt) => {
+    const selectedFiles = Array.from(evnt.target.files);
+    setListOfImages((prevImages) => [
+      ...prevImages,
+      ...selectedFiles.map((file) => URL.createObjectURL(file)),
+    ]);
+  };
+
+  const handleRemoveImage = (url) => {
+    const urlArray = listOfImages.filter((item) => item !== url);
+    setListOfImages(urlArray);
+  };
   return (
     <div className="w-4/5 sm:p-5 mx-auto">
       <h1 className="w-full text-center text-4xl font-md pt-10 mb-10 ">
@@ -97,7 +121,9 @@ const Post = () => {
             Tiêu đề bài đăng
           </label>
           <input
-            className={` ${errors.postTitle ? "border-red-500" : "border-slate-400"} text-xl sm:text-2xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+            className={` ${
+              errors.postTitle ? "border-red-500" : "border-slate-400"
+            } text-xl sm:text-2xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
             type="text"
             name="postTitle"
             id="postTitle"
@@ -118,7 +144,9 @@ const Post = () => {
             Địa chỉ
           </label>
           <input
-            className={`${errors.address ? "border-red-500" : "border-slate-400"} text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+            className={`${
+              errors.address ? "border-red-500" : "border-slate-400"
+            } text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
             type="text"
             name="address"
             id="address"
@@ -139,7 +167,9 @@ const Post = () => {
             Giá khởi điểm
           </label>
           <input
-            className={`${errors.price ? "border-red-500" : "border-slate-400"} text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+            className={`${
+              errors.price ? "border-red-500" : "border-slate-400"
+            } text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
             type="text"
             name="price"
             id="price"
@@ -215,7 +245,9 @@ const Post = () => {
                 </label>
                 <div className="relative">
                   <input
-                    className={`${errors.acreage ? "border-red-500" : "border-slate-400"} w-full text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                    className={`${
+                      errors.acreage ? "border-red-500" : "border-slate-400"
+                    } w-full text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
                     type="number"
                     name="acreage"
                     id="acreage"
@@ -241,7 +273,9 @@ const Post = () => {
                 </label>
                 <div className="relative">
                   <input
-                    className={` ${errors.facade ? "border-red-500" : "border-slate-400"} w-full text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                    className={` ${
+                      errors.facade ? "border-red-500" : "border-slate-400"
+                    } w-full text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
                     type="number"
                     name="facade"
                     id="facade"
@@ -266,7 +300,9 @@ const Post = () => {
                   Số tầng
                 </label>
                 <input
-                  className={`${errors.floors ? "border-red-500" : "border-slate-400"} text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                  className={`${
+                    errors.floors ? "border-red-500" : "border-slate-400"
+                  } text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
                   type="number"
                   name="floors"
                   id="floors"
@@ -311,7 +347,9 @@ const Post = () => {
                   Số phòng khách
                 </label>
                 <input
-                  className={`${errors.livingrooms ? "border-red-500" : "border-slate-400"} text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                  className={`${
+                    errors.livingrooms ? "border-red-500" : "border-slate-400"
+                  } text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
                   type="number"
                   name="livingrooms"
                   id="livingrooms"
@@ -334,7 +372,9 @@ const Post = () => {
                   Số phòng ngủ
                 </label>
                 <input
-                  className={`${errors.bedrooms ? "border-red-500" : "border-slate-400"} text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                  className={`${
+                    errors.bedrooms ? "border-red-500" : "border-slate-400"
+                  } text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
                   type="number"
                   name="bedrooms"
                   id="bedrooms"
@@ -357,7 +397,9 @@ const Post = () => {
                   Số toilet
                 </label>
                 <input
-                  className={`${errors.toilets ? "border-red-500" : "border-slate-400"} text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                  className={`${
+                    errors.toilets ? "border-red-500" : "border-slate-400"
+                  } text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
                   type="number"
                   name="toilets"
                   id="toilets"
@@ -378,14 +420,16 @@ const Post = () => {
             </div>
           </div>
           <div className="flex flex-col gap-y-2">
-            <label htmlFor="descriptions" className="text-slate-400">Thông tin mô tả cụ thể</label>
-            <textarea
-              name="descriptions"
-              id="descriptions"
-              {...register("descriptions")}
-              className={`${errors.descriptions ? "border-red-500" : "border-slate-400"} px-2 w-full min-h-[300px] border-[1px] border-solid outline-none focus:border-[#0B60B0]`}
-            ></textarea>
-            {errors.descriptions && (
+            <p className="text-slate-400">Thông tin mô tả cụ thể</p>
+            <ReactQuill
+              className={`${
+                errors.descriptions ? "border-red-500" : "border-slate-400"
+              } w-full min-h-[300px] border-[1px] border-solid outline-none focus:border-[#0B60B0]`}
+              theme="snow"
+              value={value}
+              onChange={setValue}
+            />
+            {value === "<p><br></p>" && (
               <p className="flex items-center gap-x-1 text-red-500">
                 <span>
                   <IoIosWarning />
@@ -401,64 +445,93 @@ const Post = () => {
             Chọn hình ảnh
           </p>
           <div>
-            <label htmlFor="titleImage" className="text-slate-500">Chọn ảnh cho phần tiêu đề</label>
-            <div className="my-5 flex flex-col justify-center items-center w-full sm:w-4/5 h-[300px] mx-auto border-[2px] border-dashed border-slate-400">
-              <label className="flex gap-x-1" htmlFor="titleImage">
-                <span>Kéo ảnh vào đây hoặc </span>
-                <span className="flex gap-x-1 items-center text-[#0B60B0]">
-                  <span>Tải lên</span>
-                  <span className="text-xl">
-                    <FaCloudUploadAlt />
-                  </span>{" "}
-                </span>
-              </label>{" "}
-              <input
-                type="file"
-                className="invisible"
-                name="titleImage"
-                id="titleImage"
-                {...register("titleImage")}
-              />
+            <label htmlFor="titleImage" className="text-slate-500">
+              Chọn ảnh cho phần tiêu đề
+            </label>
+            <div className="relative flex p-5 my-5 justify-center items-center w-full sm:w-4/5 min-h-[300px] mx-auto border-[2px] border-dashed border-slate-400">
+              {titleImage && (
+                <img src={titleImage} alt="test" className="w-[300px] h-auto" />
+              )}
+              <div className="absolute bottom-0 right-0 px-4 py-2 bg-[rgba(0,0,0,.5)]">
+                <label className="flex gap-x-1" htmlFor="titleImage">
+                  <span className="flex gap-x-1 items-center text-white cursor-pointer hover:opacity-80">
+                    <span>Tải lên</span>
+                    <span className="text-xl">
+                      <FaCloudUploadAlt />
+                    </span>{" "}
+                  </span>
+                </label>{" "}
+                <input
+                  type="file"
+                  className="hidden"
+                  name="titleImage"
+                  id="titleImage"
+                  onChange={handleUploadTitleImage}
+                />
+              </div>
             </div>
-            {errors.titleImage && (
-              <p className="flex items-center gap-x-1 text-red-500">
-                <span>
-                  <IoIosWarning />
-                </span>
-                <span>{errors.titleImage.message}</span>
-              </p>
-            )}
+            <div className="flex justify-between">
+              <button
+                type="submit"
+                className="ml-1 text-white bg-[#0B60B0] h-[40px] px-5 hover:opacity-80 uppercase"
+              >
+                Xác nhận ảnh chủ đề
+              </button>
+              <div className="relative h-[40px] w-[300px] border-[2px] flex justify-center items-center border-slate-200 border-solid overflow-hidden"> 
+                  <div className="absolute -left-[50%]  text-white bg-green-500 w-full h-full">
+                  </div>
+                  <span>50%</span>
+              </div>
+            </div>
           </div>
           <div className="mt-10">
             <label htmlFor="listOfImages" className="text-slate-500">
               Chọn các hình ảnh tài sản còn lại
             </label>
-            <div className="my-5 flex flex-col justify-center items-center w-full sm:w-4/5 h-[300px] mx-auto border-[2px] border-dashed border-slate-400">
-              <label className="flex gap-x-1" htmlFor="listOfImages">
-                <span>Kéo ảnh vào đây hoặc </span>
-                <span className="flex gap-x-1 items-center text-[#0B60B0]">
-                  <span>Tải lên</span>
-                  <span className="text-xl">
-                    <FaCloudUploadAlt />
-                  </span>{" "}
-                </span>
-              </label>{" "}
-              <input
-                type="file"
-                className="invisible"
-                name="listOfImages"
-                id="listOfImages"
-                {...register("listOfImages")}
-              />
+            <div className="relative p-5 my-5 flex flex-col gap-y-3 justify-center items-center w-full sm:w-4/5 min-h-[300px] mx-auto border-[2px] border-dashed border-slate-400">
+              <div className="flex flex-wrap w-full justify-center gap-2">
+                {listOfImages?.map((url, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className="relative w-[200px] h-auto shrink-0 grow-0 "
+                    >
+                      <img
+                        src={url}
+                        className="w-full h-auto border-[4px] border-solid boder-slate-400"
+                        alt="test"
+                      />
+                      <button
+                        onClick={() => {
+                          handleRemoveImage(url);
+                        }}
+                        className="absolute -right-[5px] -top-[10px] w-[20px] h-[20px] bg-red-500 text-white rounded-full text-sm"
+                      >
+                        X
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="absolute bottom-0 right-0 px-4 py-2 bg-[rgba(0,0,0,.5)]">
+                <label className="flex gap-x-1" htmlFor="listOfImages">
+                  <span className="flex gap-x-1 items-center text-white">
+                    <span>Tải lên</span>
+                    <span className="text-xl">
+                      <FaCloudUploadAlt />
+                    </span>{" "}
+                  </span>
+                </label>{" "}
+                <input
+                  type="file"
+                  className="hidden"
+                  name="listOfImages"
+                  id="listOfImages"
+                  multiple
+                  onChange={handleUploadMultipleImages}
+                />
+              </div>
             </div>
-            {errors.listOfImages && (
-              <p className="flex items-center gap-x-1 text-red-500">
-                <span>
-                  <IoIosWarning />
-                </span>
-                <span>{errors.listOfImages.message}</span>
-              </p>
-            )}
           </div>
         </div>
         <div className="flex justify-end">
