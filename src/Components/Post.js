@@ -13,13 +13,13 @@ import { IoIosWarning } from "react-icons/io";
 import { FaCloudUploadAlt } from "react-icons/fa";
 
 const Post = () => {
-  const [value, setValue] = useState(""); // value of Editor
+  const [value, setValue] = useState(""); // value of Description Editor
 
-  const [titleImage, setTitleImage] = useState(null); // titleImage
+  const [titleImage, setTitleImage] = useState(null); // store url of title image
 
-  const [listOfImages, setListOfImages] = useState([]); // list of images
-  const schema = yup.object().shape({
-    // schema to validate form datas
+  const [listOfImages, setListOfImages] = useState([]);// list of images
+
+  const schema = yup.object().shape({// schema to validate form datas
     postTitle: yup
       .string()
       .max(100, "Tối đa 100 ký tự")
@@ -79,12 +79,13 @@ const Post = () => {
     console.log(data);
   };
 
+  // handle to store local path of image to render for users
   const handleUploadTitleImage = (event) => {
     const url = URL.createObjectURL(event.target.files[0]);
     setTitleImage(url);
-    console.log(URL.createObjectURL(event.target.files[0]));
   };
 
+   // handle to store multiple local path of images to render for users
   const handleUploadMultipleImages = (evnt) => {
     const selectedFiles = Array.from(evnt.target.files);
     setListOfImages((prevImages) => [
@@ -93,6 +94,7 @@ const Post = () => {
     ]);
   };
 
+  // handle to remove list of selected images
   const handleRemoveImage = (url) => {
     const urlArray = listOfImages.filter((item) => item !== url);
     setListOfImages(urlArray);
@@ -439,7 +441,6 @@ const Post = () => {
             )}
           </div>
         </div>
-
         <div className="w-full py-5">
           <p className="border-l-[5px] border-solid border-[#0B60B0] mb-5 text-xl pl-2">
             Chọn hình ảnh
@@ -470,17 +471,19 @@ const Post = () => {
                 />
               </div>
             </div>
-            <div className="flex justify-between">
+            <div className="flex flex-col gap-y-5 sm:flex-row justify-between items-center">
               <button
                 type="submit"
                 className="ml-1 text-white bg-[#0B60B0] h-[40px] px-5 hover:opacity-80 uppercase"
               >
                 Xác nhận ảnh chủ đề
               </button>
-              <div className="relative h-[40px] w-[300px] border-[2px] flex justify-center items-center border-slate-200 border-solid overflow-hidden"> 
-                  <div className="absolute -left-[50%]  text-white bg-green-500 w-full h-full">
-                  </div>
-                  <span>50%</span>
+              <div className="relative h-[30px] w-[300px] shadow-inner border-[4px] flex justify-center items-center border-slate-200 border-solid overflow-hidden">
+                <span className="absolute w-full h-full flex justify-center items-center font-bold z-10">50%</span>
+                <div
+                  className="absolute -translate-x-1/2 transition-transform border-r-[2px] border-r-slate-400 border-r-solid bg-[rgb(11,96,176)] bg-[linear-gradient(50deg,_rgba(11,96,176,1)_16%,_rgba(255,255,255,1)_16%,_rgba(255,255,255,1)_30%,_rgba(11,96,176,1)_30%,_rgba(11,96,176,1)_44%,_rgba(255,255,255,1)_44%,_rgba(255,255,255,1)_58%,_rgba(11,96,176,1)_58%,_rgba(11,96,176,1)_72%,_rgba(255,255,255,1)_72%,_rgba(255,255,255,1)_85%,_rgba(10,95,175,1)_85%,_rgba(11,96,176,1)_96%,_rgba(255,255,255,1)_96%)]
+ w-full h-full -z-1"
+                ></div>
               </div>
             </div>
           </div>
@@ -530,6 +533,22 @@ const Post = () => {
                   multiple
                   onChange={handleUploadMultipleImages}
                 />
+              </div>
+              
+            </div>
+            <div className="flex flex-col gap-y-5 sm:flex-row justify-between items-center">
+              <button
+                type="submit"
+                className="ml-1 text-white bg-[#0B60B0] h-[40px] px-5 hover:opacity-80 uppercase"
+              >
+                Xác nhận ảnh chủ đề
+              </button>
+              <div className="relative h-[30px] w-[300px] shadow-inner border-[4px] flex justify-center items-center border-slate-200 border-solid overflow-hidden">
+                <span className="absolute w-full h-full flex justify-center items-center font-bold z-10">50%</span>
+                <div
+                  className="absolute -translate-x-1/2 transition-transform border-r-[2px] border-r-slate-400 border-r-solid bg-[rgb(11,96,176)] bg-[linear-gradient(50deg,_rgba(11,96,176,1)_16%,_rgba(255,255,255,1)_16%,_rgba(255,255,255,1)_30%,_rgba(11,96,176,1)_30%,_rgba(11,96,176,1)_44%,_rgba(255,255,255,1)_44%,_rgba(255,255,255,1)_58%,_rgba(11,96,176,1)_58%,_rgba(11,96,176,1)_72%,_rgba(255,255,255,1)_72%,_rgba(255,255,255,1)_85%,_rgba(10,95,175,1)_85%,_rgba(11,96,176,1)_96%,_rgba(255,255,255,1)_96%)]
+ w-full h-full -z-1"
+                ></div>
               </div>
             </div>
           </div>

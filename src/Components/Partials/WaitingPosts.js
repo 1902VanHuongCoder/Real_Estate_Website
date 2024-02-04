@@ -1,6 +1,6 @@
 import React from 'react'
 import { GoDotFill } from 'react-icons/go'
-import nharieng01 from "../../assets/images/Nha+Rieng+Image+01.jpg";
+
 const WaitingPosts = () => {
   return (
     <div className="p-5 border-[1px] border-solid border-slate-200 mt-5 rounded-t-xl">
@@ -25,11 +25,11 @@ const WaitingPosts = () => {
         </div>
 
          {/* List posts that are waiting accepting */}
-         <div className="flex gap-x-2 mt-10">
+         <div className="flex flex-col sm:flex-row gap-2 mt-10">
             <div className="w-[360px] h-[500px] bg-white rounded-t-md hover:shadow-lg transition-shadow border-[1px] border-solid border-slate-200 overflow-hidden">
               <div
                 className="w-full h-[60%] bg-red-400 bg-cover bg-center"
-                style={{ backgroundImage: `url(${nharieng01})` }}
+                style={{ backgroundImage: `url("./images/Nha+Rieng+Image+01.jpg")` }}
               ></div>
               <div className="py-3 px-2 flex flex-col gap-y-2">
                 <p className="text-xl font-medium">
@@ -54,7 +54,7 @@ const WaitingPosts = () => {
             <div className="w-[360px] h-[500px] bg-white rounded-t-md hover:shadow-lg transition-shadow border-[1px] border-solid border-slate-200 overflow-hidden">
               <div
                 className="w-full h-[60%] bg-red-400 bg-cover bg-center"
-                style={{ backgroundImage: `url(${nharieng01})` }}
+                style={{ backgroundImage: `url("./images/Nha+Rieng+Image+01.jpg")` }}
               ></div>
               <div className="py-3 px-2 flex flex-col gap-y-2">
                 <p className="text-xl font-medium">

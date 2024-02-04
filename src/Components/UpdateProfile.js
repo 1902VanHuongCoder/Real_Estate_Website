@@ -1,79 +1,211 @@
-import React from "react";
-import nharieng01 from "../assets/images/Nha+Rieng+Image+01.jpg";
-import userAvatar from "../assets/images/user.jpg";
-import { LuPencilLine } from "react-icons/lu";
+// import hooks
+import React, { useState } from "react";
 
+// import icons
+import { LuPencilLine } from "react-icons/lu";
 import { FaCamera } from "react-icons/fa";
+import { IoIosWarning } from "react-icons/io";
+
+// import packages
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+
 const UpdateProfile = () => {
+  const [background, setBackground] = useState(null); // store background url
+
+  const [userAvatar, setUserAvatar] = useState(null); // store user avatar url
+
+  const schema = yup.object().shape({
+    // schema to validate form datas
+    username: yup
+      .string()
+      .min(2, "Tên phải dài hơn 2 kí tự")
+      .max(20, "Tên tối đa 20 kí tự")
+      .required(),
+    address: yup
+      .string()
+      .min(5, "Địa chỉ phải dài hơn 5 kí tự")
+      .max(100, "Địa chỉ phải nhỏ hơn 100 kí tự")
+      .required(),
+    phoneNumber: yup
+      .string()
+      .min(3, "Số điện phải dài hơn 2 kí tự")
+      .max(11, "Số điện thoại phải ngắn hơn 11 kí tự"),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  // handle to preview background image when user upload their image
+  const handleUploadBackground = (event) => {
+    if (event.target.files.length > 0) {
+      let url = URL.createObjectURL(event.target.files[0]);
+      setBackground(url);
+    }
+    return;
+  };
+
+  // handle to preview user avatar when user upload their avatar
+  const handleUploadUserAvatar = (event) => {
+    if (event.target.files.length > 0) {
+      let url = URL.createObjectURL(event.target.files[0]);
+      setUserAvatar(url);
+    }
+    return;
+  };
+
+  // update user's datas
+  const handleUpdateUserProfile = (data) => {
+    console.log(data);
+  };
   return (
     <div className="w-full h-fit">
-      <h1 className="w-full text-center text-2xl font-md py-10">
-        CẬP NHẬT THÔNG TIN
+      <h1 className="w-full text-center text-xl sm:text-4xl font-md pt-10 mb-10">
+        <span className="border-b-[5px] border-solid border-[#0B60B0] pb-2">
+          CẬP NHẬT THÔNG TIN
+        </span>
       </h1>
-      <div className="w-full">
+      <form
+        action="/"
+        method="POST"
+        onSubmit={handleSubmit(handleUpdateUserProfile)}
+        className="w-full"
+      >
         <div
-          className="relative w-full h-[300px]"
-          style={{ backgroundImage: `url(${nharieng01})` }}
+          className="relative w-full h-[500px] bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: `url(${
+              background ? background : "./images/Nha+Rieng+Image+01.jpg"
+            })`,
+          }}
         >
-          <button className="absolute bottom-5 right-5 text-white text-xl flex gap-x-2 items-center px-3 py-2 bg-[rgba(0,0,0,.5)] hover:opacity-80">
+          <label
+            htmlFor="background"
+            className="absolute top-5 sm:top-[87%] right-5 text-white text-xl flex gap-x-2 items-center px-3 py-2 bg-[rgba(0,0,0,.5)] hover:opacity-80"
+          >
             <span>Cập nhật ảnh nền</span>
             <span>
               <LuPencilLine />
             </span>
-          </button>
+          </label>
+          <input
+            onChange={(event) => handleUploadBackground(event)}
+            type="file"
+            className="hidden"
+            name="background"
+            id="background"
+          />
         </div>
-        <div className="relative w-full h-[400px]">
-          <div className="absolute left-10 -top-[75px] h-fit flex items-center gap-x-2">
+        <div className="relative w-full h-fit pt-14 sm:pt-10 lg:pt-0">
+          {/* user avatar  */}
+          <div className="absolute left-[50%] sm:left-10 -translate-x-[50%] sm:-translate-x-[0%] -top-[75px] h-fit flex items-center gap-x-2">
             <div
-              style={{ backgroundImage: `url(${userAvatar})` }}
-              className="bg-center bg-cover w-[150px] h-[150px] bg-red-300 rounded-full overflow-hidden flex flex-col justify-end"
+              style={{
+                backgroundImage: `url(${
+                  userAvatar ? userAvatar : "./images/user.jpg"
+                })`,
+              }}
+              className="border-[4px] border-slate-200 border-solid bg-center bg-cover w-[150px] h-[150px] bg-red-300 rounded-full overflow-hidden flex flex-col justify-end"
             >
-              <div className="w-full py-3 bg-[rgba(0,0,0,.5)] text-white hover:opacity-80 cursor-pointer">
+              <label
+                htmlFor="user_avatar"
+                className="w-full py-3 bg-[rgba(0,0,0,.5)] text-white hover:opacity-80 cursor-pointer"
+              >
                 <span className="w-full flex justify-center items-center">
                   <FaCamera />
                 </span>
-              </div>
+              </label>
+              <input
+                onChange={(event) => handleUploadUserAvatar(event)}
+                type="file"
+                className="hidden"
+                name="user_avatar"
+                id="user_avatar"
+              />
             </div>
           </div>
-          <div className="w-3/5 h-fit mx-auto p-5 pt-10 flex flex-col gap-y-4">
+
+          <div className="w-full sm:w-3/5 h-fit mx-auto p-5 pt-10 flex flex-col gap-y-4">
             <div class="flex flex-col gap-y-1">
               <label htmlFor="username">Họ và tên</label>
               <input
-                className="w-full h-[50px] outline-none border-[1px] border-solid border-slate-400 pl-3"
+                className={`${
+                  errors.username ? "border-red-500" : "border-slate-400"
+                } w-full h-[50px] outline-none border-[1px] border-solid pl-3`}
                 type="text"
                 id="username"
                 name="username"
                 placeholder="Tô Văn Hưởng"
+                {...register("username")}
               />
+              {errors.username && (
+                <p className="flex items-center gap-x-1 text-red-500">
+                  <span>
+                    <IoIosWarning />
+                  </span>
+                  <span>{errors.username.message}</span>
+                </p>
+              )}
             </div>
             <div class="flex flex-col gap-y-1">
               <label htmlFor="address">Địa chỉ</label>
               <input
-                className="w-full h-[50px] outline-none border-[1px] border-solid border-slate-400 pl-3"
+                className={`${
+                  errors.address ? "border-red-500" : "border-slate-400"
+                } w-full h-[50px] outline-none border-[1px] border-solid  pl-3`}
                 type="text"
                 id="address"
                 name="address"
                 placeholder="Phố Trần Quốc Hoàn, Phường Dịch Vọng Hậu, Cầu Giấy, Hà Nội"
+                {...register("address")}
               />
+              {errors.address && (
+                <p className="flex items-center gap-x-1 text-red-500">
+                  <span>
+                    <IoIosWarning />
+                  </span>
+                  <span>{errors.address.message}</span>
+                </p>
+              )}
             </div>
             <div class="flex flex-col gap-y-1">
               <label htmlFor="phoneNumber">Số điện thoại</label>
               <input
-                className="w-full h-[50px] outline-none border-[1px] border-solid border-slate-400 pl-3"
+                className={`${
+                  errors.phoneNumber ? "border-red-500" : "border-slate-400"
+                } w-full h-[50px] outline-none border-[1px] border-solid  pl-3`}
                 type="text"
                 id="phoneNumber"
                 name="phoneNumber"
                 placeholder="0334745377"
+                {...register("phoneNumber")}
               />
+              {errors.phoneNumber && (
+                <p className="flex items-center gap-x-1 text-red-500">
+                  <span>
+                    <IoIosWarning />
+                  </span>
+                  <span>{errors.phoneNumber.message}</span>
+                </p>
+              )}
             </div>
             <div className="mt-5 flex justify-end">
-            <button className="text-white bg-[#0B60B0] h-[40px] px-5 hover:opacity-80">
-            Cập nhật
-          </button>
+              <button
+                type="submit"
+                className="text-white bg-[#0B60B0] h-[40px] px-5 hover:opacity-80"
+              >
+                Cập nhật
+              </button>
             </div>
           </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 };

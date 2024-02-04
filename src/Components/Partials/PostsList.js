@@ -25,7 +25,7 @@ const PostsList = () => {
         </div>
 
         {/* Properties */}
-        <ul className="mt-10 flex justify-evenly items-center px-5">
+        <ul className="mt-10 flex justify-evenly items-center px-2 lg:px-5">
           <li className="basis-1/6  text-center font-medium">STT</li>
           <li className="basis-2/6  text-center font-medium">Tên bài đăng</li>
           <li className="basis-1/6  text-center font-medium">Tác giả</li>
@@ -34,7 +34,7 @@ const PostsList = () => {
         </ul>
         {/* Posts list */}
         <div className="mt-5 w-full flex flex-col gap-y-1">
-          <ul className="flex justify-evenly items-center px-5 hover:bg-slate-100 py-4 rounded-lg border-[1px] border-solid border-slate-200 shadow-sm">
+          <ul className="flex justify-evenly items-center px-2 lg:px-5 hover:bg-slate-100 py-4 rounded-lg border-[1px] border-solid border-slate-200 shadow-sm">
             <li className="basis-1/6  text-center font-medium">1</li>
             <li className="basis-2/6  text-center font-medium">
               Phân lô ngõ 31 Trần Quốc Hoàn, ô tô vào nhà...
@@ -43,7 +43,7 @@ const PostsList = () => {
             <li className="basis-1/6 text-center font-medium">01/02/2024</li>
             <li className="basis-1/6 text-center font-medium cursor-pointer text-red-500">Xóa</li>
           </ul>
-          <ul className="flex justify-evenly items-center px-5 hover:bg-slate-100 py-4 rounded-lg border-[1px] border-solid border-slate-200 shadow-sm">
+          <ul className="flex justify-evenly items-center px-2 lg:px-5 hover:bg-slate-100 py-4 rounded-lg border-[1px] border-solid border-slate-200 shadow-sm">
             <li className="basis-1/6  text-center font-medium">2</li>
             <li className="basis-2/6  text-center font-medium">
               Bán đất Sóc Trăng, đường Phú Lợi, khóm 6...
@@ -52,7 +52,7 @@ const PostsList = () => {
             <li className="basis-1/6 text-center font-medium">01/02/2024</li>
             <li className="basis-1/6 text-center font-medium cursor-pointer text-red-500">Xóa</li>
           </ul>
-          <ul className="flex justify-evenly items-center px-5 hover:bg-slate-100 py-4 rounded-lg border-[1px] border-solid border-slate-200 shadow-sm">
+          <ul className="flex justify-evenly items-center px-2 lg:px-5 hover:bg-slate-100 py-4 rounded-lg border-[1px] border-solid border-slate-200 shadow-sm">
             <li className="basis-1/6  text-center font-medium">3</li>
             <li className="basis-2/6  text-center font-medium">
               Bán đất Sóc Trăng, đường Phú Lợi, khóm 6...

@@ -1,27 +1,31 @@
+//import hooks
 import React from "react";
-import building from "../assets/images/buiding.jpg";
+
+// import icons
 import { GoDotFill } from "react-icons/go";
 import { FaBook, FaUser } from "react-icons/fa";
 import { SiBookstack } from "react-icons/si";
-import nharieng01 from "../assets/images/Nha+Rieng+Image+01.jpg";
+
 import WaitingPosts from "./Partials/WaitingPosts";
+import AccountList from "./Partials/AccountList";
+import PostsList from "./Partials/PostsList";
 const AdminDashboard = () => {
   return (
     <div className="w-full h-fit">
       <div
         className="relative text-white w-full h-[400px] bg-green-300 bg-cover rounded-b-xl overflow-hidden"
-        style={{ backgroundImage: `url(${building})` }}
+        style={{ backgroundImage: `url("./images/buiding.jpg")` }}
       >
         <div className="top-0 left-0 absolute w-full h-full flex justify-center items-center flex-col gap-y-4 bg-[rgba(0,0,0,.2)]">
           <p className="text-xl">Công ty Bất Động Sản</p>
-          <h1 className="text-8xl">Văn Hưởng</h1>
+          <h1 className="text-8xl text-center">Văn Hưởng</h1>
           <p className="text-lg italic">Uy tín - Tận tâm - Hiệu quả</p>
         </div>
       </div>
 
       {/* Navigation */}
-      <div className="mt-5 w-full rounded-lg h-[60px] border-[1px] border-solid border-slate-200 overflow-hidden">
-        <ul className="flex h-full">
+      <div className="mt-5 w-full overflow-x-scroll sm:overflow-hidden rounded-lg h-[60px] border-[1px] border-solid border-slate-200">
+        <ul className="flex w-[800px] h-full"> 
           <li className="px-5 bg-[#0B60B0] rounded-r-full flex justify-center items-center text-white">
             Thông tin chung
           </li>
@@ -31,13 +35,17 @@ const AdminDashboard = () => {
           <li className="px-5 rounded-r-full flex justify-center items-center">
             Danh sách tài khoản
           </li>
-          <li className="px-5 rounded-r-full flex justify-center items-center">
+          <li className="px-5  rounded-r-full flex justify-center items-center">
             Danh sách chờ duyệt
           </li>
         </ul>
       </div>
 
       <WaitingPosts />
+
+      <AccountList />
+
+      <PostsList />
 
       <div className="p-5 border-[1px] border-solid border-slate-200 mt-5 rounded-t-xl">
         {/* General infomations */}
@@ -96,7 +104,9 @@ const AdminDashboard = () => {
             <div className="w-[360px] h-[500px] bg-white rounded-t-md hover:shadow-lg transition-shadow border-[1px] border-solid border-slate-200 overflow-hidden">
               <div
                 className="w-full h-[60%] bg-red-400 bg-cover bg-center"
-                style={{ backgroundImage: `url(${nharieng01})` }}
+                style={{
+                  backgroundImage: `url("images/Nha+Rieng+Image+01.jpg")`,
+                }}
               ></div>
               <div className="py-3 px-2 flex flex-col gap-y-2">
                 <p className="text-xl font-medium">
@@ -121,7 +131,9 @@ const AdminDashboard = () => {
             <div className="w-[360px] h-[500px] bg-white rounded-t-md hover:shadow-lg transition-shadow border-[1px] border-solid border-slate-200 overflow-hidden">
               <div
                 className="w-full h-[60%] bg-red-400 bg-cover bg-center"
-                style={{ backgroundImage: `url(${nharieng01})` }}
+                style={{
+                  backgroundImage: `url("images/Nha+Rieng+Image+01.jpg")`,
+                }}
               ></div>
               <div className="py-3 px-2 flex flex-col gap-y-2">
                 <p className="text-xl font-medium">

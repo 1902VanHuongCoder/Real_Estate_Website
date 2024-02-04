@@ -1,4 +1,7 @@
-import React from 'react'
+// import hooks
+import React from 'react';
+
+//import icons
 import { GoDotFill } from 'react-icons/go'
 
 const AccountList = () => {
@@ -24,8 +27,9 @@ const AccountList = () => {
           </button>
         </div>
 
+        <div className='w-[350px] overflow-x-scroll sm:overflow-auto sm:w-full'>
         {/* Properties */}
-        <ul className="mt-10 flex justify-evenly items-center px-5">
+        <ul className="min-w-[760px] mt-10 flex justify-evenly items-center px-2 lg:px-5">
           <li className="basis-1/6  text-center font-medium">STT</li>
           <li className="basis-1/6  text-center font-medium">Tên người dùng</li>
           <li className="basis-1/6  text-center font-medium">Số điện thoại</li>
@@ -33,8 +37,8 @@ const AccountList = () => {
           <li className="basis-1/6 text-center font-medium">Thao tác</li>
         </ul>
         {/* Posts list */}
-        <div className="mt-5 w-full flex flex-col gap-y-1">
-          <ul className="flex justify-evenly items-center px-5 hover:bg-slate-100 py-4 rounded-lg border-[1px] border-solid border-slate-200 shadow-sm">
+        <div className="min-w-[760px] mt-5 w-full flex flex-col gap-y-1">
+          <ul className="flex justify-evenly items-center px-2 lg:px-5 hover:bg-slate-100 py-4 rounded-lg border-[1px] border-solid border-slate-200 shadow-sm">
             <li className="basis-1/6  text-center font-medium">1</li>
             <li className="basis-1/6  text-center font-medium">
               tovanhuong007
@@ -45,7 +49,7 @@ const AccountList = () => {
             </li>
             <li className="basis-1/6 text-center font-medium cursor-pointer text-red-500">Xóa</li>
           </ul>
-          <ul className="flex justify-evenly items-center px-5 hover:bg-slate-100 py-4 rounded-lg border-[1px] border-solid border-slate-200 shadow-sm">
+          <ul className="flex justify-evenly items-center px-2 lg:px-5 hover:bg-slate-100 py-4 rounded-lg border-[1px] border-solid border-slate-200 shadow-sm">
             <li className="basis-1/6  text-center font-medium">2</li>
             <li className="basis-1/6  text-center font-medium">
               nguyenvantam23
@@ -54,7 +58,7 @@ const AccountList = () => {
             <li className="basis-2/6 text-center font-medium">ấp Tân Hưng, huyện Phụng Hiệp, tỉnh Hậu Giang</li>
             <li className="basis-1/6 text-center font-medium cursor-pointer text-red-500">Xóa</li>
           </ul>
-          <ul className="flex justify-evenly items-center px-5 hover:bg-slate-100 py-4 rounded-lg border-[1px] border-solid border-slate-200 shadow-sm">
+          <ul className="flex justify-evenly items-center px-2 lg:px-5 hover:bg-slate-100 py-4 rounded-lg border-[1px] border-solid border-slate-200 shadow-sm">
             <li className="basis-1/6  text-center font-medium">3</li>
             <li className="basis-1/6  text-center font-medium">
               nhamvantan009
@@ -64,6 +68,8 @@ const AccountList = () => {
             <li className="basis-1/6 text-center font-medium cursor-pointer text-red-500">Xóa</li>
           </ul>
         </div>
+        </div>
+
 
          {/*Pagenation*/}
         <div className="w-full flex justify-center gap-x-1 mt-10">

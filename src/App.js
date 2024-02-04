@@ -4,6 +4,8 @@ import Home from "./Home";
 import Details from "./Details";
 import { Feedback, ToTop, NavigationBar, Footer, Sidebar, Post } from "./Components/Middle";
 import Test from "./Test";
+import UpdateProfile from "./Components/UpdateProfile";
+import AdminDashboard from "./Components/AdminDashboard";
 
 function App() {
   return (
@@ -14,6 +16,8 @@ function App() {
           <Route path="/" element={<Home />}></Route>
           <Route path="/details/*" element={<Details />}></Route>
           <Route path="/post/*" element={<Post />}></Route>
+          <Route path="/updateprofile" element={<UpdateProfile />}></Route>
+          <Route path="/admin" element={<AdminDashboard />}></Route>
           <Route path="/test" element={<Test />}></Route>
         </Routes>
       </BrowserRouter>
