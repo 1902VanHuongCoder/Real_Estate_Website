@@ -6,6 +6,9 @@ import { Feedback, ToTop, NavigationBar, Footer, Sidebar, Post } from "./Compone
 import Test from "./Test";
 import UpdateProfile from "./Components/UpdateProfile";
 import AdminDashboard from "./Components/AdminDashboard";
+import Login from "./Components/Login";
+import SignUp from "./Components/SignUp";
+import OptionResults from "./Components/OptionResults";
 
 function App() {
   return (
@@ -19,6 +22,9 @@ function App() {
           <Route path="/updateprofile" element={<UpdateProfile />}></Route>
           <Route path="/admin" element={<AdminDashboard />}></Route>
           <Route path="/test" element={<Test />}></Route>
+          <Route path="/login" element={<Login />}></Route>
+          <Route path="/signup" element={<SignUp />}></Route>
+          <Route path="/optionResult" element={<OptionResults />}></Route>
         </Routes>
       </BrowserRouter>
       <Feedback />

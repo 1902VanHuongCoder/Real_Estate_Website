@@ -60,7 +60,7 @@ const Sidebar = () => {
   const {sideBarOpen, setSideBarOpen} = useContext(AppContext);
 
   return (
-    <motion.div animate={sideBarOpen ? "open" : "close"} variants={sideBarAnimate} className="w-90 md:w-2/4 fixed top-[146px] left-0 px-10 py-10 bg-[#40A2D8] h-screen z-[12] overflow-y-scroll">
+    <motion.div animate={sideBarOpen ? "open" : "close"} variants={sideBarAnimate} className="w-90 md:w-2/4 fixed top-0 left-0 px-10 py-10 bg-[#40A2D8] h-screen z-50 overflow-y-scroll">
       <div className="flex gap-x-1 md:gap-x-4 border-b-[1px] border-b-solid border-b-white pb-5">
         <img src="./images/logo.png" alt="logo" className="mr-3 h-20" />
         <span className="self-end whitespace-nowrap text-white text-xl md:text-2xl font-semibold dark:text-white">

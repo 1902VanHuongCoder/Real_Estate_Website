@@ -56,7 +56,7 @@ const AdminDashboard = () => {
             </span>
             <span>Thông tin chung</span>
           </div>
-          <div className="flex gap-x-2 mt-5">
+          <div className="flex gap-2 mt-5 flex-wrap">
             <div className="w-[300px] bg-white border-[1px] border-solid border-slate-200 p-4 rounded-e-md flex gap-x-5 items-center rounded-lg">
               <span className="text-white w-[50px] h-[50px] rounded-full flex justify-center items-center bg-[#40A2D8]">
                 <FaBook />
@@ -87,86 +87,6 @@ const AdminDashboard = () => {
             <div>
               <span></span>
             </div>
-          </div>
-        </div>
-
-        {/* List posts that are waiting accepting -- CONTAINER */}
-        <div className="mt-10">
-          <div className="flex items-center gap-x-2 text-xl">
-            <span>
-              <GoDotFill />
-            </span>
-            <span>Danh sách bài đăng đang chờ duyệt</span>
-          </div>
-
-          {/* List posts that are waiting accepting */}
-          <div className="flex gap-x-2 mt-5">
-            <div className="w-[360px] h-[500px] bg-white rounded-t-md hover:shadow-lg transition-shadow border-[1px] border-solid border-slate-200 overflow-hidden">
-              <div
-                className="w-full h-[60%] bg-red-400 bg-cover bg-center"
-                style={{
-                  backgroundImage: `url("images/Nha+Rieng+Image+01.jpg")`,
-                }}
-              ></div>
-              <div className="py-3 px-2 flex flex-col gap-y-2">
-                <p className="text-xl font-medium">
-                  Phân lô ngõ 31 Trần Quốc Hoàn, ô tô vào nhà, 55m2, 5 tầng,
-                  10.2 tỷ
-                </p>
-                <div className="text-lg flex gap-x-1">
-                  <span className="text-slate-500">Ngày đăng:</span>
-                  <span>01/01/2023</span>
-                </div>
-                <div className="flex gap-x-2 mt-5 justify-end">
-                  <button className="hover:opacity-80 px-5 py-3 border-[2px] border-solid border-[#0B60B0] font-medium">
-                    Duyệt
-                  </button>
-                  <button className="hover:opacity-80 px-5 py-3 font-medium bg-red-500 text-white">
-                    Không duyệt
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div className="w-[360px] h-[500px] bg-white rounded-t-md hover:shadow-lg transition-shadow border-[1px] border-solid border-slate-200 overflow-hidden">
-              <div
-                className="w-full h-[60%] bg-red-400 bg-cover bg-center"
-                style={{
-                  backgroundImage: `url("images/Nha+Rieng+Image+01.jpg")`,
-                }}
-              ></div>
-              <div className="py-3 px-2 flex flex-col gap-y-2">
-                <p className="text-xl font-medium">
-                  Phân lô ngõ 31 Trần Quốc Hoàn, ô tô vào nhà, 55m2, 5 tầng,
-                  10.2 tỷ
-                </p>
-                <div className="text-lg flex gap-x-1">
-                  <span className="text-slate-500">Ngày đăng:</span>
-                  <span>01/01/2023</span>
-                </div>
-                <div className="flex gap-x-2 mt-5 justify-end">
-                  <button className="hover:opacity-80 px-5 py-3 border-[2px] border-solid border-[#0B60B0] font-medium">
-                    Duyệt
-                  </button>
-                  <button className="hover:opacity-80 px-5 py-3 font-medium bg-red-500 text-white">
-                    Không duyệt
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Navigate lists*/}
-          <div className="w-full flex justify-center gap-x-1 mt-10">
-            <button className="w-[50px] h-[50px] border-[1px] border-solid border-slate-300 bg-[#40A2D8] text-white">
-              1
-            </button>
-            <button className="w-[50px] h-[50px] border-[1px] border-solid border-slate-300">
-              2
-            </button>
-            <button className="w-[50px] h-[50px] border-[1px] border-solid border-slate-300">
-              3
-            </button>
           </div>
         </div>
       </div>

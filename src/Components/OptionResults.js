@@ -1,4 +1,7 @@
+// import hooks
 import React from "react";
+
+// import icons
 import {
   FaBuilding,
   FaLocationDot,
@@ -9,24 +12,22 @@ import {
 import { GiMultiDirections } from "react-icons/gi";
 import { MdBedroomParent } from "react-icons/md";
 import { PiToiletFill } from "react-icons/pi";
-import Home2 from "../assets/images/Home+Image+2.jpg";
-import label from "../assets/images/label.png";
-import user from "../assets/images/user.jpg";
+
 const OptionResults = () => {
   return (
     <div className="w-full h-fit p-5">
       <h1 className="pl-4 text-xl font-medium uppercase border-l-[5px] border-l-solid border-l-[#0B60B0]">
         Thuê căn hộ chung cư
       </h1>
-      <div className="w-full mt-5 grid grid-cols-2 gap-5">
+      <div className="w-full mt-5 grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div className="w-full mt-5 border-[1px] border-solid border-slate-200 h-fit">
           <div
             className="relative w-full h-[350px] bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url("${Home2}")` }}
+            style={{ backgroundImage: `url("./images/Home+Image+2.jpg")` }}
           >
             <div
               className="absolute top-5 -left-1 w-fit h-[50px] bg-cover bg-right bg-no-repeat text-white text-lg flex pl-4 pr-6 items-center"
-              style={{ backgroundImage: `url("${label}")` }}
+              style={{ backgroundImage: `url("./images/label.png")` }}
             >
               10,9 tỷ
             </div>
@@ -41,7 +42,7 @@ const OptionResults = () => {
                 <p className="text-xl hidden lg:block">Nguyễn Văn Tám</p>
                 <div
                   className="lg:absolute lg:-top-1 lg:-right-3 border-[2px] border-solid border-white w-[60px] h-[60px] bg-cover bg-center bg-no-repeat rounded-full"
-                  style={{ backgroundImage: `url("${user}")` }}
+                  style={{ backgroundImage: `url("./images/user.jpg")` }}
                 ></div>
               </div>
             </div>
@@ -125,11 +126,11 @@ const OptionResults = () => {
         <div className="w-full mt-5 border-[1px] border-solid border-slate-200 h-fit">
           <div
             className="relative w-full h-[350px] bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url("${Home2}")` }}
+            style={{ backgroundImage: `url("./images/Home+Image+2.jpg")` }}
           >
             <div
               className="absolute top-5 -left-1 w-fit h-[50px] bg-cover bg-right bg-no-repeat text-white text-lg flex pl-4 pr-6 items-center"
-              style={{ backgroundImage: `url("${label}")` }}
+              style={{ backgroundImage: `url("./images/label.png")` }}
             >
               10,9 tỷ
             </div>
@@ -144,7 +145,7 @@ const OptionResults = () => {
                 <p className="text-xl hidden lg:block">Nguyễn Văn Tám</p>
                 <div
                   className="lg:absolute lg:-top-1 lg:-right-3 border-[2px] border-solid border-white w-[60px] h-[60px] bg-cover bg-center bg-no-repeat rounded-full"
-                  style={{ backgroundImage: `url("${user}")` }}
+                  style={{ backgroundImage: `url("./images/user.jpg")` }}
                 ></div>
               </div>
             </div>
@@ -228,11 +229,11 @@ const OptionResults = () => {
         <div className="w-full mt-5 border-[1px] border-solid border-slate-200 h-fit">
           <div
             className="relative w-full h-[350px] bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url("${Home2}")` }}
+            style={{ backgroundImage: `url("./images/Home+Image+2.jpg")` }}
           >
             <div
               className="absolute top-5 -left-1 w-fit h-[50px] bg-cover bg-right bg-no-repeat text-white text-lg flex pl-4 pr-6 items-center"
-              style={{ backgroundImage: `url("${label}")` }}
+              style={{ backgroundImage: `url("./images/label.png")` }}
             >
               10,9 tỷ
             </div>
@@ -247,7 +248,7 @@ const OptionResults = () => {
                 <p className="text-xl hidden lg:block">Nguyễn Văn Tám</p>
                 <div
                   className="lg:absolute lg:-top-1 lg:-right-3 border-[2px] border-solid border-white w-[60px] h-[60px] bg-cover bg-center bg-no-repeat rounded-full"
-                  style={{ backgroundImage: `url("${user}")` }}
+                  style={{ backgroundImage: `url("./images/user.jpg")` }}
                 ></div>
               </div>
             </div>

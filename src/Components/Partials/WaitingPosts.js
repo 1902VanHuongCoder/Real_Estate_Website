@@ -15,7 +15,7 @@ const WaitingPosts = () => {
         {/* Search Input */}
         <div className="w-full flex justify-end items-center gap-x-1 border-b-[1px] border-b-solid border-b-slate-200 pb-10">
           <input
-            className="pl-2 w-[250px] h-[40px] border-solid border-[2px] border-slate-400 outline-none focus:border-[#0B60B0]"
+            className="pl-2 w-[200px] sm:w-[250px] h-[40px] border-solid border-[2px] border-slate-400 outline-none focus:border-[#0B60B0]"
             type="text"
             placeholder="Tên bài đăng"
           />
@@ -26,7 +26,7 @@ const WaitingPosts = () => {
 
          {/* List posts that are waiting accepting */}
          <div className="flex flex-col sm:flex-row gap-2 mt-10">
-            <div className="w-[360px] h-[500px] bg-white rounded-t-md hover:shadow-lg transition-shadow border-[1px] border-solid border-slate-200 overflow-hidden">
+            <div className="w-[320px] sm:w-[360px] h-[550px] sm:h-[500px] bg-white rounded-t-md hover:shadow-lg transition-shadow border-[1px] border-solid border-slate-200 overflow-hidden">
               <div
                 className="w-full h-[60%] bg-red-400 bg-cover bg-center"
                 style={{ backgroundImage: `url("./images/Nha+Rieng+Image+01.jpg")` }}
@@ -51,7 +51,7 @@ const WaitingPosts = () => {
               </div>
             </div>
 
-            <div className="w-[360px] h-[500px] bg-white rounded-t-md hover:shadow-lg transition-shadow border-[1px] border-solid border-slate-200 overflow-hidden">
+            <div className="w-[320px] sm:w-[360px] h-[550px] sm:h-[500px] bg-white rounded-t-md hover:shadow-lg transition-shadow border-[1px] border-solid border-slate-200 overflow-hidden">
               <div
                 className="w-full h-[60%] bg-red-400 bg-cover bg-center"
                 style={{ backgroundImage: `url("./images/Nha+Rieng+Image+01.jpg")` }}

@@ -18,9 +18,9 @@ const AccountList = () => {
         {/* Search Input */}
         <div className="w-full flex justify-end items-center gap-x-1 border-b-[1px] border-b-solid border-b-slate-200 pb-10">
           <input
-            className="pl-2 w-[250px] h-[40px] border-solid border-[2px] border-slate-400 outline-none focus:border-[#0B60B0]"
+            className="pl-2 w-[200px] sm:w-[250px] h-[40px] border-solid border-[2px] border-slate-400 outline-none focus:border-[#0B60B0]"
             type="text"
-            placeholder="Tên người dùng"
+            placeholder="Tên bài đăng"
           />
           <button className="text-white h-[40px] px-3 bg-[#0B60B0]">
             Tìm kiếm
