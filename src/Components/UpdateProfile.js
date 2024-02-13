@@ -10,6 +10,7 @@ import { IoIosWarning } from "react-icons/io";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import Transitions from "../Transition";
 
 const UpdateProfile = () => {
   const [background, setBackground] = useState(null); // store background url
@@ -65,148 +66,150 @@ const UpdateProfile = () => {
     console.log(data);
   };
   return (
-    <div className="w-full h-fit">
-      <h1 className="w-full text-center text-xl sm:text-4xl font-md pt-10 mb-10">
-        <span className="border-b-[5px] border-solid border-[#0B60B0] pb-2">
-          CẬP NHẬT THÔNG TIN
-        </span>
-      </h1>
-      <form
-        action="/"
-        method="POST"
-        onSubmit={handleSubmit(handleUpdateUserProfile)}
-        className="w-full"
-      >
-        <div
-          className="relative w-full h-[500px] bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url(${
-              background ? background : "./images/Nha+Rieng+Image+01.jpg"
-            })`,
-          }}
+    <Transitions>
+      <div className="w-full h-fit">
+        <h1 className="w-full text-center text-xl sm:text-4xl font-md pt-10 mb-10">
+          <span className="border-b-[5px] border-solid border-[#0B60B0] pb-2">
+            CẬP NHẬT THÔNG TIN
+          </span>
+        </h1>
+        <form
+          action="/"
+          method="POST"
+          onSubmit={handleSubmit(handleUpdateUserProfile)}
+          className="w-full"
         >
-          <label
-            htmlFor="background"
-            className="absolute top-5 sm:top-[87%] right-5 text-white text-xl flex gap-x-2 items-center px-3 py-2 bg-[rgba(0,0,0,.5)] hover:opacity-80"
+          <div
+            className="relative w-full h-[500px] bg-cover bg-center bg-no-repeat"
+            style={{
+              backgroundImage: `url(${
+                background ? background : "./images/Nha+Rieng+Image+01.jpg"
+              })`,
+            }}
           >
-            <span>Cập nhật ảnh nền</span>
-            <span>
-              <LuPencilLine />
-            </span>
-          </label>
-          <input
-            onChange={(event) => handleUploadBackground(event)}
-            type="file"
-            className="hidden"
-            name="background"
-            id="background"
-          />
-        </div>
-        <div className="relative w-full h-fit pt-14 sm:pt-10 lg:pt-0">
-          {/* user avatar  */}
-          <div className="absolute left-[50%] sm:left-10 -translate-x-[50%] sm:-translate-x-[0%] -top-[75px] h-fit flex items-center gap-x-2">
-            <div
-              style={{
-                backgroundImage: `url(${
-                  userAvatar ? userAvatar : "./images/user.jpg"
-                })`,
-              }}
-              className="border-[4px] border-slate-200 border-solid bg-center bg-cover w-[150px] h-[150px] bg-red-300 rounded-full overflow-hidden flex flex-col justify-end"
+            <label
+              htmlFor="background"
+              className="absolute top-5 sm:top-[87%] right-5 text-white text-xl flex gap-x-2 items-center px-3 py-2 bg-[rgba(0,0,0,.5)] hover:opacity-80"
             >
-              <label
-                htmlFor="user_avatar"
-                className="w-full py-3 bg-[rgba(0,0,0,.5)] text-white hover:opacity-80 cursor-pointer"
-              >
-                <span className="w-full flex justify-center items-center">
-                  <FaCamera />
-                </span>
-              </label>
-              <input
-                onChange={(event) => handleUploadUserAvatar(event)}
-                type="file"
-                className="hidden"
-                name="user_avatar"
-                id="user_avatar"
-              />
-            </div>
+              <span>Cập nhật ảnh nền</span>
+              <span>
+                <LuPencilLine />
+              </span>
+            </label>
+            <input
+              onChange={(event) => handleUploadBackground(event)}
+              type="file"
+              className="hidden"
+              name="background"
+              id="background"
+            />
           </div>
+          <div className="relative w-full h-fit pt-14 sm:pt-10 lg:pt-0">
+            {/* user avatar  */}
+            <div className="absolute left-[50%] sm:left-10 -translate-x-[50%] sm:-translate-x-[0%] -top-[75px] h-fit flex items-center gap-x-2">
+              <div
+                style={{
+                  backgroundImage: `url(${
+                    userAvatar ? userAvatar : "./images/user.jpg"
+                  })`,
+                }}
+                className="border-[4px] border-slate-200 border-solid bg-center bg-cover w-[150px] h-[150px] bg-red-300 rounded-full overflow-hidden flex flex-col justify-end"
+              >
+                <label
+                  htmlFor="user_avatar"
+                  className="w-full py-3 bg-[rgba(0,0,0,.5)] text-white hover:opacity-80 cursor-pointer"
+                >
+                  <span className="w-full flex justify-center items-center">
+                    <FaCamera />
+                  </span>
+                </label>
+                <input
+                  onChange={(event) => handleUploadUserAvatar(event)}
+                  type="file"
+                  className="hidden"
+                  name="user_avatar"
+                  id="user_avatar"
+                />
+              </div>
+            </div>
 
-          <div className="w-full sm:w-3/5 h-fit mx-auto p-5 pt-10 flex flex-col gap-y-4">
-            <div class="flex flex-col gap-y-1">
-              <label htmlFor="username">Họ và tên</label>
-              <input
-                className={`${
-                  errors.username ? "border-red-500" : "border-slate-400"
-                } w-full h-[50px] outline-none border-[1px] border-solid pl-3`}
-                type="text"
-                id="username"
-                name="username"
-                placeholder="Tô Văn Hưởng"
-                {...register("username")}
-              />
-              {errors.username && (
-                <p className="flex items-center gap-x-1 text-red-500">
-                  <span>
-                    <IoIosWarning />
-                  </span>
-                  <span>{errors.username.message}</span>
-                </p>
-              )}
-            </div>
-            <div class="flex flex-col gap-y-1">
-              <label htmlFor="address">Địa chỉ</label>
-              <input
-                className={`${
-                  errors.address ? "border-red-500" : "border-slate-400"
-                } w-full h-[50px] outline-none border-[1px] border-solid  pl-3`}
-                type="text"
-                id="address"
-                name="address"
-                placeholder="Phố Trần Quốc Hoàn, Phường Dịch Vọng Hậu, Cầu Giấy, Hà Nội"
-                {...register("address")}
-              />
-              {errors.address && (
-                <p className="flex items-center gap-x-1 text-red-500">
-                  <span>
-                    <IoIosWarning />
-                  </span>
-                  <span>{errors.address.message}</span>
-                </p>
-              )}
-            </div>
-            <div class="flex flex-col gap-y-1">
-              <label htmlFor="phoneNumber">Số điện thoại</label>
-              <input
-                className={`${
-                  errors.phoneNumber ? "border-red-500" : "border-slate-400"
-                } w-full h-[50px] outline-none border-[1px] border-solid  pl-3`}
-                type="text"
-                id="phoneNumber"
-                name="phoneNumber"
-                placeholder="0334745377"
-                {...register("phoneNumber")}
-              />
-              {errors.phoneNumber && (
-                <p className="flex items-center gap-x-1 text-red-500">
-                  <span>
-                    <IoIosWarning />
-                  </span>
-                  <span>{errors.phoneNumber.message}</span>
-                </p>
-              )}
-            </div>
-            <div className="mt-5 flex justify-end">
-              <button
-                type="submit"
-                className="text-white bg-[#0B60B0] h-[40px] px-5 hover:opacity-80"
-              >
-                Cập nhật
-              </button>
+            <div className="w-full sm:w-3/5 h-fit mx-auto p-5 pt-10 flex flex-col gap-y-4">
+              <div class="flex flex-col gap-y-1">
+                <label htmlFor="username">Họ và tên</label>
+                <input
+                  className={`${
+                    errors.username ? "border-red-500" : "border-slate-400"
+                  } w-full h-[50px] outline-none border-[1px] border-solid pl-3`}
+                  type="text"
+                  id="username"
+                  name="username"
+                  placeholder="Tô Văn Hưởng"
+                  {...register("username")}
+                />
+                {errors.username && (
+                  <p className="flex items-center gap-x-1 text-red-500">
+                    <span>
+                      <IoIosWarning />
+                    </span>
+                    <span>{errors.username.message}</span>
+                  </p>
+                )}
+              </div>
+              <div class="flex flex-col gap-y-1">
+                <label htmlFor="address">Địa chỉ</label>
+                <input
+                  className={`${
+                    errors.address ? "border-red-500" : "border-slate-400"
+                  } w-full h-[50px] outline-none border-[1px] border-solid  pl-3`}
+                  type="text"
+                  id="address"
+                  name="address"
+                  placeholder="Phố Trần Quốc Hoàn, Phường Dịch Vọng Hậu, Cầu Giấy, Hà Nội"
+                  {...register("address")}
+                />
+                {errors.address && (
+                  <p className="flex items-center gap-x-1 text-red-500">
+                    <span>
+                      <IoIosWarning />
+                    </span>
+                    <span>{errors.address.message}</span>
+                  </p>
+                )}
+              </div>
+              <div class="flex flex-col gap-y-1">
+                <label htmlFor="phoneNumber">Số điện thoại</label>
+                <input
+                  className={`${
+                    errors.phoneNumber ? "border-red-500" : "border-slate-400"
+                  } w-full h-[50px] outline-none border-[1px] border-solid  pl-3`}
+                  type="text"
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  placeholder="0334745377"
+                  {...register("phoneNumber")}
+                />
+                {errors.phoneNumber && (
+                  <p className="flex items-center gap-x-1 text-red-500">
+                    <span>
+                      <IoIosWarning />
+                    </span>
+                    <span>{errors.phoneNumber.message}</span>
+                  </p>
+                )}
+              </div>
+              <div className="mt-5 flex justify-end">
+                <button
+                  type="submit"
+                  className="text-white bg-[#0B60B0] h-[40px] px-5 hover:opacity-80"
+                >
+                  Cập nhật
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+    </Transitions>
   );
 };
 

@@ -1,12 +1,15 @@
 import React from "react";
-import { DetailContent, ImageContainer} from "./Components/Middle";
+import { DetailContent, ImageContainer } from "./Components/Middle";
+import Transitions from "./Transition";
 
 const Details = () => {
   return (
-    <div className="w-full h-fit">
-      <DetailContent />
-      <ImageContainer />
-    </div>
+    <Transitions>
+      <div className="w-full h-fit">
+        <DetailContent />
+        <ImageContainer />
+      </div>
+    </Transitions>
   );
 };
 

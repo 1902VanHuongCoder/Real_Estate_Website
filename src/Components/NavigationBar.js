@@ -16,16 +16,16 @@ import { AppContext } from "../Context/AppContext";
 import {rentItems, saleItems} from '../datas/navdatas';
 
 const NavigationBar = () => {
-  const { sideBarOpen, setSideBarOpen, openUserBox, setOpenUserBox } = useContext(AppContext);
+  const { sideBarOpen, setSideBarOpen, openUserBox, setOpenUserBox, setComponent } = useContext(AppContext);
   return (
     <div className="sticky top-0 w-full px-5 md:px-10 py-5 z-40 bg-white flex flex-col gap-y-4">
       <div className="flex justify-between items-center">
         
         {/* Logo  */}
         <div className="flex gap-x-2">
-          <a href="/">
+          <span onClick={() => setComponent("home")}>
             <img src="./images/logo.png" alt="logo" className="mr-3 h-6 sm:h-9" />
-          </a>
+          </span>
           <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
             BDS Văn Hưởng
           </span>

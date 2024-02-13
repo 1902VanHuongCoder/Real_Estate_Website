@@ -31,11 +31,12 @@ const userBoxVariants = {
 };
 
 const UserBox = () => {
-  const { openUserBox } = useContext(AppContext);
+  const { openUserBox, setComponent } = useContext(AppContext);
   return (
     <motion.div
       variants={userBoxVariants}
       animate={openUserBox ? "open" : "close"}
+      initial={false}
       className={`absolute w-fit h-fit border-[1px] border-solid border-slate-200 bg-white z-40 shadow-lg`}
     >
       <div className="flex gap-x-2 p-5 border-b-[1px] border-solid border-slate-200">
@@ -44,23 +45,45 @@ const UserBox = () => {
           className="w-[60px] h-[60px] rounded-full bg-center bg-no-repeat bg-cover"
         ></div>
         <div className="self-end flex flex-col gap-y-1">
-          <p className="text-2xl font-medium">PaulTo9999</p> 
+          <p className="text-2xl font-medium">PaulTo9999</p>
           <p className="text-md opacity-80">huongb2105616@student.ctu.edu.vn</p>
         </div>
       </div>
 
       <ul className="flex flex-col gap-y-1 px-5 py-5 border-b-[1px] border-solid border-slate-200">
-        <li className="flex gap-x-2 text-lg items-center">
-          <CiUser /> Hồ sơ của bạn
+        <li>
+          <span
+            className="flex gap-x-2 text-lg items-center"
+            onClick={() => setComponent("profile")}
+          >
+            <CiUser /> Hồ sơ của bạn
+          </span>
         </li>
-        <li className="flex gap-x-2 text-lg items-center">
-          <LuUserCog /> Cập nhật hồ sơ
+        <li>
+          <span
+            className="flex gap-x-2 text-lg items-center"
+            onClick={() => setComponent("update_profile")}
+          >
+            {" "}
+            <LuUserCog /> Cập nhật hồ sơ
+          </span>
         </li>
-        <li className="flex gap-x-2 text-lg items-center">
-          <SlNote /> Đăng tin
+        <li>
+          <span
+            onClick={() => setComponent("post")}
+            className="flex gap-x-2 text-lg items-center"
+          >
+            <SlNote /> Đăng tin
+          </span>
         </li>
-        <li className="flex gap-x-2 text-lg items-center">
-          <CiViewList /> Danh sách tin của bạn
+        <li>
+          <span
+            onClick={() => setComponent("profile")}
+            className="flex gap-x-2 text-lg items-center"
+            href="/profile"
+          >
+            <CiViewList /> Danh sách tin của bạn
+          </span>
         </li>
       </ul>
 

@@ -34,6 +34,7 @@ const Feedback = () => {
       <motion.div
         variants={feedbackVariants}
         animate={expandFeedbackBox ? "open" : "close"}
+        initial={false}
         className={`absolute -left-[250px] sm:-left-[300px] -top-[400px] border-[1px] border-solid border-slate-200 shadow-md bg-white text-black p-5 overflow-hidden`}
       >
         <p className="flex">

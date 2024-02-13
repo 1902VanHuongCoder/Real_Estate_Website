@@ -1,13 +1,27 @@
 // import hooks
-import React from "react";
-
+import React, { useContext } from "react";
+import {useNotification} from "../Hooks/useNotification";
 // import packages
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { IoIosWarning } from "react-icons/io";
 
+// import firebase services
+import { GoogleAuthProvider } from "firebase/auth";
+import { getAuth, signInWithPopup } from "firebase/auth";
+import { app } from "../FirebaseConfig/firebase";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+
+//import context
+import { AppContext } from "../Context/AppContext";
+
+//import library
+import md5 from "md5";
+
 const SignUp = () => {
+  const { session, setSession,  } = useContext(AppContext);
+  const [handleShowNotification] = useNotification();
   const schema = yup.object().shape({
     // schema to validate form datas
     username: yup
@@ -38,12 +52,52 @@ const SignUp = () => {
     resolver: yupResolver(schema),
   });
 
-  const handleSignUp = () => {
-    // handle login of user
+  const handleSignUp = async (data) => {
+    // handle sign-up of user
+    let flag = false;
+    if (data.password !== "" && md5(data.password) === md5(data.confirm_password)) {
+      flag = true;
+    }
+
+    if (flag) {
+      const dataToStore = {
+        username: data.username,
+        email: data.email,
+        phoneNumber: data.phoneNumber,
+        password: md5(data.password),
+        create_at: serverTimestamp(),
+        update_at: serverTimestamp(),
+      };
+      const docRef = await addDoc(
+        collection(app, "user_accounts"),
+        dataToStore
+      );
+    }else{
+      handleShowNotification("Confirming password is not valid!", "error");
+      console.log("Confirming password is not valid!");
+    }
+  };
+
+  const handleSignUpWithGoogle = async () => {
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const token = credential.accessToken;
+      const user = result.user;
+      console.log(user);
+    } catch (error) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorMessage);
+      // Handle the sign-in error here
+      alert("Run");
+    }
   };
   return (
     <div className="w-full h-fit flex justify-center items-center">
-      <div className="w-[400px] h-fit shadow-md p-5 border-[1px] border-solid border-slate-200">
+      <div className="w-[400px] h-fit shadow-md p-5 border-[1px] border-solid border-slate-200 my-[50px]">
         <h1 className="py-6 text-xl uppercase text-center font-medium">
           Đăng ký
         </h1>
@@ -64,6 +118,7 @@ const SignUp = () => {
               id="username"
               name="username"
               type="text"
+              autoComplete="off"
               {...register("username")}
             />
             {errors.username && (
@@ -86,6 +141,7 @@ const SignUp = () => {
               id="email"
               name="email"
               type="text"
+              autoComplete="on"
               {...register("email")}
             />
             {errors.email && (
@@ -108,6 +164,7 @@ const SignUp = () => {
               id="phoneNumber"
               name="phoneNumber"
               type="text"
+              autoComplete="on"
               {...register("phoneNumber")}
             />
             {errors.phoneNumber && (
@@ -130,6 +187,7 @@ const SignUp = () => {
               id="password"
               name="password"
               type="password"
+              autoComplete="on"
               {...register("password")}
             />
             {errors.password && (
@@ -152,6 +210,7 @@ const SignUp = () => {
               id="confirm_password"
               name="confirm_password"
               type="password"
+              autoComplete="on"
               {...register("confirm_password")}
             />
             {errors.confirm_password && (
@@ -171,7 +230,20 @@ const SignUp = () => {
               Đăng ký
             </button>
           </div>
-          <div>
+          <div
+            onClick={handleSignUpWithGoogle}
+            className="cursor-pointer flex items-center gap-x-2 justify-center py-5"
+          >
+            <span>Đăng ký bằng</span>
+            <span className="w-[50px] h-[50px] rounded-full bg-slate-100 flex justify-center items-center">
+              <img
+                className="w-[40px] h-[40px]"
+                src="./images/google_logo.png"
+                alt="Google Logo"
+              />
+            </span>
+          </div>
+          <div className="flex gap-x-1 items-center justify-center">
             <span>Nếu bạn đã có tài khoản! </span>
             <span className="text-[#40A2D8] underline">
               <a href="/">Đăng nhập</a>

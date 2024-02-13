@@ -105,6 +105,10 @@ const Login = () => {
               Đăng nhập
             </button>
           </div>
+          <div className="flex items-center gap-x-2 justify-center py-5">
+              <span>Đăng ký bằng</span>
+              <span className="w-[50px] h-[50px] rounded-full bg-slate-100 flex justify-center items-center"><img className="w-[40px] h-[40px]" src="./images/google_logo.png" alt="Google Logo"/></span>
+          </div>
           <div>
             <span>Nếu bạn chưa có tài khoản! </span>
             <span className="text-[#40A2D8] underline">
