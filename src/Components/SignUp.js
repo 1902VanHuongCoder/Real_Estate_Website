@@ -1,6 +1,6 @@
 // import hooks
 import React, { useContext } from "react";
-import {useNotification} from "../Hooks/useNotification";
+import { useNotification } from "../Hooks/useNotification";
 // import packages
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
@@ -10,8 +10,16 @@ import { IoIosWarning } from "react-icons/io";
 // import firebase services
 import { GoogleAuthProvider } from "firebase/auth";
 import { getAuth, signInWithPopup } from "firebase/auth";
-import { app } from "../FirebaseConfig/firebase";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { db, app } from "../FirebaseConfig/firebase";
+import {
+  QuerySnapshot,
+  addDoc,
+  collection,
+  getDocs,
+  query,
+  serverTimestamp,
+  where,
+} from "firebase/firestore";
 
 //import context
 import { AppContext } from "../Context/AppContext";
@@ -20,8 +28,10 @@ import { AppContext } from "../Context/AppContext";
 import md5 from "md5";
 
 const SignUp = () => {
-  const { session, setSession,  } = useContext(AppContext);
-  const [handleShowNotification] = useNotification();
+  const { setSession } = useContext(AppContext);
+
+  const [handleShowNotification] = useNotification(); //custom hook
+
   const schema = yup.object().shape({
     // schema to validate form datas
     username: yup
@@ -52,47 +62,89 @@ const SignUp = () => {
     resolver: yupResolver(schema),
   });
 
+  // handle sign-up with the form datas
   const handleSignUp = async (data) => {
     // handle sign-up of user
     let flag = false;
-    if (data.password !== "" && md5(data.password) === md5(data.confirm_password)) {
+    if (
+      data.password !== "" &&
+      md5(data.password) === md5(data.confirm_password) // encrypte password with md5 library to increase security for sensitive datas
+    ) {
       flag = true;
     }
 
     if (flag) {
-      const dataToStore = {
-        username: data.username,
-        email: data.email,
-        phoneNumber: data.phoneNumber,
-        password: md5(data.password),
-        create_at: serverTimestamp(),
-        update_at: serverTimestamp(),
-      };
-      const docRef = await addDoc(
-        collection(app, "user_accounts"),
-        dataToStore
+      const userAccountRef = collection(db, "user_accounts"); // reference to user accounts in database
+      const q = query(userAccountRef, where("email", "==", data.email)); // query whether this email had existed in database
+      const result = await getDocs(q); // the query command will reuturn a document list that equal to email
+      if (result.docs.length === 0) { // if this account has not existed, add to database
+        const dataToStore = {
+          username: data.username,
+          email: data.email,
+          phoneNumber: data.phoneNumber,
+          password: md5(data.password),
+          create_at: serverTimestamp(),
+          update_at: serverTimestamp(),
+          role: "user",
+          photoURL: null,
+        };
+        await addDoc(collection(db, "user_accounts"), dataToStore); // add document to user_accounts table in database
+        localStorage.setItem("email", data.email); // increase UX for sequential visits.
+        setSession(dataToStore); // set value for sesstion context
+      } else { // otherwise, require user to sign-up with new email
+        handleShowNotification(
+          "Email này đã được sử dụng! Vui lòng sử dụng 1 email khác.",
+          "error"
+        );
+      }
+    } else {
+      // handle errors when there are problems
+      handleShowNotification(
+        "Xác nhận mật khẩu không chính xác. Kiểm tra lại xác nhận mật khẩu của bạn",
+        "error"
       );
-    }else{
-      handleShowNotification("Confirming password is not valid!", "error");
-      console.log("Confirming password is not valid!");
     }
   };
 
+  // handle sign-up with Google Provider through Firebase SDK
   const handleSignUpWithGoogle = async () => {
     const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
+    const provider = new GoogleAuthProvider(); // use Google provider to authenticate user.
     try {
-      const result = await signInWithPopup(auth, provider);
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
-      const user = result.user;
-      console.log(user);
+      const result = await signInWithPopup(auth, provider); // render popup to authenticate with Google
+      const user = result.user; // some basic user informations are returned.
+      const userData = {
+        username: user.displayName,
+        email: user.email,
+        phoneNumber: null,
+        password: user.uid,
+        create_at: serverTimestamp(),
+        update_at: serverTimestamp(),
+        role: "user",
+        photoURL: user.photoURL,
+      };
+
+      // check whether user had existed
+      const userAccountRef = collection(db, "user_accounts");
+      const q = query(userAccountRef, where("email", "==", user.email));
+      const queryResult = await getDocs(q);
+      if (queryResult.docs.length === 0) {
+        await addDoc(collection(db, "user_accounts"), userData);
+        localStorage.setItem("email", user.email);
+        setSession(userData); // set value for sesstion context
+      } else {
+        handleShowNotification(
+          "Email này đã được sử dụng! Vui lòng sử dụng 1 email khác.",
+          "error"
+        );
+      }
     } catch (error) {
-      const errorCode = error.code;
       const errorMessage = error.message;
+      handleShowNotification(
+        "Quá trình đăng kí xảy ra lỗi. Vui lòng thử lại",
+        "error"
+      );
       console.log(errorMessage);
-      // Handle the sign-in error here
-      alert("Run");
     }
   };
   return (

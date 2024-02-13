@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { FaCheckCircle } from "react-icons/fa";
 import { IoMdCloseCircle } from "react-icons/io";
 import { AppContext } from "../../Context/AppContext";
+
 const Notification = ({ type, message }) => {
   const { showNotification, setShowNotification } = useContext(AppContext);
   const notificationVariants = {
@@ -16,13 +17,13 @@ const Notification = ({ type, message }) => {
     show: {
       height: "50px",
       transition: {
-        duration: 0.5,
+        duration: 0.2,
       },
     },
     hidden: {
-      x: "-100%",
+      scale: 0,
       transition: {
-        duration: 0.5,
+        duration: 0.2,
       },
     },
   };

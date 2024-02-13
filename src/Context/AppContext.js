@@ -8,7 +8,7 @@ const AppProvider = ({ children }) => {
   const [showImage, setShowImage] = useState(false);  // toggle to view images in detail page
   const [component, setComponent] = useState(null); 
   const [session, setSession] = useState(null);
-  const [showNotification, setShowNotification] = useState({message: "text", type: "success"});
+  const [showNotification, setShowNotification] = useState(null);
   const userInfo = {
     sideBarOpen: sideBarOpen,
     setSideBarOpen: setSideBarOpen,
