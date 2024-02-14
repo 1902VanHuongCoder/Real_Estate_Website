@@ -5,21 +5,28 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
 
 // import icons
 import { IoIosWarning } from "react-icons/io";
-import { FaCloudUploadAlt } from "react-icons/fa";
 import Transitions from "../Transition";
+
+// import components
+import UploadImage from "./Partials/UploadImage";
+import Editor from "./Editor";
+
+//import firebase services
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "../FirebaseConfig/firebase";
+import { useNotification } from "../Hooks/useNotification";
 
 const Post = () => {
   const [value, setValue] = useState(""); // value of Description Editor
 
-  const [titleImage, setTitleImage] = useState(null); // store url of title image
+  const [titleImageURL, setTitleImageURL] = useState(null); // store url of title image
 
-  const [listOfImages, setListOfImages] = useState([]); // list of images
+  const [listOfImageURLs, setListOfImageURLs] = useState([]); // list of images
 
+  const [handleShowNotification] = useNotification();
   const schema = yup.object().shape({
     // schema to validate form datas
     postTitle: yup
@@ -72,34 +79,51 @@ const Post = () => {
     resolver: yupResolver(schema),
   });
 
-  const handleToPost = (data) => {
-    if (value === "<p><br></p>") {
-      return;
+  const handleToPost = async (data) => {
+    if (titleImageURL) {
+      if (value !== "" || value !== "<p><br></p>") {
+        const dataToStore = {
+          postTitle: data.postTitle,
+          address: data.address,
+          price: data.price,
+          typeOfProperty: data.typeOfProperty,
+          post_method_reding_house: data.post_method_reding_house,
+          post_method_selling_house: data.post_method_selling_house,
+          acreage: data.acreage,
+          facade: data.facade,
+          floors: data.floors,
+          livingrooms: data.livingrooms,
+          bedrooms: data.bedrooms,
+          toilets: data.toilets,
+          direction: data.direction,
+          description: value,
+          titleImageURL: titleImageURL,
+          besideImageURLs: listOfImageURLs,
+        };
+        try {
+          await addDoc(collection(db, "posts"), dataToStore);
+          handleShowNotification(
+            "Bài đăng của bạn đang ở chờ được duyệt. Thời gian duyệt trong vòng 2 ngày kể từ ngày đăng.",
+            "success"
+          );
+        } catch (error) {
+          console.log(error);
+          handleShowNotification(
+            "Đăng bài thất bại. Kiểm tra lại thông tin bài đăng.", "error"
+          );
+        }
+      }else{
+        handleShowNotification(
+          "Bạn phải nhập thông tin mô tả cho bất động sản.", "error"
+        );
+      }
+    }else{
+      handleShowNotification(
+        "Bạn chưa chọn ảnh tiêu đề bài đăng.", "error"
+      );
     }
-    console.log(value);
-    console.log(data);
   };
 
-  // handle to store local path of image to render for users
-  const handleUploadTitleImage = (event) => {
-    const url = URL.createObjectURL(event.target.files[0]);
-    setTitleImage(url);
-  };
-
-  // handle to store multiple local path of images to render for users
-  const handleUploadMultipleImages = (evnt) => {
-    const selectedFiles = Array.from(evnt.target.files);
-    setListOfImages((prevImages) => [
-      ...prevImages,
-      ...selectedFiles.map((file) => URL.createObjectURL(file)),
-    ]);
-  };
-
-  // handle to remove list of selected images
-  const handleRemoveImage = (url) => {
-    const urlArray = listOfImages.filter((item) => item !== url);
-    setListOfImages(urlArray);
-  };
   return (
     <Transitions>
       <div className="w-4/5 sm:p-5 mx-auto">
@@ -427,143 +451,14 @@ const Post = () => {
             </div>
             <div className="flex flex-col gap-y-2">
               <p className="text-slate-400">Thông tin mô tả cụ thể</p>
-              <ReactQuill
-                className={`${
-                  errors.descriptions ? "border-red-500" : "border-slate-400"
-                } w-full min-h-[300px] border-[1px] border-solid outline-none focus:border-[#0B60B0]`}
-                theme="snow"
-                value={value}
-                onChange={setValue}
-              />
-              {value === "<p><br></p>" && (
-                <p className="flex items-center gap-x-1 text-red-500">
-                  <span>
-                    <IoIosWarning />
-                  </span>
-                  <span>{errors.descriptions.message}</span>
-                </p>
-              )}
+              <Editor value={value} setValue={setValue} />
             </div>
           </div>
-          <div className="w-full py-5">
-            <p className="border-l-[5px] border-solid border-[#0B60B0] mb-5 text-xl pl-2">
-              Chọn hình ảnh
-            </p>
-            <div>
-              <label htmlFor="titleImage" className="text-slate-500">
-                Chọn ảnh cho phần tiêu đề
-              </label>
-              <div className="relative flex p-5 my-5 justify-center items-center w-full sm:w-4/5 min-h-[300px] mx-auto border-[2px] border-dashed border-slate-400">
-                {titleImage && (
-                  <img
-                    src={titleImage}
-                    alt="test"
-                    className="w-[300px] h-auto"
-                  />
-                )}
-                <div className="absolute bottom-0 right-0 px-4 py-2 bg-[rgba(0,0,0,.5)]">
-                  <label className="flex gap-x-1" htmlFor="titleImage">
-                    <span className="flex gap-x-1 items-center text-white cursor-pointer hover:opacity-80">
-                      <span>Tải lên</span>
-                      <span className="text-xl">
-                        <FaCloudUploadAlt />
-                      </span>{" "}
-                    </span>
-                  </label>{" "}
-                  <input
-                    type="file"
-                    className="hidden"
-                    name="titleImage"
-                    id="titleImage"
-                    onChange={handleUploadTitleImage}
-                  />
-                </div>
-              </div>
-              <div className="flex flex-col gap-y-5 sm:flex-row justify-between items-center">
-                <button
-                  type="submit"
-                  className="ml-1 text-white bg-[#0B60B0] h-[40px] px-5 hover:opacity-80 uppercase"
-                >
-                  Xác nhận ảnh chủ đề
-                </button>
-                <div className="relative h-[30px] w-[300px] shadow-inner border-[4px] flex justify-center items-center border-slate-200 border-solid overflow-hidden">
-                  <span className="absolute w-full h-full flex justify-center items-center font-bold z-10">
-                    50%
-                  </span>
-                  <div
-                    className="absolute -translate-x-1/2 transition-transform border-r-[2px] border-r-slate-400 border-r-solid bg-[rgb(11,96,176)] bg-[linear-gradient(50deg,_rgba(11,96,176,1)_16%,_rgba(255,255,255,1)_16%,_rgba(255,255,255,1)_30%,_rgba(11,96,176,1)_30%,_rgba(11,96,176,1)_44%,_rgba(255,255,255,1)_44%,_rgba(255,255,255,1)_58%,_rgba(11,96,176,1)_58%,_rgba(11,96,176,1)_72%,_rgba(255,255,255,1)_72%,_rgba(255,255,255,1)_85%,_rgba(10,95,175,1)_85%,_rgba(11,96,176,1)_96%,_rgba(255,255,255,1)_96%)]
- w-full h-full -z-1"
-                  ></div>
-                </div>
-              </div>
-            </div>
-            <div className="mt-10">
-              <label htmlFor="listOfImages" className="text-slate-500">
-                Chọn các hình ảnh tài sản còn lại
-              </label>
-              <div className="relative p-5 my-5 flex flex-col gap-y-3 justify-center items-center w-full sm:w-4/5 min-h-[300px] mx-auto border-[2px] border-dashed border-slate-400">
-                <div className="flex flex-wrap w-full justify-center gap-2">
-                  {listOfImages?.map((url, index) => {
-                    return (
-                      <div
-                        key={index}
-                        className="relative w-[200px] h-auto shrink-0 grow-0 "
-                      >
-                        <img
-                          src={url}
-                          className="w-full h-auto border-[4px] border-solid boder-slate-400"
-                          alt="test"
-                        />
-                        <button
-                          onClick={() => {
-                            handleRemoveImage(url);
-                          }}
-                          className="absolute -right-[5px] -top-[10px] w-[20px] h-[20px] bg-red-500 text-white rounded-full text-sm"
-                        >
-                          X
-                        </button>
-                      </div>
-                    );
-                  })}
-                </div>
-                <div className="absolute bottom-0 right-0 px-4 py-2 bg-[rgba(0,0,0,.5)]">
-                  <label className="flex gap-x-1" htmlFor="listOfImages">
-                    <span className="flex gap-x-1 items-center text-white">
-                      <span>Tải lên</span>
-                      <span className="text-xl">
-                        <FaCloudUploadAlt />
-                      </span>{" "}
-                    </span>
-                  </label>{" "}
-                  <input
-                    type="file"
-                    className="hidden"
-                    name="listOfImages"
-                    id="listOfImages"
-                    multiple
-                    onChange={handleUploadMultipleImages}
-                  />
-                </div>
-              </div>
-              <div className="flex flex-col gap-y-5 sm:flex-row justify-between items-center">
-                <button
-                  type="submit"
-                  className="ml-1 text-white bg-[#0B60B0] h-[40px] px-5 hover:opacity-80 uppercase"
-                >
-                  Xác nhận ảnh chủ đề
-                </button>
-                <div className="relative h-[30px] w-[300px] shadow-inner border-[4px] flex justify-center items-center border-slate-200 border-solid overflow-hidden">
-                  <span className="absolute w-full h-full flex justify-center items-center font-bold z-10">
-                    50%
-                  </span>
-                  <div
-                    className="absolute -translate-x-1/2 transition-transform border-r-[2px] border-r-slate-400 border-r-solid bg-[rgb(11,96,176)] bg-[linear-gradient(50deg,_rgba(11,96,176,1)_16%,_rgba(255,255,255,1)_16%,_rgba(255,255,255,1)_30%,_rgba(11,96,176,1)_30%,_rgba(11,96,176,1)_44%,_rgba(255,255,255,1)_44%,_rgba(255,255,255,1)_58%,_rgba(11,96,176,1)_58%,_rgba(11,96,176,1)_72%,_rgba(255,255,255,1)_72%,_rgba(255,255,255,1)_85%,_rgba(10,95,175,1)_85%,_rgba(11,96,176,1)_96%,_rgba(255,255,255,1)_96%)]
- w-full h-full -z-1"
-                  ></div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <UploadImage
+            setTitleImageURL={setTitleImageURL}
+            setListOfImageURLs={setListOfImageURLs}
+            listOfImageURLs={listOfImageURLs}
+          />
           <div className="flex justify-end">
             <button
               type="reset"

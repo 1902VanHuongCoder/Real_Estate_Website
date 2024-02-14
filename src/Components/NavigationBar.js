@@ -98,8 +98,8 @@ const NavigationBar = () => {
         <form className="flex gap-x-1 justify-center" action="/" method="GET">
           <input
             type="text"
-            name="query"
-            id="query"
+            name="phoneQuery"
+            id="phoneQuery"
             placeholder="Tên tài sản..."
             className="px-3 border-[2px] border-solid border-slate-400 focus:outline-none focus:border-2 focus:border-solid focus:border-[#0B60B0] w-[200px] h-[40px]"
           />

@@ -29,6 +29,7 @@ import { AnimatePresence } from "framer-motion";
 import Test1 from "./Test1";
 import Veryfy from "./VeryfyEmail";
 import LoginTest from "./LoginTTest";
+import UploadImage from "./Components/Partials/UploadImage";
 
 function App() {
   const { showNotification, component } = useContext(AppContext);
@@ -46,13 +47,16 @@ function App() {
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             <Route index path="/" element={<Home />}></Route>
-            <Route path="/details/*" element={<Details />}></Route>
+            <Route path="/signup" element={<SignUp />}></Route>
+            <Route path="/login" element={<Login />}></Route>
             <Route path="/post" element={<Post />}></Route>
+
+
+            <Route path="/details/*" element={<Details />}></Route>
+            <Route path="/uploadimage" element={<UploadImage/>}></Route>
             <Route path="/admin" element={<AdminDashboard />}></Route>
             <Route path="/test" element={<Test />}></Route>
             <Route path="/login1" element={<LoginTest />}></Route>
-            <Route path="/login" element={<Login />}></Route>
-            <Route path="/signup" element={<SignUp />}></Route>
             <Route path="/optionResult" element={<OptionResults />}></Route>
             <Route path="/updateprofile" element={<UpdateProfile />}></Route>
             <Route path="/profile" element={<Profile />}></Route>
