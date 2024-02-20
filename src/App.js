@@ -23,36 +23,38 @@ import {
 import { useLocation } from "react-router-dom";
 
 // import context
-import { useContext } from "react";
-import { AppContext } from "./Context/AppContext";
 import { AnimatePresence } from "framer-motion";
 import Test1 from "./Test1";
 import Veryfy from "./VeryfyEmail";
 import LoginTest from "./LoginTTest";
 import UploadImage from "./Components/Partials/UploadImage";
+import { useContext } from "react";
+import { AppContext } from "./Context/AppContext";
+import Test2 from "./test2";
 
 function App() {
-  const { showNotification, component } = useContext(AppContext);
   const location = useLocation();
+  const {session, component} = useContext(AppContext);
+  // console.log(session);
   return (
     <div className="relative max-w-[1200px] mx-auto overflow-hidden">
       <NavigationBar />
-      {/* <AnimatePresence mode="wait">
+      <AnimatePresence mode="wait">
         {component === "home" && <Home />}
         {component === "profile" && <Profile />}
         {component === "update_profile" && <UpdateProfile />}
         {component === "post" && <Post />}
-      </AnimatePresence> */}
+      </AnimatePresence>
       <Notification />
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             <Route index path="/" element={<Home />}></Route>
             <Route path="/signup" element={<SignUp />}></Route>
-            <Route path="/login" element={<Login />}></Route>
-            <Route path="/post" element={<Post />}></Route>
+            <Route path="/real+estate/signin" element={<Login />}></Route>
+            <Route path="/real+estate/search+result/*" element={<OptionResults />}></Route>
 
 
-            <Route path="/details/*" element={<Details />}></Route>
+            {/* <Route path="/details/*" element={<Details />}></Route>
             <Route path="/uploadimage" element={<UploadImage/>}></Route>
             <Route path="/admin" element={<AdminDashboard />}></Route>
             <Route path="/test" element={<Test />}></Route>
@@ -61,7 +63,7 @@ function App() {
             <Route path="/updateprofile" element={<UpdateProfile />}></Route>
             <Route path="/profile" element={<Profile />}></Route>
             <Route path="/test1" element={<Test1 />}></Route>
-            <Route path="/test2" element={<Veryfy />}></Route>
+            <Route path="/test2" element={<Veryfy />}></Route> */}
           </Routes>
         </AnimatePresence>
   

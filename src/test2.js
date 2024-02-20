@@ -1,23 +1,32 @@
 import React, { useState } from "react";
 import {
   getAuth,
-  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  sendEmailVerification,
 } from "firebase/auth";
 import { app } from "./FirebaseConfig/firebase";
-const Test1 = () => {
-  const [info, setInfo] = useState({ email: "", password: "" });
+
+const Test2 = () => {
   const auth = getAuth(app);
 
-  console.log(info.password);
+  const [info, setInfo] = useState({ email: "", password: "" });
+
   const handleSignUp = (e) => {
     e.preventDefault();
-    createUserWithEmailAndPassword(auth, info.email, info.password)
+    signInWithEmailAndPassword(auth, info.email, info.password)
       .then((userCredential) => {
+        // Signed in
         const user = userCredential.user;
+        alert("Đăng nhập thành công");
+        alert("Đã gửi email xác nhận đến email của bạn! Xác nhận ngay");
+        console.log(user.email);
+        sendEmailVerification(user);
+        console.log(user.emailVerified);
+        console.log();
       })
       .catch((error) => {
-        alert("Dang ky tai khoan that bai!" + error.message);
-        // ..
+        const errorCode = error.code;
+        const errorMessage = error.message;
       });
   };
 
@@ -33,9 +42,9 @@ const Test1 = () => {
         onChange={(e) => setInfo({ ...info, password: e.target.value })}
         type="password"
       />
-      <button type="submit">Sign Up</button>
+      <button type="submit">Login</button>
     </form>
   );
 };
 
-export default Test1;
+export default Test2;

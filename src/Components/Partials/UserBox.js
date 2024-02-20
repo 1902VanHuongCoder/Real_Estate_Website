@@ -31,7 +31,7 @@ const userBoxVariants = {
 };
 
 const UserBox = () => {
-  const { openUserBox, setComponent } = useContext(AppContext);
+  const { openUserBox, setComponent, session } = useContext(AppContext);
   return (
     <motion.div
       variants={userBoxVariants}
@@ -41,12 +41,18 @@ const UserBox = () => {
     >
       <div className="flex gap-x-2 p-5 border-b-[1px] border-solid border-slate-200">
         <div
-          style={{ backgroundImage: `url("./images/user.jpg")` }}
-          className="w-[60px] h-[60px] rounded-full bg-center bg-no-repeat bg-cover"
+          style={{
+            backgroundImage: `url(${
+              session?.photoURL !== ""
+                ? session?.photoURL
+                : "./images/user_icon.png"
+            } )`,
+          }}
+          className="w-[60px] h-[60px] rounded-full bg-center bg-no-repeat bg-cover border-[4px] border-solid border-slate-200"
         ></div>
         <div className="self-end flex flex-col gap-y-1">
-          <p className="text-2xl font-medium">PaulTo9999</p>
-          <p className="text-md opacity-80">huongb2105616@student.ctu.edu.vn</p>
+          <p className="text-2xl font-medium">{session?.username}</p>
+          <p className="text-md opacity-80">{session?.email}</p>
         </div>
       </div>
 
@@ -88,12 +94,15 @@ const UserBox = () => {
       </ul>
 
       <ul className="flex flex-col gap-y-1 px-5 py-5">
-        <li className="flex gap-x-2 text-lg items-center">
-          <CiLogout /> Đăng xuất
-        </li>
-        <li className="flex gap-x-2 text-lg items-center">
-          <CiLogin /> Đăng nhập
-        </li>
+        {session ? (
+          <li className="flex gap-x-2 text-lg items-center">
+            <CiLogout /> Đăng xuất
+          </li>
+        ) : (
+          <li className="flex gap-x-2 text-lg items-center">
+            <CiLogin /> Đăng nhập
+          </li>
+        )}
       </ul>
     </motion.div>
   );

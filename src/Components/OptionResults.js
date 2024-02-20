@@ -1,5 +1,6 @@
 // import hooks
-import React from "react";
+import { collection, getDocs } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
 
 // import icons
 import {
@@ -12,8 +13,52 @@ import {
 import { GiMultiDirections } from "react-icons/gi";
 import { MdBedroomParent } from "react-icons/md";
 import { PiToiletFill } from "react-icons/pi";
+import { useLocation } from "react-router-dom";
+import { db } from "../FirebaseConfig/firebase";
 
 const OptionResults = () => {
+  const { state } = useLocation();
+  // const [posts, setPosts] = useState([]);
+  const [results, setResults] = useState([]);
+
+  const filterPosts = (keywordsArray, string) => {
+    let flag = false;
+    keywordsArray.forEach((element) => {
+      if (string.includes(element)) {
+        flag = true;
+        return flag;
+      }
+      return flag;
+    });
+  };
+  const fetchData = async () => {
+    // setLoading(true);
+    await getDocs(collection(db, "posts")).then((response) => {
+      const dataResponsed = response.docs.map((doc) => ({
+        ...doc.data(),
+      }));
+
+      const resultFiltered = [];
+      const valuesFromQueryString = state.split(" ");
+      
+      dataResponsed.forEach((element) => {
+        if (filterPosts(valuesFromQueryString, element.typeOfProperty)) {
+          resultFiltered.push(element);
+        }
+      });
+      if(resultFiltered.length > 0){
+        setResults(resultFiltered);
+        console.log("set run");
+      }
+      
+    });
+    // setLoading(false);
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  console.log(results);
   return (
     <div className="w-full h-fit p-5">
       <h1 className="pl-4 text-xl font-medium uppercase border-l-[5px] border-l-solid border-l-[#0B60B0]">

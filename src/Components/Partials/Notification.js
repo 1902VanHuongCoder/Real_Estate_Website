@@ -8,8 +8,8 @@ import { FaCheckCircle } from "react-icons/fa";
 import { IoMdCloseCircle } from "react-icons/io";
 import { AppContext } from "../../Context/AppContext";
 
-const Notification = ({ type, message }) => {
-  const { showNotification, setShowNotification } = useContext(AppContext);
+const Notification = () => {
+  const { showNotification, setShowNotification, session } = useContext(AppContext);
   const notificationVariants = {
     initial: {
       height: 0,
@@ -36,14 +36,14 @@ const Notification = ({ type, message }) => {
           animate="show"
           exit="hidden"
           initial="initial"
-          className={`w-[90%] h-[50px] mx-auto flex items-center justify-between px-5 text-white ${
+          className={`w-[90%] gap-x-1 min-h-[50px] mx-auto flex items-center justify-between px-2 sm:px-5 text-white ${
             showNotification.type === "error" && "bg-red-500"
           } ${showNotification.type === "success" && "bg-green-500"} ${
             showNotification.type === "warning" && "bg-yellow-500"
           } rounded-md`}
         >
           {showNotification.type === "error" && (
-            <div class="flex gap-x-1 items-center">
+            <div className="flex gap-x-1 items-center">
               <span>
                 <FaCheckCircle />
               </span>
@@ -51,7 +51,7 @@ const Notification = ({ type, message }) => {
             </div>
           )}
           {showNotification.type === "success" && (
-            <div class="flex gap-x-1 items-center">
+            <div className="flex gap-x-1 items-center">
               <span>
                 <FaCheckCircle />
               </span>
@@ -59,7 +59,7 @@ const Notification = ({ type, message }) => {
             </div>
           )}
           {showNotification.type === "warning" && (
-            <div class="flex gap-x-1 items-center">
+            <div className="flex gap-x-1 items-center">
               <span>
                 <FaCheckCircle />
               </span>
@@ -70,7 +70,8 @@ const Notification = ({ type, message }) => {
             onClick={() => setShowNotification(false)}
             className="text-white text-xl"
           >
-            <IoMdCloseCircle />
+          <IoMdCloseCircle />
+            
           </span>
         </motion.div>
       )}

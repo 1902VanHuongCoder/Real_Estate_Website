@@ -99,28 +99,46 @@ const Post = () => {
           description: value,
           titleImageURL: titleImageURL,
           besideImageURLs: listOfImageURLs,
+          excepted: false,
+          username: "To Van Huong",
         };
         try {
           await addDoc(collection(db, "posts"), dataToStore);
           handleShowNotification(
-            "Bài đăng của bạn đang ở chờ được duyệt. Thời gian duyệt trong vòng 2 ngày kể từ ngày đăng.",
+            "Đăng bài thành công. Đang chờ duyệt",
             "success"
           );
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+          });
         } catch (error) {
           console.log(error);
           handleShowNotification(
-            "Đăng bài thất bại. Kiểm tra lại thông tin bài đăng.", "error"
+            "Đăng bài thất bại. Kiểm tra lại thông tin bài đăng.",
+            "error"
           );
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+          });
         }
-      }else{
+      } else {
         handleShowNotification(
-          "Bạn phải nhập thông tin mô tả cho bất động sản.", "error"
+          "Bạn phải nhập thông tin mô tả cho bất động sản.",
+          "error"
         );
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
       }
-    }else{
-      handleShowNotification(
-        "Bạn chưa chọn ảnh tiêu đề bài đăng.", "error"
-      );
+    } else {
+      handleShowNotification("Bạn chưa chọn ảnh tiêu đề bài đăng.", "error");
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
     }
   };
 
@@ -224,12 +242,12 @@ const Post = () => {
                 className="h-[50px] border-[1px] border-solid px-3 outline-none"
                 {...register("typeOfProperty")}
               >
-                <option value="apartment">Căn hộ chung cư</option>
-                <option value="office">Văn phòng</option>
-                <option value="private_house">Nhà riêng</option>
-                <option value="villa_and_nextto">Biệt thự, liền kề</option>
-                <option value="town_house">Nhà mặt phố</option>
-                <option value="shop_house">
+                <option value="căn hộ chung cư">Căn hộ chung cư</option>
+                <option value="văn phòng">Văn phòng</option>
+                <option value="nhà riêng">Nhà riêng</option>
+                <option value="biệt thự và liền kề">Biệt thự, liền kề</option>
+                <option value="nhà mặt phố">Nhà mặt phố</option>
+                <option value="shop house và nhà phố thương mại">
                   Shop house, nhà phố thương mại
                 </option>
                 <option value="warehouse">Kho, nhà xưởng</option>

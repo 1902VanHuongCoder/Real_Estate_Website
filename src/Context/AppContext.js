@@ -6,8 +6,8 @@ const AppProvider = ({ children }) => {
   const [sideBarOpen, setSideBarOpen] = useState(false); // state to store and control sidebar
   const [isOpenUserBox, setOpenUserBox] = useState(false); // state to store and control userbox
   const [showImage, setShowImage] = useState(false);  // toggle to view images in detail page
-  const [component, setComponent] = useState(null); 
   const [session, setSession] = useState(null);
+  const [component, setComponent] = useState(null);
   const [showNotification, setShowNotification] = useState(null);
   const userInfo = {
     sideBarOpen: sideBarOpen,

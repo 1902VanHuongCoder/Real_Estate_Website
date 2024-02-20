@@ -1,30 +1,47 @@
 // import hooks
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 
-// import icons 
+// import icons
 import { IoIosArrowDown } from "react-icons/io";
 import { CiUser } from "react-icons/ci";
 import { TiThMenu } from "react-icons/ti";
 
 // import components
-import {UserBox, NavItems} from './Middle';
+import { UserBox, NavItems } from "./Middle";
 
 // import contexts
 import { AppContext } from "../Context/AppContext";
 
 // import datas for navigation bar
-import {rentItems, saleItems} from '../datas/navdatas';
+import { rentItems, saleItems } from "../datas/navdatas";
+import { Link, useNavigate } from "react-router-dom";
 
 const NavigationBar = () => {
-  const { sideBarOpen, setSideBarOpen, openUserBox, setOpenUserBox, setComponent } = useContext(AppContext);
+  const {
+    sideBarOpen,
+    setSideBarOpen,
+    openUserBox,
+    setOpenUserBox,
+    setComponent,
+    session,
+  } = useContext(AppContext);
+  const navigate = useNavigate();
+  const [search, setSearch] = useState("");
+  const handleSearch = (e) => {
+    e.preventDefault();
+    navigate(`/real+estate/search+result/query=?${search}`, { state: search });
+  };
   return (
     <div className="sticky top-0 w-full px-5 md:px-10 py-5 z-40 bg-white flex flex-col gap-y-4">
       <div className="flex justify-between items-center">
-        
         {/* Logo  */}
         <div className="flex gap-x-2">
           <span onClick={() => setComponent("home")}>
-            <img src="./images/logo.png" alt="logo" className="mr-3 h-6 sm:h-9" />
+            <img
+              src="./images/logo.png"
+              alt="logo"
+              className="mr-3 h-6 sm:h-9"
+            />
           </span>
           <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
             BDS Văn Hưởng
@@ -32,15 +49,20 @@ const NavigationBar = () => {
         </div>
 
         {/* Search input */}
-        <form className="hidden sm:block" action="/" method="GET">
+        <form className="hidden sm:block">
           <input
             type="text"
             name="query"
             id="query"
+            onChange={(e) => setSearch(e.target.value)}
             placeholder="Tên tài sản..."
             className="px-3 border-[2px] border-solid border-slate-400 focus:outline-none focus:border-2 focus:border-solid focus:border-[#0B60B0] w-[250px] h-[40px]"
           />
-          <button type="submit" className="ml-1 text-white bg-[#0B60B0] h-[40px] px-5 hover:opacity-80">
+          <button
+            type="button"
+            onClick={handleSearch}
+            className="ml-1 text-white bg-[#0B60B0] h-[40px] px-5 hover:opacity-80"
+          >
             Tìm kiếm
           </button>
         </form>
@@ -72,15 +94,20 @@ const NavigationBar = () => {
         </ul>
 
         {/* User icons  */}
+
         <div className="relative flex items-center gap-x-4 md:gap-x-7">
-          <button
-            onClick={() => {
-              setOpenUserBox(!openUserBox);
-            }}
-            className="w-[50px] h-[50px] flex justify-center items-center bg-[#F0EDCF] rounded-full"
-          >
-            <CiUser />
-          </button>
+          {localStorage.getItem("userEmail") ? (
+            <button
+              onClick={() => {
+                setOpenUserBox(!openUserBox);
+              }}
+              className="w-[50px] h-[50px] flex justify-center items-center bg-[#F0EDCF] rounded-full"
+            >
+              <CiUser />
+            </button>
+          ) : (
+            <Link to="signup">Đăng ký</Link>
+          )}
           <button
             className="block lg:hidden"
             onClick={() => {
@@ -90,25 +117,28 @@ const NavigationBar = () => {
             <TiThMenu className="text-2xl" />
           </button>
         </div>
-
       </div>
 
       {/* Search bar for mobile devices */}
-      <div className="block sm:hidden">
-        <form className="flex gap-x-1 justify-center" action="/" method="GET">
+      <div className="flex sm:hidden justify-center">
+        <form onSubmit={handleSearch} action="/real+estate/search+result/" method="GET">
           <input
             type="text"
             name="phoneQuery"
             id="phoneQuery"
             placeholder="Tên tài sản..."
+            onChange={(e) => setSearch(e.target.value)}
             className="px-3 border-[2px] border-solid border-slate-400 focus:outline-none focus:border-2 focus:border-solid focus:border-[#0B60B0] w-[200px] h-[40px]"
           />
-          <button type="submit" className="ml-1 text-white bg-[#0B60B0] h-[40px] px-5 hover:opacity-80">
+          <button
+            type="submit"
+            className="ml-1 text-white bg-[#0B60B0] h-[40px] px-5 hover:opacity-80"
+          >
             Tìm kiếm
           </button>
         </form>
       </div>
-      
+
       <UserBox />
     </div>
   );

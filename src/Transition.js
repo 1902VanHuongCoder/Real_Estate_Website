@@ -16,7 +16,7 @@ const Transitions = ({ children }) => {
       // transition={{ duration: 1 }}
       initial={{ x: "100%", opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
-      transition={{ duration: 3 }}
+      transition={{ duration: 0.2 }}
       exit={{ x: 10 }}
     >
       {children}
