@@ -7,7 +7,6 @@ export {default as Sidebar } from "./Sidebar";
 export {default as Post } from "./Post";
 export {default as Editor} from "./Editor";
 
-
 // Partials/
 export {default as Feedback } from "./Partials/Feedback";
 export {default as ToTop } from "./Partials/ToTop";

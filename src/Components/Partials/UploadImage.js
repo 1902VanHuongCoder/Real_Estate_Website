@@ -1,5 +1,5 @@
 // import hooks
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 //import firebase services
 import { storage } from "../../FirebaseConfig/firebase";
@@ -10,6 +10,7 @@ import { FaCloudUploadAlt } from "react-icons/fa";
 
 // import motion library
 import { AnimatePresence, motion } from "framer-motion";
+import { AppContext } from "../../Context/AppContext";
 
 const UploadImage = ({
   setTitleImageURL,
@@ -77,7 +78,6 @@ const UploadImage = ({
   // handle store title image to storage of firebase service
   const handleUploadTitleImageToStorage = (e) => {
     e.preventDefault();
-
     if (titleImage.details) {
       const storageRef = ref(
         storage,
@@ -146,16 +146,16 @@ const UploadImage = ({
   var calPercentOfUploadingImagesList = -(100 - percentOfUploadingImagesList);
 
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      setPercentOfUploadingTitleImage(0);
-      setPercentOfUploadingImagesList(0);
-    }, 3000);
-
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  });
-
+    if (
+      percentOfUploadingTitleImage === 100 ||
+      percentOfUploadingImagesList === 100
+    ) {
+      setTimeout(() => {
+        setPercentOfUploadingTitleImage(0);
+        setPercentOfUploadingImagesList(0);
+      }, 2000);
+    }
+  }, [percentOfUploadingTitleImage, percentOfUploadingImagesList]);
 
   return (
     <div className="w-full py-5">
@@ -218,7 +218,6 @@ const UploadImage = ({
                   initial={{ x: percentOfUploadingTitleImage }}
                   animate={{
                     x: calPercentUploadingTitleImage + "%",
-                    type: "tween",
                   }}
                   className={`absolute border-r-[2px] border-r-slate-400 border-r-solid bg-[rgb(11,96,176)] bg-[linear-gradient(50deg,_rgba(11,96,176,1)_16%,_rgba(255,255,255,1)_16%,_rgba(255,255,255,1)_30%,_rgba(11,96,176,1)_30%,_rgba(11,96,176,1)_44%,_rgba(255,255,255,1)_44%,_rgba(255,255,255,1)_58%,_rgba(11,96,176,1)_58%,_rgba(11,96,176,1)_72%,_rgba(255,255,255,1)_72%,_rgba(255,255,255,1)_85%,_rgba(10,95,175,1)_85%,_rgba(11,96,176,1)_96%,_rgba(255,255,255,1)_96%)]
  w-full h-full -z-1`}
@@ -296,13 +295,12 @@ const UploadImage = ({
                 className="relative h-[30px] w-[300px] shadow-inner border-[4px] flex justify-center items-center border-slate-200 border-solid overflow-hidden"
               >
                 <span className="absolute w-full h-full flex justify-center items-center font-bold z-10">
-                {percentOfUploadingImagesList}%
+                  {percentOfUploadingImagesList}%
                 </span>
                 <motion.div
                   initial={{ x: percentOfUploadingTitleImage }}
                   animate={{
                     x: calPercentOfUploadingImagesList + "%",
-                    type: "tween",
                   }}
                   className={`absolute border-r-[2px] border-r-slate-400 border-r-solid bg-[rgb(11,96,176)] bg-[linear-gradient(50deg,_rgba(11,96,176,1)_16%,_rgba(255,255,255,1)_16%,_rgba(255,255,255,1)_30%,_rgba(11,96,176,1)_30%,_rgba(11,96,176,1)_44%,_rgba(255,255,255,1)_44%,_rgba(255,255,255,1)_58%,_rgba(11,96,176,1)_58%,_rgba(11,96,176,1)_72%,_rgba(255,255,255,1)_72%,_rgba(255,255,255,1)_85%,_rgba(10,95,175,1)_85%,_rgba(11,96,176,1)_96%,_rgba(255,255,255,1)_96%)]
  w-full h-full -z-1`}

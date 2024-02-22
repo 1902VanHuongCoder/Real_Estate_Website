@@ -5,7 +5,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { FaLocationDot } from "react-icons/fa6";
 import { FaRulerCombined, FaRulerHorizontal } from "react-icons/fa6";
 import { GiMultiDirections } from "react-icons/gi";
-import { FaBuilding} from "react-icons/fa";
+import { FaBuilding } from "react-icons/fa";
 import { MdBedroomParent } from "react-icons/md";
 import { PiToiletFill } from "react-icons/pi";
 
@@ -14,19 +14,18 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../FirebaseConfig/firebase";
 import { AppContext } from "../Context/AppContext";
 
-
 //import images
-import userIcon from '../images/user_icon.png';
 import { useNavigate } from "react-router-dom";
 
 const News = () => {
   const [news, setNews] = useState([]);
-  const {setShowSpinner} = useContext(AppContext);
+  const { setShowSpinner, setRealEstateDetail } = useContext(AppContext);
   const navigate = useNavigate();
-  
-  const handleViewDetails = () => {
 
-  }
+  const handleViewDetails = (postData) => {
+      setRealEstateDetail(postData);
+      navigate("/details");
+  };
 
   const fetchData = async () => {
     setShowSpinner(true);
@@ -43,7 +42,6 @@ const News = () => {
     fetchData();
   }, []);
 
-  console.log(news);
 
   return (
     <div className="lg:basis-[70%] h-fit w-full px-5 lg:px-10 pt-10 sm:pt-14">
@@ -52,96 +50,102 @@ const News = () => {
       </h2>
 
       {/* News components  */}
-      {news.length > 0 ? 
+      {news.length > 0 ? (
         news.map((item, index) => (
-          <div key={index} className="w-full mt-5 border-[1px] border-solid border-slate-200 h-fit">
-        <div
-          className="relative w-full h-[350px] bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url("${item.titleImageURL}")` }}
-        >
           <div
-            className="absolute top-5 -left-1 w-fit h-[50px] bg-cover bg-right bg-no-repeat text-white text-lg flex pl-4 pr-6 items-center"
-            style={{ backgroundImage: `url("./images/label.png")` }}
+            key={index}
+            className="w-full mt-5 border-[1px] border-solid border-slate-200 h-fit"
           >
-            {item.price}
-          </div>
-        </div>
-        <div className="flex flex-col gap-y-2 p-2">
-          <h3 className="font-medium text-lg">
-            {item.postTitle}
-          </h3>
-          <p className="flex items-center gap-x-1 text-base">
-            <span className="text-lg text-red-600">
-              <FaLocationDot />
-            </span>
-            {item.address}
-          </p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 lg:grid-cols-4 lg:gap-x-5 justify-evenly">
-            <div className="flex items-center gap-x-2">
-              <span>
-                <FaRulerCombined />
-              </span>
-              <span className="flex gap-x-1 items-center">
-                <span className="opacity-60">Diện tích: </span>
-                <span>
-                  {item.acreage} m<sup>2</sup>
+            <div
+              className="relative w-full h-[350px] bg-cover bg-center bg-no-repeat"
+              style={{ backgroundImage: `url("${item.titleImageURL}")` }}
+            >
+              <div
+                className="absolute top-5 -left-1 w-fit h-[50px] bg-cover bg-right bg-no-repeat text-white text-lg flex pl-4 pr-6 items-center"
+                style={{ backgroundImage: `url("./images/label.png")` }}
+              >
+                {item.price}
+              </div>
+            </div>
+            <div className="flex flex-col gap-y-2 p-2">
+              <h3 className="font-medium text-lg">{item.postTitle}</h3>
+              <p className="flex items-center gap-x-1 text-base">
+                <span className="text-lg text-red-600">
+                  <FaLocationDot />
                 </span>
-              </span>
-            </div>
-            <div className="flex items-center gap-x-2">
-              <span>
-                <GiMultiDirections />
-              </span>
-              <span className="flex gap-x-1 items-center">
-                <span className="opacity-60">Hướng: </span>
-                <span>{item.direction}</span>
-              </span>
-            </div>
-            <div className="flex items-center gap-x-2">
-              <span>
-                <FaBuilding />
-              </span>
-              <span className="flex gap-x-1 items-center">
-                <span className="opacity-60">Số tầng: </span>
-                <span>{item.floors}</span>
-              </span>
-            </div>
-            <div className="flex items-center gap-x-2">
-              <span>
-                <FaRulerHorizontal />
-              </span>
-              <span className="flex gap-x-1 items-center">
-                <span className="opacity-60">Mặt tiền: </span>
-                <span>{item.facade} m</span>
-              </span>
-            </div>
-            <div className="flex items-center gap-x-2">
-              <span>
-                <MdBedroomParent />
-              </span>
-              <span className="flex gap-x-1 items-center">
-                <span className="opacity-60">Phòng ngủ: </span>
-                <span>{item.bedrooms}</span>
-              </span>
-            </div>
-            <div className="flex items-center gap-x-2">
-              <span>
-                <PiToiletFill />
-              </span>
-              <span className="flex gap-x-1 items-center">
-                <span className="opacity-60">Số toilet: </span>
-                <span>{item.toilets}</span>
-              </span>
+                {item.address}
+              </p>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 lg:grid-cols-4 lg:gap-x-5 justify-evenly">
+                <div className="flex items-center gap-x-2">
+                  <span>
+                    <FaRulerCombined />
+                  </span>
+                  <span className="flex gap-x-1 items-center">
+                    <span className="opacity-60">Diện tích: </span>
+                    <span>
+                      {item.acreage} m<sup>2</sup>
+                    </span>
+                  </span>
+                </div>
+                <div className="flex items-center gap-x-2">
+                  <span>
+                    <GiMultiDirections />
+                  </span>
+                  <span className="flex gap-x-1 items-center">
+                    <span className="opacity-60">Hướng: </span>
+                    <span>{item.direction}</span>
+                  </span>
+                </div>
+                <div className="flex items-center gap-x-2">
+                  <span>
+                    <FaBuilding />
+                  </span>
+                  <span className="flex gap-x-1 items-center">
+                    <span className="opacity-60">Số tầng: </span>
+                    <span>{item.floors}</span>
+                  </span>
+                </div>
+                <div className="flex items-center gap-x-2">
+                  <span>
+                    <FaRulerHorizontal />
+                  </span>
+                  <span className="flex gap-x-1 items-center">
+                    <span className="opacity-60">Mặt tiền: </span>
+                    <span>{item.facade} m</span>
+                  </span>
+                </div>
+                <div className="flex items-center gap-x-2">
+                  <span>
+                    <MdBedroomParent />
+                  </span>
+                  <span className="flex gap-x-1 items-center">
+                    <span className="opacity-60">Phòng ngủ: </span>
+                    <span>{item.bedrooms}</span>
+                  </span>
+                </div>
+                <div className="flex items-center gap-x-2">
+                  <span>
+                    <PiToiletFill />
+                  </span>
+                  <span className="flex gap-x-1 items-center">
+                    <span className="opacity-60">Số toilet: </span>
+                    <span>{item.toilets}</span>
+                  </span>
+                </div>
+              </div>
+              <div>Đã được đăng vào ngày: {item.createdAt}</div>
+              <button
+                onClick={() => handleViewDetails(item)}
+                className="w-[100px] h-[40px] border-[2px] border-solid border-[#0B60B0] hover:bg-[#0B60B0] hover:text-white"
+              >
+                Chi tiết
+              </button>
             </div>
           </div>
-          <div>Đã được đăng vào ngày: {item.createdAt}</div>
-          <button className="w-[100px] h-[40px] border-[2px] border-solid border-[#0B60B0] hover:bg-[#0B60B0] hover:text-white">
-            Chi tiết
-          </button>
-        </div>
-      </div>
         ))
-       : <div>Hiện tại chưa có bài đăng nào</div>}
+      ) : (
+        <div>Hiện tại chưa có bài đăng nào</div>
+      )}
     </div>
   );
 };

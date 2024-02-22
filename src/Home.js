@@ -1,6 +1,6 @@
 // import components
 import { Hero, MainContent } from "./Components/Middle";
-import Transitions from "./Transition";
+import Transitions from "./Components/Partials/Transition";
 
 const Home = () => {
   return (

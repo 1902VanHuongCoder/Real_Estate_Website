@@ -18,6 +18,7 @@ import {
   NavigationBar,
   Footer,
   Sidebar,
+  ImageContainer,
 } from "./Components/Middle";
 
 import { useLocation } from "react-router-dom";
@@ -40,6 +41,7 @@ function App() {
   return (
     <div className="relative">
       <Loading />
+      <ImageContainer />
       <div className="relative max-w-[1200px] mx-auto overflow-hidden">
         <NavigationBar />
         <Notification />
@@ -58,7 +60,7 @@ function App() {
               element={<OptionResults />}
             ></Route>
                <Route path="/admin" element={<AdminDashboard />}></Route>
-
+               <Route path="/details" element={<Details />}></Route>
             {/* <Route path="/details/*" element={<Details />}></Route>
             <Route path="/uploadimage" element={<UploadImage/>}></Route>
             <Route path="/admin" element={<AdminDashboard />}></Route>

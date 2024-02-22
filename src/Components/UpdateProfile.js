@@ -10,7 +10,7 @@ import { IoIosWarning } from "react-icons/io";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import Transitions from "../Transition";
+import Transitions from "./Partials/Transition";
 
 const UpdateProfile = () => {
   const [background, setBackground] = useState(null); // store background url

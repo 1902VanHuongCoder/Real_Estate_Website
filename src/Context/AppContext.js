@@ -10,6 +10,7 @@ const AppProvider = ({ children }) => {
   const [component, setComponent] = useState(null);
   const [showNotification, setShowNotification] = useState(null);
   const [showSpinner, setShowSpinner] = useState(false);
+  const [realEstateDetail, setRealEstateDetail] = useState(null);
 
   const userInfo = {
     sideBarOpen: sideBarOpen,
@@ -31,7 +32,12 @@ const AppProvider = ({ children }) => {
     setShowNotification: setShowNotification,
 
     showSpinner: showSpinner,
-    setShowSpinner: setShowSpinner
+    setShowSpinner: setShowSpinner,
+
+    realEstateDetail: realEstateDetail,
+    setRealEstateDetail: setRealEstateDetail,
+
+
   };
 
   return <AppContext.Provider value={userInfo}>{children}</AppContext.Provider>;

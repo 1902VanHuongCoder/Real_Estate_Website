@@ -4,7 +4,7 @@ import React from "react";
 //import icons
 import { FaLocationDot } from "react-icons/fa6";
 import { GoDotFill } from "react-icons/go";
-import Transitions from "../Transition";
+import Transitions from "./Partials/Transition";
 
 const Profile = () => {
   return (

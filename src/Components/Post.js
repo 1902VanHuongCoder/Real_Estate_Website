@@ -1,5 +1,6 @@
 // import hooks
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { useNotification } from "../Hooks/useNotification";
 
 // import packages
 import { useForm } from "react-hook-form";
@@ -8,27 +9,29 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 // import icons
 import { IoIosWarning } from "react-icons/io";
-import Transitions from "../Transition";
 
 // import components
+import Transitions from "./Partials/Transition";
 import UploadImage from "./Partials/UploadImage";
 import Editor from "./Editor";
 
 //import firebase services
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../FirebaseConfig/firebase";
-import { useNotification } from "../Hooks/useNotification";
-
-//import packages
+import { AppContext } from "../Context/AppContext";
 
 const Post = () => {
+
+  const { setShowSpinner} = useContext(AppContext);
+
+  const [handleShowNotification] = useNotification();
+
   const [value, setValue] = useState(""); // value of Description Editor
 
   const [titleImageURL, setTitleImageURL] = useState(null); // store url of title image
 
   const [listOfImageURLs, setListOfImageURLs] = useState([]); // list of images
 
-  const [handleShowNotification] = useNotification();
   const schema = yup.object().shape({
     // schema to validate form datas
     postTitle: yup
@@ -83,6 +86,7 @@ const Post = () => {
 
   const handleToPost = async (data) => {
     const date = new Date();
+    setShowSpinner(true);
     if (titleImageURL) {
       if (value !== "" || value !== "<p><br></p>") {
         const dataToStore = {
@@ -109,7 +113,7 @@ const Post = () => {
         try {
           await addDoc(collection(db, "posts"), dataToStore);
           handleShowNotification(
-            "Đăng bài thành công. Đang chờ duyệt",
+            "Đăng bài thành công.",
             "success"
           );
           window.scrollTo({
@@ -144,6 +148,7 @@ const Post = () => {
         behavior: "smooth",
       });
     }
+    setShowSpinner(false);
   };
 
   return (
@@ -502,3 +507,5 @@ const Post = () => {
 };
 
 export default Post;
+
+// THIS COMPONENT IS BEING BLOCK
