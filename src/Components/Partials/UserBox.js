@@ -5,12 +5,17 @@ import React, { useContext } from "react";
 import { CiLogout, CiLogin, CiViewList, CiUser } from "react-icons/ci";
 import { SlNote } from "react-icons/sl";
 import { LuUserCog } from "react-icons/lu";
+import { IoHomeOutline } from "react-icons/io5";
 
 //import context
 import { AppContext } from "../../Context/AppContext";
 
 //import library
 import { motion } from "framer-motion";
+
+// import images
+import defaultUserAvatar from "../../images/user_icon.png";
+import { Link } from "react-router-dom";
 
 //Create animation for user box when it comes and outs
 const userBoxVariants = {
@@ -32,20 +37,19 @@ const userBoxVariants = {
 
 const UserBox = () => {
   const { openUserBox, setComponent, session } = useContext(AppContext);
+  console.log(session);
   return (
     <motion.div
       variants={userBoxVariants}
       animate={openUserBox ? "open" : "close"}
       initial={false}
-      className={`absolute w-fit h-fit border-[1px] border-solid border-slate-200 bg-white z-40 shadow-lg`}
+      className={`absolute w-[320px] h-fit border-[1px] border-solid border-slate-200 bg-white z-40 shadow-lg`}
     >
       <div className="flex gap-x-2 p-5 border-b-[1px] border-solid border-slate-200">
         <div
           style={{
             backgroundImage: `url(${
-              session?.photoURL !== ""
-                ? session?.photoURL
-                : "./images/user_icon.png"
+              session?.photoURL !== "" ? session?.photoURL : defaultUserAvatar
             } )`,
           }}
           className="w-[60px] h-[60px] rounded-full bg-center bg-no-repeat bg-cover border-[4px] border-solid border-slate-200"
@@ -57,6 +61,14 @@ const UserBox = () => {
       </div>
 
       <ul className="flex flex-col gap-y-1 px-5 py-5 border-b-[1px] border-solid border-slate-200">
+        <li>
+          <Link
+            to="/"
+            className="flex gap-x-2 text-lg items-center"
+          >
+            <IoHomeOutline /> Trang chủ
+          </Link>
+        </li>
         <li>
           <span
             className="flex gap-x-2 text-lg items-center"

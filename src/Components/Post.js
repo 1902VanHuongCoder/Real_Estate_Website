@@ -19,6 +19,8 @@ import { addDoc, collection } from "firebase/firestore";
 import { db } from "../FirebaseConfig/firebase";
 import { useNotification } from "../Hooks/useNotification";
 
+//import packages
+
 const Post = () => {
   const [value, setValue] = useState(""); // value of Description Editor
 
@@ -77,9 +79,10 @@ const Post = () => {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
-  });
+  }); 
 
   const handleToPost = async (data) => {
+    const date = new Date();
     if (titleImageURL) {
       if (value !== "" || value !== "<p><br></p>") {
         const dataToStore = {
@@ -100,7 +103,8 @@ const Post = () => {
           titleImageURL: titleImageURL,
           besideImageURLs: listOfImageURLs,
           excepted: false,
-          username: "To Van Huong",
+          createdAt: date.getDay() + "/" + date.getMonth() + 1 + "/" + date.getFullYear(),
+          updatedAt: date.getDay() + "/" + date.getMonth() + 1 + "/" + date.getFullYear(),
         };
         try {
           await addDoc(collection(db, "posts"), dataToStore);
@@ -378,14 +382,14 @@ const Post = () => {
                     className="h-[50px] border-[1px] border-solid px-3 outline-none"
                     {...register("direction")}
                   >
-                    <option value="east">Đông</option>
-                    <option value="southeast">Đông Nam</option>
-                    <option value="northeast">Đông Bắc</option>
-                    <option value="northwest">Tây Bắc</option>
-                    <option value="north">Bắc</option>
-                    <option value="south">Nam</option>
-                    <option value="southwest">Tây Nam</option>
-                    <option value="west">Tây</option>
+                    <option value="Đông">Đông</option>
+                    <option value="Đông nam">Đông Nam</option>
+                    <option value="Đông bắc">Đông Bắc</option>
+                    <option value="Tây bắc">Tây Bắc</option>
+                    <option value="Bắc">Bắc</option>
+                    <option value="Nam">Nam</option>
+                    <option value="Tây nam">Tây Nam</option>
+                    <option value="Tây">Tây</option>
                   </select>
                 </div>
               </div>

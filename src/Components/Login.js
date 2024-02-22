@@ -21,7 +21,7 @@ const Login = () => {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const { setSession } = useContext(AppContext);
+  const { setSession, setShowSpinner } = useContext(AppContext);
 
   const [email, setEmail] = useState("");
 
@@ -34,6 +34,8 @@ const Login = () => {
   const handleLogin = async (e) => {
 
     e.preventDefault();
+    setShowSpinner(true);
+
     // handle login of user
     const userAccountRef = collection(db, "user_accounts"); // reference to user accounts in database
     const q = query(userAccountRef, where("email", "==", email)); // query whether this email had existed in database
@@ -42,9 +44,14 @@ const Login = () => {
       // if this account has not existed, notify for user to sign up new account
       handleShowNotification("Bạn chưa có tài khoản. Hãy đăng ký!", "error");
       window.scrollTo(0, 0);
+      setShowSpinner(false);
     } else {
       result.docs.forEach((doc) => {
         if (doc.data().password === md5(password)) {
+          
+          console.log("Dung mat khau!");
+          console.log(auth.currentUser.emailVerified);
+         
           if (auth.currentUser.emailVerified) {
             window.scrollTo(0, 0);
             handleShowNotification("Đăng nhập thành công!", "success");
@@ -63,6 +70,7 @@ const Login = () => {
           window.scrollTo(0, 0);
         }
       });
+      setShowSpinner(false);
     }
   };
 

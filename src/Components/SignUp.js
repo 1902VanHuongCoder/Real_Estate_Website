@@ -40,7 +40,7 @@ import { Link, useNavigate } from "react-router-dom";
 const SignUp = () => {
   const auth = getAuth(app);
 
-  const { setSession } = useContext(AppContext);
+  const { setSession, setShowSpinner } = useContext(AppContext);
 
   const [handleShowNotification] = useNotification(); //custom hook
 
@@ -93,6 +93,7 @@ const SignUp = () => {
     }
 
     if (flag) {
+      setShowSpinner(true);
       const userAccountRef = collection(db, "user_accounts"); // reference to user accounts in database
       const q = query(userAccountRef, where("email", "==", data.email)); // query whether this email had existed in database
       const result = await getDocs(q); // the query command will reuturn a document list that equal to email
@@ -150,6 +151,7 @@ const SignUp = () => {
         );
         window.scrollTo(0, 0);
       }
+      setShowSpinner(false);
     } else {
       // handle errors when there are problems
       handleShowNotification(
@@ -157,6 +159,7 @@ const SignUp = () => {
         "error"
       );
       window.scrollTo(0, 0);
+      setShowSpinner(false);
     }
   };
 

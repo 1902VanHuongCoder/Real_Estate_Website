@@ -9,6 +9,8 @@ const AppProvider = ({ children }) => {
   const [session, setSession] = useState(null);
   const [component, setComponent] = useState(null);
   const [showNotification, setShowNotification] = useState(null);
+  const [showSpinner, setShowSpinner] = useState(false);
+
   const userInfo = {
     sideBarOpen: sideBarOpen,
     setSideBarOpen: setSideBarOpen,
@@ -26,7 +28,10 @@ const AppProvider = ({ children }) => {
     setSession:setSession,
 
     showNotification: showNotification,
-    setShowNotification: setShowNotification
+    setShowNotification: setShowNotification,
+
+    showSpinner: showSpinner,
+    setShowSpinner: setShowSpinner
   };
 
   return <AppContext.Provider value={userInfo}>{children}</AppContext.Provider>;

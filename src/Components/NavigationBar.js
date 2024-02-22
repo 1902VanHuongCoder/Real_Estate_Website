@@ -16,6 +16,8 @@ import { AppContext } from "../Context/AppContext";
 import { rentItems, saleItems } from "../datas/navdatas";
 import { Link, useNavigate } from "react-router-dom";
 
+// import images
+import logo from '../images/logo.png';
 const NavigationBar = () => {
   const {
     sideBarOpen,
@@ -38,7 +40,7 @@ const NavigationBar = () => {
         <div className="flex gap-x-2">
           <span onClick={() => setComponent("home")}>
             <img
-              src="./images/logo.png"
+              src={logo}
               alt="logo"
               className="mr-3 h-6 sm:h-9"
             />

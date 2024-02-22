@@ -31,28 +31,33 @@ import UploadImage from "./Components/Partials/UploadImage";
 import { useContext } from "react";
 import { AppContext } from "./Context/AppContext";
 import Test2 from "./test2";
+import Loading from "./Components/Partials/Loading";
 
 function App() {
   const location = useLocation();
-  const {session, component} = useContext(AppContext);
+  const { session, component } = useContext(AppContext);
   // console.log(session);
   return (
-    <div className="relative max-w-[1200px] mx-auto overflow-hidden">
-      <NavigationBar />
-      <AnimatePresence mode="wait">
-        {component === "home" && <Home />}
-        {component === "profile" && <Profile />}
-        {component === "update_profile" && <UpdateProfile />}
-        {component === "post" && <Post />}
-      </AnimatePresence>
-      <Notification />
+    <div className="relative">
+      <Loading />
+      <div className="relative max-w-[1200px] mx-auto overflow-hidden">
+        <NavigationBar />
+        <Notification />
+        <AnimatePresence mode="wait">
+          {component === "profile" && <Profile />}
+          {component === "update_profile" && <UpdateProfile />}
+          {component === "post" && <Post />}
+        </AnimatePresence>
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             <Route index path="/" element={<Home />}></Route>
             <Route path="/signup" element={<SignUp />}></Route>
             <Route path="/real+estate/signin" element={<Login />}></Route>
-            <Route path="/real+estate/search+result/*" element={<OptionResults />}></Route>
-
+            <Route
+              path="/real+estate/search+result/*"
+              element={<OptionResults />}
+            ></Route>
+               <Route path="/admin" element={<AdminDashboard />}></Route>
 
             {/* <Route path="/details/*" element={<Details />}></Route>
             <Route path="/uploadimage" element={<UploadImage/>}></Route>
@@ -66,11 +71,12 @@ function App() {
             <Route path="/test2" element={<Veryfy />}></Route> */}
           </Routes>
         </AnimatePresence>
-  
-      <Feedback />
-      <ToTop />
-      <Footer />
-      <Sidebar />
+
+        <Feedback />
+        <ToTop />
+        <Footer />
+        <Sidebar />
+      </div>
     </div>
   );
 }
