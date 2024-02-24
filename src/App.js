@@ -46,11 +46,6 @@ function App() {
         <NavigationBar />
         <Notification />
         <AnimatePresence mode="wait">
-          {component === "profile" && <Profile />}
-          {component === "update_profile" && <UpdateProfile />}
-          {component === "post" && <Post />}
-        </AnimatePresence>
-        <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             <Route index path="/" element={<Home />}></Route>
             <Route path="/signup" element={<SignUp />}></Route>
@@ -59,8 +54,11 @@ function App() {
               path="/real+estate/search+result/*"
               element={<OptionResults />}
             ></Route>
-               <Route path="/admin" element={<AdminDashboard />}></Route>
                <Route path="/details" element={<Details />}></Route>
+               <Route path="/real+estate/your+profile" element={<Profile />}></Route>
+               <Route path="/real+estate/update+profile" element={<UpdateProfile />}></Route>
+               <Route path="/real+estate/post" element={<Post />}></Route>
+
             {/* <Route path="/details/*" element={<Details />}></Route>
             <Route path="/uploadimage" element={<UploadImage/>}></Route>
             <Route path="/admin" element={<AdminDashboard />}></Route>

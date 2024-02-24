@@ -36,7 +36,9 @@ import { AppContext } from "../Context/AppContext";
 //import library
 import md5 from "md5";
 import { Link, useNavigate } from "react-router-dom";
+import Transitions from "./Partials/Transition";
 
+// import component
 const SignUp = () => {
   const auth = getAuth(app);
 
@@ -187,7 +189,7 @@ const SignUp = () => {
       const queryResult = await getDocs(q);
       if (queryResult.docs.length < 1) {
         await addDoc(collection(db, "user_accounts"), userData);
-        localStorage.setItem("email", user.email);
+        localStorage.setItem("userEmail", user.email);
         handleShowNotification("Đăng ký tài khoản thành công!", "success");
         window.scrollTo(0, 0);
         setSession(userData);
@@ -210,201 +212,203 @@ const SignUp = () => {
     }
   };
   return (
-    <div className="w-full h-fit flex justify-center items-center">
-      <div className="w-[400px] h-fit shadow-md p-5 border-[1px] border-solid border-slate-200 my-[50px]">
-        <h1 className="py-6 text-xl uppercase text-center font-medium">
-          Đăng ký
-        </h1>
-        <form
-          onSubmit={handleSubmit(handleSignUp)}
-          action="/"
-          method="POST"
-          className="flex flex-col gap-y-4"
-        >
-          <div className="flex flex-col gap-y-2">
-            <label className="text-slate-500 pl-2" htmlFor="username">
-              Tên đăng nhập
-            </label>
-            <input
-              className={`${
-                errors.username ? "border-red-500" : "border-slate-400"
-              } text-base pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
-              id="username"
-              name="username"
-              type="text"
-              autoComplete="off"
-              {...register("username")}
-            />
-            {errors.username && (
-              <p className="flex items-center gap-x-1 text-red-500">
-                <span>
-                  <IoIosWarning />
-                </span>
-                <span>{errors.username.message}</span>
-              </p>
-            )}
-          </div>
-          <div className="flex flex-col gap-y-2">
-            <label className="text-slate-500 pl-2" htmlFor="email">
-              Địa chỉ email
-            </label>
-            <input
-              className={`${
-                errors.email ? "border-red-500" : "border-slate-400"
-              } text-base pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
-              id="email"
-              name="email"
-              type="email"
-              autoComplete="on"
-              {...register("email")}
-            />
-            {errors.email && (
-              <p className="flex items-center gap-x-1 text-red-500">
-                <span>
-                  <IoIosWarning />
-                </span>
-                <span>{errors.email.message}</span>
-              </p>
-            )}
-          </div>
-          <div className="flex flex-col gap-y-2">
-            <label className="text-slate-500 pl-2" htmlFor="phoneNumber">
-              Số điện thoại
-            </label>
-            <div className="relative w-full h-fit">
-              <span className="absolute -left-[1px] -top-[1px] w-[100px] h-[52px] flex items-center gap-x-1 pl-2 bg-slate-200">
-                <span className="w-[40px] h-[30px] bg-cover bg-center">
-                  <img
-                    className="w-full h-full"
-                    src="./images/vn_flag_icon.png"
-                    alt="vn_flag_icon"
-                  />
-                </span>
-                <span className="font-semibold">+84</span>
-              </span>
-              <input
-                className={`${
-                  errors.phoneNumber ? "border-red-500" : "border-slate-400"
-                } w-full text-base pl-28 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
-                id="phoneNumber"
-                name="phoneNumber"
-                type="text"
-                autoComplete="on"
-                {...register("phoneNumber")}
-              />
-            </div>
-
-            {errors.phoneNumber && (
-              <p className="flex items-center gap-x-1 text-red-500">
-                <span>
-                  <IoIosWarning />
-                </span>
-                <span>{errors.phoneNumber.message}</span>
-              </p>
-            )}
-          </div>
-          <div className="flex flex-col gap-y-2">
-            <label className="text-slate-500 pl-2" htmlFor="password">
-              Mật khẩu
-            </label>
-            <div className="relative">
-              <span
-                onClick={() => {
-                  setShowPassword(!showPassword);
-                }}
-                className="absolute right-0 top-0 h-[50px] flex justify-center items-center w-[40px] text-slate-500 cursor-pointer"
-              >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </span>
-              <input
-                className={`${
-                  errors.password ? "border-red-500" : "border-slate-400"
-                } w-full text-base pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
-                id="password"
-                name="password"
-                type={showPassword ? "text" : "password"}
-                autoComplete="on"
-                {...register("password")}
-              />
-            </div>
-            {errors.password && (
-              <p className="flex items-center gap-x-1 text-red-500">
-                <span>
-                  <IoIosWarning />
-                </span>
-                <span>{errors.password.message}</span>
-              </p>
-            )}
-          </div>
-          <div className="flex flex-col gap-y-2">
-            <label className="text-slate-500 pl-2" htmlFor="password">
-              Xác nhận mật khẩu
-            </label>
-            <div className="relative">
-              <span
-                onClick={() => {
-                  setShowPassword(!showPassword);
-                }}
-                className="absolute right-0 top-0 h-[50px] flex justify-center items-center w-[40px] text-slate-500 cursor-pointer"
-              >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </span>
-              <input
-                className={`${
-                  errors.confirm_password
-                    ? "border-red-500"
-                    : "border-slate-400"
-                } w-full text-base pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
-                id="confirm_password"
-                name="confirm_password"
-                type={showPassword ? "text" : "password"}
-                autoComplete="on"
-                {...register("confirm_password")}
-              />
-            </div>
-
-            {errors.confirm_password && (
-              <p className="flex items-center gap-x-1 text-red-500">
-                <span>
-                  <IoIosWarning />
-                </span>
-                <span>{errors.confirm_password.message}</span>
-              </p>
-            )}
-          </div>
-          <div className="flex justify-center mt-5">
-            <button
-              type="submit"
-              className="ml-1 text-white bg-[#0B60B0] h-[40px] px-5 w-[150px] hover:opacity-80"
-            >
-              Đăng ký
-            </button>
-          </div>
-          <div
-            onClick={handleSignUpWithGoogle}
-            className="cursor-pointer flex items-center gap-x-2 justify-center py-5"
+    <Transitions>
+      <div className="w-full h-fit flex justify-center items-center">
+        <div className="w-[400px] h-fit shadow-md p-5 border-[1px] border-solid border-slate-200 my-[50px]">
+          <h1 className="py-6 text-xl uppercase text-center font-medium">
+            Đăng ký
+          </h1>
+          <form
+            onSubmit={handleSubmit(handleSignUp)}
+            action="/"
+            method="POST"
+            className="flex flex-col gap-y-4"
           >
-            <span>Đăng ký bằng</span>
-            <span className="w-[50px] h-[50px] rounded-full bg-slate-100 flex justify-center items-center">
-              <img
-                className="w-[40px] h-[40px]"
-                src="./images/google_logo.png"
-                alt="Google Logo"
+            <div className="flex flex-col gap-y-2">
+              <label className="text-slate-500 pl-2" htmlFor="username">
+                Tên đăng nhập
+              </label>
+              <input
+                className={`${
+                  errors.username ? "border-red-500" : "border-slate-400"
+                } text-base pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                id="username"
+                name="username"
+                type="text"
+                autoComplete="off"
+                {...register("username")}
               />
-            </span>
-          </div>
-          <div className="flex gap-x-1 items-center justify-center pb-6">
-            <span>Nếu bạn đã có tài khoản! </span>
-            <span className="text-[#40A2D8] underline">
-              <Link to="/real+estate/signin">Đăng nhập</Link>
-            </span>
-          </div>
-        </form>
+              {errors.username && (
+                <p className="flex items-center gap-x-1 text-red-500">
+                  <span>
+                    <IoIosWarning />
+                  </span>
+                  <span>{errors.username.message}</span>
+                </p>
+              )}
+            </div>
+            <div className="flex flex-col gap-y-2">
+              <label className="text-slate-500 pl-2" htmlFor="email">
+                Địa chỉ email
+              </label>
+              <input
+                className={`${
+                  errors.email ? "border-red-500" : "border-slate-400"
+                } text-base pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="on"
+                {...register("email")}
+              />
+              {errors.email && (
+                <p className="flex items-center gap-x-1 text-red-500">
+                  <span>
+                    <IoIosWarning />
+                  </span>
+                  <span>{errors.email.message}</span>
+                </p>
+              )}
+            </div>
+            <div className="flex flex-col gap-y-2">
+              <label className="text-slate-500 pl-2" htmlFor="phoneNumber">
+                Số điện thoại
+              </label>
+              <div className="relative w-full h-fit">
+                <span className="absolute -left-[1px] -top-[1px] w-[100px] h-[52px] flex items-center gap-x-1 pl-2 bg-slate-200">
+                  <span className="w-[40px] h-[30px] bg-cover bg-center">
+                    <img
+                      className="w-full h-full"
+                      src="./images/vn_flag_icon.png"
+                      alt="vn_flag_icon"
+                    />
+                  </span>
+                  <span className="font-semibold">+84</span>
+                </span>
+                <input
+                  className={`${
+                    errors.phoneNumber ? "border-red-500" : "border-slate-400"
+                  } w-full text-base pl-28 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  type="text"
+                  autoComplete="on"
+                  {...register("phoneNumber")}
+                />
+              </div>
+
+              {errors.phoneNumber && (
+                <p className="flex items-center gap-x-1 text-red-500">
+                  <span>
+                    <IoIosWarning />
+                  </span>
+                  <span>{errors.phoneNumber.message}</span>
+                </p>
+              )}
+            </div>
+            <div className="flex flex-col gap-y-2">
+              <label className="text-slate-500 pl-2" htmlFor="password">
+                Mật khẩu
+              </label>
+              <div className="relative">
+                <span
+                  onClick={() => {
+                    setShowPassword(!showPassword);
+                  }}
+                  className="absolute right-0 top-0 h-[50px] flex justify-center items-center w-[40px] text-slate-500 cursor-pointer"
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+                <input
+                  className={`${
+                    errors.password ? "border-red-500" : "border-slate-400"
+                  } w-full text-base pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="on"
+                  {...register("password")}
+                />
+              </div>
+              {errors.password && (
+                <p className="flex items-center gap-x-1 text-red-500">
+                  <span>
+                    <IoIosWarning />
+                  </span>
+                  <span>{errors.password.message}</span>
+                </p>
+              )}
+            </div>
+            <div className="flex flex-col gap-y-2">
+              <label className="text-slate-500 pl-2" htmlFor="password">
+                Xác nhận mật khẩu
+              </label>
+              <div className="relative">
+                <span
+                  onClick={() => {
+                    setShowPassword(!showPassword);
+                  }}
+                  className="absolute right-0 top-0 h-[50px] flex justify-center items-center w-[40px] text-slate-500 cursor-pointer"
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+                <input
+                  className={`${
+                    errors.confirm_password
+                      ? "border-red-500"
+                      : "border-slate-400"
+                  } w-full text-base pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                  id="confirm_password"
+                  name="confirm_password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="on"
+                  {...register("confirm_password")}
+                />
+              </div>
+
+              {errors.confirm_password && (
+                <p className="flex items-center gap-x-1 text-red-500">
+                  <span>
+                    <IoIosWarning />
+                  </span>
+                  <span>{errors.confirm_password.message}</span>
+                </p>
+              )}
+            </div>
+            <div className="flex justify-center mt-5">
+              <button
+                type="submit"
+                className="ml-1 text-white bg-[#0B60B0] h-[40px] px-5 w-[150px] hover:opacity-80"
+              >
+                Đăng ký
+              </button>
+            </div>
+            <div
+              onClick={handleSignUpWithGoogle}
+              className="cursor-pointer flex items-center gap-x-2 justify-center py-5"
+            >
+              <span>Đăng ký bằng</span>
+              <span className="w-[50px] h-[50px] rounded-full bg-slate-100 flex justify-center items-center">
+                <img
+                  className="w-[40px] h-[40px]"
+                  src="./images/google_logo.png"
+                  alt="Google Logo"
+                />
+              </span>
+            </div>
+            <div className="flex gap-x-1 items-center justify-center pb-6">
+              <span>Nếu bạn đã có tài khoản! </span>
+              <span className="text-[#40A2D8] underline">
+                <Link to="/real+estate/signin">Đăng nhập</Link>
+              </span>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+    </Transitions>
   );
 };
 
 export default SignUp;
 
-// THIS FILE IS BEING BLOCKED 
+// THIS FILE IS BEING BLOCKED

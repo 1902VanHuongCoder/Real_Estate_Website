@@ -1,5 +1,5 @@
 // import hooks
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 //import firebase services
 import { storage } from "../../FirebaseConfig/firebase";
@@ -10,7 +10,6 @@ import { FaCloudUploadAlt } from "react-icons/fa";
 
 // import motion library
 import { AnimatePresence, motion } from "framer-motion";
-import { AppContext } from "../../Context/AppContext";
 
 const UploadImage = ({
   setTitleImageURL,
@@ -21,7 +20,7 @@ const UploadImage = ({
     useState(0);
 
   const [percentOfUploadingImagesList, setPercentOfUploadingImagesList] =
-    useState(20);
+    useState(0);
   const [titleImage, setTitleImage] = useState(null); // store local url when we upload file from our computer
   const [listOfImages, setListOfImages] = useState({
     // the same
@@ -315,3 +314,6 @@ const UploadImage = ({
 };
 
 export default UploadImage;
+
+// THIS FILE WAS BEING BLOCK
+

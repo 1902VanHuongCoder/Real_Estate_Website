@@ -384,7 +384,7 @@ const Post = () => {
                   <select
                     id="direction"
                     name="direction"
-                    className="h-[50px] border-[1px] border-solid px-3 outline-none"
+                    className="h-[50px] border-[1px] border-solid border-slate-400 px-3 outline-none"
                     {...register("direction")}
                   >
                     <option value="Đông">Đông</option>

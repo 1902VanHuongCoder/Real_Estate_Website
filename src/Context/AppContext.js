@@ -7,7 +7,6 @@ const AppProvider = ({ children }) => {
   const [isOpenUserBox, setOpenUserBox] = useState(false); // state to store and control userbox
   const [showImage, setShowImage] = useState(false);  // toggle to view images in detail page
   const [session, setSession] = useState(null);
-  const [component, setComponent] = useState(null);
   const [showNotification, setShowNotification] = useState(null);
   const [showSpinner, setShowSpinner] = useState(false);
   const [realEstateDetail, setRealEstateDetail] = useState(null);
@@ -21,9 +20,6 @@ const AppProvider = ({ children }) => {
 
     showImage: showImage,
     setShowImage: setShowImage,
-
-    component:component,
-    setComponent: setComponent,
 
     session: session,
     setSession:setSession,
