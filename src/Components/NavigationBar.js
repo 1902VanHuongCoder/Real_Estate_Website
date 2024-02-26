@@ -24,7 +24,6 @@ const NavigationBar = () => {
     setSideBarOpen,
     openUserBox,
     setOpenUserBox,
-    setComponent,
   } = useContext(AppContext);
   const navigate = useNavigate();
   const [search, setSearch] = useState("");

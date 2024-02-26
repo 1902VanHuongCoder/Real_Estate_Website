@@ -18,8 +18,7 @@ import { AppContext } from "../Context/AppContext";
 import { useNavigate } from "react-router-dom";
 
 const News = () => {
-  const [news, setNews] = useState([]);
-  const { setShowSpinner, setRealEstateDetail } = useContext(AppContext);
+  const { setShowSpinner, setRealEstateDetail,postsWasFiltered, setPostsWasFiltered } = useContext(AppContext);
   const navigate = useNavigate();
 
   const handleViewDetails = (postData) => {
@@ -34,7 +33,7 @@ const News = () => {
         ...doc.data(),
         id: doc.id,
       }));
-      setNews(dataResponsed);
+      setPostsWasFiltered(dataResponsed);
     });
     setShowSpinner(false);
   };
@@ -42,7 +41,7 @@ const News = () => {
     fetchData();
   }, []);
 
-
+console.log(postsWasFiltered);
   return (
     <div className="lg:basis-[70%] h-fit w-full px-5 lg:px-10 pt-10 sm:pt-14">
       <h2 className="text-2xl border-l-[6px] border-l-solid border-l-[#0B60B0] pl-3">
@@ -50,8 +49,8 @@ const News = () => {
       </h2>
 
       {/* News components  */}
-      {news.length > 0 ? (
-        news.map((item, index) => (
+      {postsWasFiltered?.length > 0 ? (
+        postsWasFiltered?.map((item, index) => (
           <div
             key={index}
             className="w-full mt-5 border-[1px] border-solid border-slate-200 h-fit"

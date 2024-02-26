@@ -10,7 +10,8 @@ const AppProvider = ({ children }) => {
   const [showNotification, setShowNotification] = useState(null);
   const [showSpinner, setShowSpinner] = useState(false);
   const [realEstateDetail, setRealEstateDetail] = useState(null);
-
+  const [postsWasFiltered, setPostsWasFiltered] = useState(null);
+  console.log(session);
   const userInfo = {
     sideBarOpen: sideBarOpen,
     setSideBarOpen: setSideBarOpen,
@@ -33,7 +34,8 @@ const AppProvider = ({ children }) => {
     realEstateDetail: realEstateDetail,
     setRealEstateDetail: setRealEstateDetail,
 
-
+    postsWasFiltered: postsWasFiltered,
+    setPostsWasFiltered: setPostsWasFiltered,
   };
 
   return <AppContext.Provider value={userInfo}>{children}</AppContext.Provider>;

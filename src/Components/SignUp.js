@@ -87,6 +87,7 @@ const SignUp = () => {
   const handleSignUp = async (data) => {
     // handle sign-up of user
     let flag = false;
+    const date = new Date();
     if (
       data.password !== "" &&
       md5(data.password) === md5(data.confirm_password) // encrypte password with md5 library to increase security for sensitive datas
@@ -110,10 +111,24 @@ const SignUp = () => {
           email: data.email,
           phoneNumber: data.phoneNumber,
           password: md5(data.password),
-          create_at: serverTimestamp(),
-          update_at: serverTimestamp(),
+          create_at:
+            date.getDay() +
+            "/" +
+            date.getMonth() +
+            1 +
+            "/" +
+            date.getFullYear(),
+          update_at:
+            date.getDay() +
+            "/" +
+            date.getMonth() +
+            1 +
+            "/" +
+            date.getFullYear(),
           role: "user",
           photoURL: "",
+          address: "",
+          backgroundURL: "",
         };
 
         const ref = await addDoc(collection(db, "user_accounts"), dataToStore); // add document to user_accounts table in database
@@ -167,6 +182,7 @@ const SignUp = () => {
 
   // handle sign-up with Google Provider through Firebase SDK - can't use this feature because it has some problems with Chrome browser
   const handleSignUpWithGoogle = async () => {
+    const date = new Date();
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider(); // use Google provider to authenticate user.
     try {
@@ -177,10 +193,14 @@ const SignUp = () => {
         email: user.email,
         phoneNumber: null,
         password: user.uid,
-        create_at: serverTimestamp(),
-        update_at: serverTimestamp(),
+        create_at:
+          date.getDay() + "/" + date.getMonth() + 1 + "/" + date.getFullYear(),
+        update_at:
+          date.getDay() + "/" + date.getMonth() + 1 + "/" + date.getFullYear(),
         role: "user",
         photoURL: user.photoURL,
+        address: "",
+        backgroundURL: "",
       };
 
       // check whether user had existed

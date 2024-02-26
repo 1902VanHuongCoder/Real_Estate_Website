@@ -1,19 +1,25 @@
 // import hooks
-import React from "react";
+import React, { useContext } from "react";
 
 //import icons
 import { FaLocationDot } from "react-icons/fa6";
-import { GoDotFill } from "react-icons/go";
 import Transitions from "./Partials/Transition";
 
+//import context
+import { AppContext } from "../Context/AppContext";
+
+//import images
+import defaultBackground from '../images/buiding.jpg';
+import defaultAvatar from "../images/user_icon.png";
 const Profile = () => {
+  const {session} = useContext(AppContext);
   return (
     <Transitions>
       <div className="w-full h-fit">
         {/* background  */}
         <div
           className="h-[400px] w-full bg-center bg-cover bg-no-repeat"
-          style={{ backgroundImage: `url("./images/Nha+Rieng+Image+01.jpg")` }}
+          style={{ backgroundImage: `url("${ session &&  session.backgroundURL !== "" ? session.backgroundURL : defaultBackground}")` }}
         ></div>
 
         <div className="relative h-fit pt-[300px] sm:pt-[280px] lg:pt-[250px]">
@@ -21,31 +27,31 @@ const Profile = () => {
           <div className="absolute -top-[200px] left-[50%] translate-x-[-50%] w-[90%] sm:w-3/5 h-fit p-5 bg-white rounded-md shadow-md flex flex-col gap-y-2 items-center justify-center">
             <div className="w-fit h-fit border-[5px] border-solid border-slate-300 rounded-full">
               <div
-                className="w-[120px] h-[120px] bg-red-400 rounded-full bg-cover bg-center bg-no-repeat"
-                style={{ backgroundImage: `url("./images/user.jpg")` }}
+                className="w-[120px] h-[120px] rounded-full bg-cover bg-center bg-no-repeat"
+                style={{ backgroundImage: `url("${session && session.photoURL !== "" ? session.photoURL : defaultAvatar}")` }}
               ></div>
             </div>
-            <h1 className="mt-5 text-4xl font-medium">Tô Văn Hưởng</h1>
+            <h1 className="mt-5 text-4xl font-medium">{session && session.username !== "" ? session.username : "Không Xác Định"}</h1>
             <p className="text-base sm:text-lg text-slate-500 mt-5 flex gap-x-2 items-center">
               <span className="text-red-500 hidden sm:block">
                 <FaLocationDot />
               </span>
               <span className="text-center">
-                ấp Mương Khai - xã Mỹ Hương - huyện Mỹ Tú - tỉnh Sóc Trăng
+                {session && session.address !== "" ? session.address : "Không xác định"}
               </span>
             </p>
             <p className="text-lg text-slate-500 mt-5">
-              <span className="text-base">Điện thoại:</span>
-              <span> 0334745366</span>
+              <span className="text-base">Điện thoại: </span>
+              <span>{session && session.phoneNumber !== "" ? session.phoneNumber : "Không xác định"}</span>
             </p>
             <div className="flex justify-between w-full px-0 sm:px-10 mt-5">
               <p className="flex flex-col items-center sm:flex-row gap-2">
-                <span className="italic">Số bài đăng: </span>
-                <span>04</span>
+                <span className="italic">Ngày cập nhật: </span>
+                <span>{session && session.update_at !== "" ? session.update_at : "Không xác định"}</span>
               </p>
               <p className="flex flex-col items-center sm:flex-row gap-2">
                 <span className="italic"> Ngày gia nhập: </span>
-                <span>01/01/2024</span>
+                <span>{session && session.create_at !== "" ? session.create_at : "Không xác định"}</span>
               </p>
             </div>
           </div>
@@ -61,7 +67,7 @@ const Profile = () => {
           </div>
 
           {/* Posts list are waiting accepting */}
-          <div className="p-5">
+          {/* <div className="p-5">
             <p className="flex gap-x-1 items-center text-3xl pb-10 pt-5">
               <span className="opacity-80 flex justify-center items-center h-[50px]">
                 <GoDotFill />
@@ -202,7 +208,7 @@ const Profile = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </Transitions>
