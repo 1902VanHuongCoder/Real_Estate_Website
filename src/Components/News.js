@@ -1,5 +1,5 @@
 // import hooks
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect} from "react";
 
 // import icons
 import { FaLocationDot } from "react-icons/fa6";
@@ -41,7 +41,6 @@ const News = () => {
     fetchData();
   }, []);
 
-console.log(postsWasFiltered);
   return (
     <div className="lg:basis-[70%] h-fit w-full px-5 lg:px-10 pt-10 sm:pt-14">
       <h2 className="text-2xl border-l-[6px] border-l-solid border-l-[#0B60B0] pl-3">

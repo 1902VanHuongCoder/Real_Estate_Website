@@ -38,6 +38,8 @@ import md5 from "md5";
 import { Link, useNavigate } from "react-router-dom";
 import Transitions from "./Partials/Transition";
 
+//import images
+import flagIcon from '../images/vn_flag_icon.png';
 // import component
 const SignUp = () => {
   const auth = getAuth(app);
@@ -299,7 +301,7 @@ const SignUp = () => {
                   <span className="w-[40px] h-[30px] bg-cover bg-center">
                     <img
                       className="w-full h-full"
-                      src="./images/vn_flag_icon.png"
+                      src={flagIcon}
                       alt="vn_flag_icon"
                     />
                   </span>

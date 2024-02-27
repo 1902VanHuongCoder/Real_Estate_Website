@@ -7,7 +7,7 @@ import md5 from "md5";
 import { Link, useNavigate } from "react-router-dom";
 
 // import firebase services
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
 import { app, db } from "../FirebaseConfig/firebase";
 import { AppContext } from "../Context/AppContext";
 
@@ -22,7 +22,7 @@ const Login = () => {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const { setSession, setShowSpinner } = useContext(AppContext);
+  const { setSession, setShowSpinner, session } = useContext(AppContext);
 
   const [email, setEmail] = useState("");
 
@@ -48,14 +48,12 @@ const Login = () => {
     } else {
       result.docs.forEach((doc) => {
         if (doc.data().password === md5(password)) {
-          console.log("Dung mat khau!");
-          console.log(auth.currentUser.emailVerified);
-
           if (auth.currentUser.emailVerified) {
             window.scrollTo(0, 0);
             handleShowNotification("Đăng nhập thành công!", "success");
             localStorage.setItem("userEmail", doc.data().email);
-            setSession(doc.data());
+            const data = {...doc.data(),id: doc.id};
+            setSession(data);
             navigate("/");
           } else {
             handleShowNotification(
@@ -73,12 +71,9 @@ const Login = () => {
     }
   };
 
-  useEffect(() => {
-    let userEmail = localStorage.getItem("userEmail");
-    if (userEmail) {
-      window.location.href = "http://localhost:3000/";
-    }
-  }, []);
+  if (localStorage.getItem("userEmail")) {
+    navigate("/");
+  }
   return (
     <Transitions>
       <div className="w-full h-fit flex justify-center items-center">

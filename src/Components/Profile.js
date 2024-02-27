@@ -11,6 +11,10 @@ import { AppContext } from "../Context/AppContext";
 //import images
 import defaultBackground from '../images/buiding.jpg';
 import defaultAvatar from "../images/user_icon.png";
+
+//import components
+import { Link } from "react-router-dom";
+
 const Profile = () => {
   const {session} = useContext(AppContext);
   return (
@@ -37,12 +41,12 @@ const Profile = () => {
                 <FaLocationDot />
               </span>
               <span className="text-center">
-                {session && session.address !== "" ? session.address : "Không xác định"}
+                {session && session.address !== "" ? session.address : "Chưa cập nhật thông tin"}
               </span>
             </p>
             <p className="text-lg text-slate-500 mt-5">
               <span className="text-base">Điện thoại: </span>
-              <span>{session && session.phoneNumber !== "" ? session.phoneNumber : "Không xác định"}</span>
+              <span>{session && session.phoneNumber ? session.phoneNumber : "Chưa cập nhật thông tin"}</span>
             </p>
             <div className="flex justify-between w-full px-0 sm:px-10 mt-5">
               <p className="flex flex-col items-center sm:flex-row gap-2">
@@ -58,12 +62,12 @@ const Profile = () => {
 
           {/* navigation options */}
           <div className="w-full h-fit flex gap-x-2 px-5 pb-5 border-b-[1px] border-b-solid border-b-slate-200">
-            <button className="h-[60px] border-[1px] border-solid border-slate-400 px-5 py-3 bg-[#40A2D8] text-white font-medium text-lg">
-              Đăng bài
-            </button>
-            <button className="h-[60px] border-[1px] border-solid border-slate-400 px-5 py-3 bg-[#40A2D8] text-white font-medium text-lg">
+            <Link to="/" className="h-[60px] border-[1px] border-solid border-slate-400 px-5 py-3 bg-[#40A2D8] text-white font-medium text-lg">
+              Trang chủ
+            </Link>
+            <Link to="/real+estate/update+profile" className="h-[60px] border-[1px] border-solid border-slate-400 px-5 py-3 bg-[#40A2D8] text-white font-medium text-lg">
               Sửa hồ sơ
-            </button>
+            </Link>
           </div>
 
           {/* Posts list are waiting accepting */}

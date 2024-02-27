@@ -11,7 +11,7 @@ const AppProvider = ({ children }) => {
   const [showSpinner, setShowSpinner] = useState(false);
   const [realEstateDetail, setRealEstateDetail] = useState(null);
   const [postsWasFiltered, setPostsWasFiltered] = useState(null);
-  console.log(session);
+  
   const userInfo = {
     sideBarOpen: sideBarOpen,
     setSideBarOpen: setSideBarOpen,

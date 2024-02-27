@@ -1,5 +1,5 @@
 // import hooks
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 // import icons
 import { LuPencilLine } from "react-icons/lu";
@@ -12,10 +12,20 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Transitions from "./Partials/Transition";
 
+//import images
+import defaultBackground from "../images/buiding.jpg";
+import defaultAvatar from "../images/user_icon.png";
+import flagIcon from "../images/vn_flag_icon.png";
+
+// import context
+import { AppContext } from "../Context/AppContext";
+
 const UpdateProfile = () => {
   const [background, setBackground] = useState(null); // store background url
 
   const [userAvatar, setUserAvatar] = useState(null); // store user avatar url
+
+  const { session } = useContext(AppContext);
 
   const schema = yup.object().shape({
     // schema to validate form datas
@@ -47,7 +57,7 @@ const UpdateProfile = () => {
   const handleUploadBackground = (event) => {
     if (event.target.files.length > 0) {
       let url = URL.createObjectURL(event.target.files[0]);
-      setBackground(url);
+      setBackground({ localURL: url, details: event.target.files[0] });
     }
     return;
   };
@@ -56,7 +66,7 @@ const UpdateProfile = () => {
   const handleUploadUserAvatar = (event) => {
     if (event.target.files.length > 0) {
       let url = URL.createObjectURL(event.target.files[0]);
-      setUserAvatar(url);
+      setUserAvatar({ localURL: url, details: event.target.files[0] });
     }
     return;
   };
@@ -64,6 +74,8 @@ const UpdateProfile = () => {
   // update user's datas
   const handleUpdateUserProfile = (data) => {
     console.log(data);
+    console.log(background.details);
+    console.log(userAvatar.details);
   };
   return (
     <Transitions>
@@ -83,7 +95,11 @@ const UpdateProfile = () => {
             className="relative w-full h-[500px] bg-cover bg-center bg-no-repeat"
             style={{
               backgroundImage: `url(${
-                background ? background : "./images/Nha+Rieng+Image+01.jpg"
+                background
+                  ? background.localURL
+                  : session && session.backgroundURL !== ""
+                  ? session.backgroundURL
+                  : defaultBackground
               })`,
             }}
           >
@@ -110,10 +126,14 @@ const UpdateProfile = () => {
               <div
                 style={{
                   backgroundImage: `url(${
-                    userAvatar ? userAvatar : "./images/user.jpg"
+                    userAvatar
+                      ? userAvatar.localURL
+                      : session && session.photoURL !== ""
+                      ? session.photoURL
+                      : defaultAvatar
                   })`,
                 }}
-                className="border-[4px] border-slate-200 border-solid bg-center bg-cover w-[150px] h-[150px] bg-red-300 rounded-full overflow-hidden flex flex-col justify-end"
+                className="border-[4px] border-slate-200 border-solid bg-center bg-cover w-[150px] h-[150px] bg-white rounded-full overflow-hidden flex flex-col justify-end"
               >
                 <label
                   htmlFor="user_avatar"
@@ -134,7 +154,7 @@ const UpdateProfile = () => {
             </div>
 
             <div className="w-full sm:w-3/5 h-fit mx-auto p-5 pt-10 flex flex-col gap-y-4">
-              <div class="flex flex-col gap-y-1">
+              <div className="flex flex-col gap-y-1">
                 <label htmlFor="username">Họ và tên</label>
                 <input
                   className={`${
@@ -143,7 +163,9 @@ const UpdateProfile = () => {
                   type="text"
                   id="username"
                   name="username"
-                  placeholder="Tô Văn Hưởng"
+                  placeholder={
+                    session ? session.username : "Nhập tên của bạn ..."
+                  }
                   {...register("username")}
                 />
                 {errors.username && (
@@ -155,7 +177,7 @@ const UpdateProfile = () => {
                   </p>
                 )}
               </div>
-              <div class="flex flex-col gap-y-1">
+              <div className="flex flex-col gap-y-1">
                 <label htmlFor="address">Địa chỉ</label>
                 <input
                   className={`${
@@ -164,7 +186,9 @@ const UpdateProfile = () => {
                   type="text"
                   id="address"
                   name="address"
-                  placeholder="Phố Trần Quốc Hoàn, Phường Dịch Vọng Hậu, Cầu Giấy, Hà Nội"
+                  placeholder={
+                    session && session.address !== "" ? session.address : "Nhập địa chỉ ..."
+                  }
                   {...register("address")}
                 />
                 {errors.address && (
@@ -176,18 +200,33 @@ const UpdateProfile = () => {
                   </p>
                 )}
               </div>
-              <div class="flex flex-col gap-y-1">
-                <label htmlFor="phoneNumber">Số điện thoại</label>
-                <input
-                  className={`${
-                    errors.phoneNumber ? "border-red-500" : "border-slate-400"
-                  } w-full h-[50px] outline-none border-[1px] border-solid  pl-3`}
-                  type="text"
-                  id="phoneNumber"
-                  name="phoneNumber"
-                  placeholder="0334745377"
-                  {...register("phoneNumber")}
-                />
+              <div className="flex flex-col gap-y-2">
+                <label className="text-slate-500 pl-2" htmlFor="phoneNumber">
+                  Số điện thoại
+                </label>
+                <div className="relative w-full h-fit">
+                  <span className="absolute -left-[1px] -top-[1px] w-[100px] h-[52px] flex items-center gap-x-1 pl-2 bg-slate-200">
+                    <span className="w-[40px] h-[30px] bg-cover bg-center">
+                      <img
+                        className="w-full h-full"
+                        src={flagIcon}
+                        alt="vn_flag_icon"
+                      />
+                    </span>
+                    <span className="font-semibold">+84</span>
+                  </span>
+                  <input
+                    className={`${
+                      errors.phoneNumber ? "border-red-500" : "border-slate-400"
+                    } w-full text-base pl-28 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                    id="phoneNumber"
+                    name="phoneNumber"
+                    type="text"
+                    autoComplete="on"
+                    {...register("phoneNumber")}
+                  />
+                </div>
+
                 {errors.phoneNumber && (
                   <p className="flex items-center gap-x-1 text-red-500">
                     <span>

@@ -37,7 +37,7 @@ import Loading from "./Components/Partials/Loading";
 function App() {
   const location = useLocation();
   const { session, component } = useContext(AppContext);
-  // console.log(session);
+  console.log(session);
   return (
     <div className="relative">
       <Loading />
