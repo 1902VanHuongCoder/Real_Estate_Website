@@ -8,13 +8,6 @@ import { AppContext } from "./Context/AppContext";
 
 const Home = () => {
   const { session } = useContext(AppContext);
-
-  useEffect(() => {
-    const userInfo = localStorage.getItem("userInfo");
-    if (!userInfo) {
-      window.location.href = "/real+estate/signin";
-    }
-  }, []);
   return (
     <Transitions>
       <div className="relative max-w-[1200px] mx-auto overflow-hidden">

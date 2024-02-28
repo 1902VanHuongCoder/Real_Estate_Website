@@ -39,7 +39,8 @@ import { Link, useNavigate } from "react-router-dom";
 import Transitions from "./Partials/Transition";
 
 //import images
-import flagIcon from '../images/vn_flag_icon.png';
+import flagIcon from "../images/vn_flag_icon.png";
+import googleIcon from "../images/google_logo.png";
 // import component
 const SignUp = () => {
   const auth = getAuth(app);
@@ -186,11 +187,15 @@ const SignUp = () => {
   const handleSignUpWithGoogle = async () => {
     const date = new Date();
     const auth = getAuth(app);
+    var flag = false;
+    var userEmail = "";
     const provider = new GoogleAuthProvider(); // use Google provider to authenticate user.
     try {
       const result = await signInWithPopup(auth, provider); // render popup to authenticate with Google
       const user = result.user; // some basic user informations are returned.
+      userEmail = user.email; 
       const userData = {
+        userId: "more" + result.displayName + new Date().getFullYear(),
         username: user.displayName,
         email: user.email,
         phoneNumber: "",
@@ -211,11 +216,9 @@ const SignUp = () => {
       const queryResult = await getDocs(q);
       if (queryResult.docs.length < 1) {
         await addDoc(collection(db, "user_accounts"), userData);
-        localStorage.setItem("userEmail", user.email);
         handleShowNotification("Đăng ký tài khoản thành công!", "success");
         window.scrollTo(0, 0);
-        setSession(userData);
-        navigate("/");
+        flag = true;
       } else {
         handleShowNotification(
           "Email này đã được sử dụng! Vui lòng sử dụng 1 email khác.",
@@ -231,6 +234,27 @@ const SignUp = () => {
       );
       window.scrollTo(0, 0);
       console.log(errorMessage);
+    }
+
+    if (flag) {
+      const userAccountRef = collection(db, "user_accounts"); // reference to user accounts in database
+      const q = query(userAccountRef, where("email", "==",  userEmail)); // query whether this email had existed in database
+      const result = await getDocs(q); // the query command will reuturn a document list that equal to email
+      result.docs.forEach((doc) => {
+        const dataToStoreToLocalStorage = {
+          userEmail: doc.data().email,
+          userName: doc.data().username,
+          userId: doc.id,
+          photoURL: doc.data().photoURL,
+        };
+        localStorage.setItem(
+          "userInfo",
+          JSON.stringify(dataToStoreToLocalStorage)
+        );
+        const data = { ...doc.data(), id: doc.id };
+        setSession(data);
+      });
+      navigate("/");
     }
   };
   return (
@@ -413,7 +437,7 @@ const SignUp = () => {
               <span className="w-[50px] h-[50px] rounded-full bg-slate-100 flex justify-center items-center">
                 <img
                   className="w-[40px] h-[40px]"
-                  src="./images/google_logo.png"
+                  src={googleIcon}
                   alt="Google Logo"
                 />
               </span>

@@ -24,6 +24,7 @@ const NavigationBar = () => {
     setSideBarOpen,
     openUserBox,
     setOpenUserBox,
+    session
   } = useContext(AppContext);
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
@@ -94,7 +95,7 @@ const NavigationBar = () => {
         {/* User icons  */}
 
         <div className="relative flex items-center gap-x-4 md:gap-x-4">
-          {localStorage.getItem("userInfo") ? (
+          {localStorage.getItem("userInfo") && session ? (
             <button
               onClick={() => {
                 setOpenUserBox(!openUserBox);
@@ -104,7 +105,7 @@ const NavigationBar = () => {
               <FaUser className="text-[#0B60B0]" />
             </button>
           ) : (
-            <Link to="signup" className="h-[40px] text-lg font-bold px-5 border-[#0B60B0] border-[2px] border-solid flex justify-center items-center rounded-xl">Đăng ký</Link>
+            <Link to="/real+estate/signup" className="h-[40px] text-lg font-bold px-5 border-[#0B60B0] border-[2px] border-solid flex justify-center items-center rounded-xl">Đăng ký</Link>
           )}
           <button
             className="block lg:hidden"

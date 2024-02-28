@@ -1,5 +1,5 @@
 // import hooks
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNotification } from "../Hooks/useNotification";
 
 // import icons
@@ -9,8 +9,6 @@ import { IoIosWarning } from "react-icons/io";
 
 // import packages
 import { useForm } from "react-hook-form";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
 import Transitions from "./Partials/Transition";
 
 //import images
@@ -24,7 +22,14 @@ import { AppContext } from "../Context/AppContext";
 //import firebase service
 import { db, storage } from "../FirebaseConfig/firebase";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { doc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 
 const UpdateProfile = () => {
   const [background, setBackground] = useState({
@@ -37,36 +42,17 @@ const UpdateProfile = () => {
     details: null,
   }); // store user avatar url
 
-  const { session, setShowSpinner } = useContext(AppContext);
+  const { session, setShowSpinner, setSession } = useContext(AppContext);
 
   const [handleShowNotification] = useNotification();
 
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-  const schema = yup.object().shape({
-    // schema to validate form datas
-    username: yup
-      .string()
-      .min(2, "Tên phải dài hơn 2 kí tự")
-      .max(20, "Tên tối đa 20 kí tự")
-      .required(),
-    address: yup
-      .string()
-      .min(5, "Địa chỉ phải dài hơn 5 kí tự")
-      .max(100, "Địa chỉ phải nhỏ hơn 100 kí tự")
-      .required(),
-    phoneNumber: yup
-      .string()
-      .min(3, "Số điện phải dài hơn 2 kí tự")
-      .max(11, "Số điện thoại phải ngắn hơn 11 kí tự"),
-  });
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
+  } = useForm();
 
   // handle to preview background image when user upload their image
   const handleUploadBackground = (event) => {
@@ -81,19 +67,23 @@ const UpdateProfile = () => {
   const handleUploadUserAvatar = (event) => {
     if (event.target.files.length > 0) {
       let url = URL.createObjectURL(event.target.files[0]);
-      setUserAvatar({ localURL: url, details: event.target.files[0]});
+      setUserAvatar({ localURL: url, details: event.target.files[0] });
     }
     return;
   };
-
+   
   // update user's datas
   const handleUpdateUserProfile = async (data) => {
     setShowSpinner(true);
-    console.log("Function is running...");
+    const userAccountRef = doc(db, "user_accounts", session.id);
+
     setTimeout(async () => {
-      const imagesURL = [];
       if (background.details) {
-        const storageRef = ref(storage, `/userImages/${background.details.name}`); // create reference to storage in products folder
+        console.log("Update background before url");
+        const storageRef = ref(
+          storage,
+          `/userImages/${background.details.name}`
+        ); // create reference to storage in products folder
         const uploadTask = uploadBytesResumable(storageRef, background.details); // upload image to storage
         uploadTask.on(
           //keep tracking upload process to display nescessary informations
@@ -113,14 +103,24 @@ const UpdateProfile = () => {
           },
           () => {
             getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-              imagesURL.push(url);
-              console.log(url);
+              console.log("BackgroundURL: " + url);
+              updateDoc(userAccountRef, {
+                backgroundURL: url,
+              });
+
+              console.log("Update background after url");
+              setSession({...session, backgroundURL: url});
+              setShowSpinner(false);
             });
           }
         );
       }
       if (userAvatar.details) {
-        const storageRef = ref(storage, `/userImages/${userAvatar.details.name}`); // create reference to storage in products folder
+        console.log("Update user avatar before url");
+        const storageRef = ref(
+          storage,
+          `/userImages/${userAvatar.details.name}`
+        ); // create reference to storage in products folder
         const uploadTask = uploadBytesResumable(storageRef, userAvatar.details); // upload image to storage
         uploadTask.on(
           //keep tracking upload process to display nescessary informations
@@ -140,40 +140,55 @@ const UpdateProfile = () => {
           },
           () => {
             getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-              imagesURL.push(url);
-              console.log(url);
+              console.log("UseravatarURL: " + url);
+              updateDoc(userAccountRef, {
+                photoURL: url,
+              });
+              console.log("Update user avatar after url");
+              setSession({...session, photoURL: url})
+              setShowSpinner(false);
             });
           }
         );
       }
-      const userAccountRef = doc(db, "user_accounts", userInfo.userId);
-      if (imagesURL.length === 1) {
+
+      if (data.username !== "") {
         await updateDoc(userAccountRef, {
-          backgroundURL: imagesURL[0],
-          address: data.address,
-          phoneNumber: data.phoneNumber,
           username: data.username,
         });
-        setShowSpinner(false);
-      } else if (imagesURL.length === 2) {
-        await updateDoc(userAccountRef, {
-          backgroundURL: imagesURL[0],
-          photoURL: imagesURL[1],
-          address: data.address,
-          phoneNumber: data.phoneNumber,
-          username: data.username,
-        });
-        setShowSpinner(false);
-      } else {
-        await updateDoc(userAccountRef, {
-          address: data.address,
-          phoneNumber: data.phoneNumber,
-          username: data.username,
-        });
-        setShowSpinner(false);
+        console.log("Username was updated");
+        setSession({...session, username: data.username});
       }
-    });
+
+      if (data.phoneNumber !== "") {
+        await updateDoc(userAccountRef, {
+          phoneNumber: data.phoneNumber,
+        });
+        console.log("Phone number was updated");
+        setSession({...session, phoneNumber: data.phoneNumber});
+      }
+
+      if (data.address !== "") {
+        await updateDoc(userAccountRef, {
+          address: data.address,
+        });
+        setSession({...session, address: data.address});
+        console.log("Address was updated");
+
+      }
+
+      if (!background.details && !userAvatar.details) {
+        setShowSpinner(false);
+        console.log("No background and avatar is running....");
+      }
+    }, 3000);
   };
+  useEffect(() => {
+    const userInfo = localStorage.getItem("userInfo");
+    if (!userInfo) {
+      window.location.href = "/real+estate/signin";
+    }
+  }, []);
   return (
     <Transitions>
       <div className="w-full h-fit">
@@ -337,7 +352,6 @@ const UpdateProfile = () => {
               </div>
               <div className="mt-5 flex justify-end">
                 <button
-                  
                   type="submit"
                   className="text-white bg-[#0B60B0] h-[40px] px-5 hover:opacity-80"
                 >

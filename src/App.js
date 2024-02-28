@@ -37,6 +37,7 @@ import Loading from "./Components/Partials/Loading";
 function App() {
   const location = useLocation();
   const { session, component } = useContext(AppContext);
+  // console.log(session);
   return (
     <div className="relative">
       <Loading />
@@ -47,7 +48,7 @@ function App() {
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             <Route index path="/" element={<Home />}></Route>
-            <Route path="/signup" element={<SignUp />}></Route>
+            <Route path="/real+estate/signup" element={<SignUp />}></Route>
             <Route path="/real+estate/signin" element={<Login />}></Route>
             <Route
               path="/real+estate/search+result/*"

@@ -1,5 +1,5 @@
 // import hooks
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 
 //import icons
 import { FaLocationDot } from "react-icons/fa6";
@@ -17,7 +17,14 @@ import { Link } from "react-router-dom";
 
 const Profile = () => {
   const {session} = useContext(AppContext);
+  useEffect(() => {
+    const userInfo = localStorage.getItem("userInfo");
+    if (!userInfo) {
+      window.location.href = "/real+estate/signin";
+    }
+  }, []);
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  
   return (
     <Transitions>
       <div className="w-full h-fit">
@@ -33,10 +40,10 @@ const Profile = () => {
             <div className="w-fit h-fit border-[5px] border-solid border-slate-300 rounded-full">
               <div
                 className="w-[120px] h-[120px] rounded-full bg-cover bg-center bg-no-repeat"
-                style={{ backgroundImage: `url("${userInfo && userInfo.photoURL !== "" ? userInfo.photoURL : defaultAvatar}")` }}
+                style={{ backgroundImage: `url("${session && session.photoURL !== "" ? session.photoURL : defaultAvatar}")` }}
               ></div>
             </div>
-            <h1 className="mt-5 text-4xl font-medium">{userInfo ? userInfo.userName : "Lỗi hiển thị"}</h1>
+            <h1 className="mt-5 text-4xl font-medium">{session ? session.username : "Lỗi hiển thị"}</h1>
             <p className="text-base sm:text-lg text-slate-500 mt-5 flex gap-x-2 items-center">
               <span className="text-red-500 hidden sm:block">
                 <FaLocationDot />

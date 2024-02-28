@@ -37,20 +37,21 @@ const userBoxVariants = {
 };
 
 const UserBox = () => {
-  const { openUserBox, session, setSession, setShowSpinner, setOpenUserBox} = useContext(AppContext);
+  const { openUserBox, session, setSession, setShowSpinner, setOpenUserBox } =
+    useContext(AppContext);
   const navigate = useNavigate();
-  const [ handleShowNotification ] = useNotification();
+  const [handleShowNotification] = useNotification();
   const handleSignOut = () => {
     setShowSpinner(true);
-      setTimeout(() => {
-        setShowSpinner(false);
-        localStorage.removeItem("userInfo");
-        setSession(null);
-        setOpenUserBox(false);
-        handleShowNotification("Đăng xuất tài khoản thành công!", "success");
-        navigate("/real+estate/signin");
-      }, 3000);
-  }
+    setTimeout(() => {
+      setShowSpinner(false);
+      localStorage.removeItem("userInfo");
+      setSession(null);
+      setOpenUserBox(false);
+      handleShowNotification("Đăng xuất tài khoản thành công!", "success");
+      navigate("/real+estate/signin");
+    }, 3000);
+  };
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
   return (
     <motion.div
@@ -63,14 +64,18 @@ const UserBox = () => {
         <div
           style={{
             backgroundImage: `url(${
-              userInfo && userInfo.photoURL !== "" ? userInfo.photoURL : defaultUserAvatar
+              session && session.photoURL !== "" ? session.photoURL : defaultUserAvatar
             } )`,
           }}
           className="w-[60px] h-[60px] rounded-full bg-center bg-no-repeat bg-cover border-[4px] border-solid border-slate-200"
         ></div>
         <div className="self-end flex flex-col gap-y-1">
-          <p className="text-2xl font-medium">{userInfo ? userInfo.userName : "Lỗi hiển thị"}</p>
-          <p className="text-md opacity-80">{userInfo ? userInfo.userEmail : "Lỗi hiển thị"}</p>
+          <p className="text-2xl font-medium">
+            {session ? session.username : "Lỗi hiển thị"}
+          </p>
+          <p className="text-md opacity-80">
+            {session ? session.email : "Lỗi hiển thị"}
+          </p>
         </div>
       </div>
 
@@ -102,11 +107,17 @@ const UserBox = () => {
 
       <ul className="flex flex-col gap-y-1 px-5 py-5">
         {userInfo ? (
-          <li onClick={handleSignOut} className="flex gap-x-2 text-lg cursor-pointer items-center">
+          <li
+            onClick={handleSignOut}
+            className="flex gap-x-2 text-lg cursor-pointer items-center"
+          >
             <CiLogout /> Đăng xuất
           </li>
         ) : (
-          <Link to="/real+estate/signin" className="flex gap-x-2 text-lg cursor-pointer items-center">
+          <Link
+            to="/real+estate/signin"
+            className="flex gap-x-2 text-lg cursor-pointer items-center"
+          >
             <CiLogin /> Đăng nhập
           </Link>
         )}

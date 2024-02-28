@@ -7,7 +7,14 @@ import md5 from "md5";
 import { Link, useNavigate } from "react-router-dom";
 
 // import firebase services
-import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import { app, db } from "../FirebaseConfig/firebase";
 import { AppContext } from "../Context/AppContext";
 
@@ -51,9 +58,17 @@ const Login = () => {
           if (auth.currentUser.emailVerified) {
             window.scrollTo(0, 0);
             handleShowNotification("Đăng nhập thành công!", "success");
-            const dataToStoreToLocalStorage = {userEmail: doc.data().email, userName: doc.data().username, userId: doc.id, photoURL: doc.data().photoURL};
-            localStorage.setItem("userInfo", JSON.stringify(dataToStoreToLocalStorage));
-            const data = {...doc.data(),id: doc.id};
+            const dataToStoreToLocalStorage = {
+              userEmail: doc.data().email,
+              userName: doc.data().username,
+              userId: doc.id,
+              photoURL: doc.data().photoURL,
+            };
+            localStorage.setItem(
+              "userInfo",
+              JSON.stringify(dataToStoreToLocalStorage)
+            );
+            const data = { ...doc.data(), id: doc.id };
             setSession(data);
           } else {
             handleShowNotification(
@@ -71,12 +86,11 @@ const Login = () => {
     }
   };
 
-  useEffect(() => {
-    const userInfo = localStorage.getItem("userInfo");
-      if(userInfo){
-          window.location.href = "/";
-      }
-  })
+  const userInfo = localStorage.getItem("userInfo");
+
+  if (userInfo && session) {
+    navigate("/");
+  }
   return (
     <Transitions>
       <div className="w-full h-fit flex justify-center items-center">
