@@ -29,7 +29,7 @@ import Test1 from "./Test1";
 import Veryfy from "./VeryfyEmail";
 import LoginTest from "./LoginTTest";
 import UploadImage from "./Components/Partials/UploadImage";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AppContext } from "./Context/AppContext";
 import Test2 from "./test2";
 import Loading from "./Components/Partials/Loading";
@@ -37,7 +37,6 @@ import Loading from "./Components/Partials/Loading";
 function App() {
   const location = useLocation();
   const { session, component } = useContext(AppContext);
-  console.log(session);
   return (
     <div className="relative">
       <Loading />
@@ -58,7 +57,7 @@ function App() {
                <Route path="/real+estate/your+profile" element={<Profile />}></Route>
                <Route path="/real+estate/update+profile" element={<UpdateProfile />}></Route>
                <Route path="/real+estate/post" element={<Post />}></Route>
-
+               <Route path="/admin" element={<AdminDashboard />}></Route>
             {/* <Route path="/details/*" element={<Details />}></Route>
             <Route path="/uploadimage" element={<UploadImage/>}></Route>
             <Route path="/admin" element={<AdminDashboard />}></Route>

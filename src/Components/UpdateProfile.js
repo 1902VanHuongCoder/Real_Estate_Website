@@ -1,5 +1,6 @@
 // import hooks
 import React, { useContext, useState } from "react";
+import { useNotification } from "../Hooks/useNotification";
 
 // import icons
 import { LuPencilLine } from "react-icons/lu";
@@ -20,13 +21,27 @@ import flagIcon from "../images/vn_flag_icon.png";
 // import context
 import { AppContext } from "../Context/AppContext";
 
+//import firebase service
+import { db, storage } from "../FirebaseConfig/firebase";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { doc, updateDoc } from "firebase/firestore";
+
 const UpdateProfile = () => {
-  const [background, setBackground] = useState(null); // store background url
+  const [background, setBackground] = useState({
+    localURL: null,
+    details: null,
+  }); // store background url
 
-  const [userAvatar, setUserAvatar] = useState(null); // store user avatar url
+  const [userAvatar, setUserAvatar] = useState({
+    localURL: null,
+    details: null,
+  }); // store user avatar url
 
-  const { session } = useContext(AppContext);
+  const { session, setShowSpinner } = useContext(AppContext);
 
+  const [handleShowNotification] = useNotification();
+
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
   const schema = yup.object().shape({
     // schema to validate form datas
     username: yup
@@ -66,16 +81,98 @@ const UpdateProfile = () => {
   const handleUploadUserAvatar = (event) => {
     if (event.target.files.length > 0) {
       let url = URL.createObjectURL(event.target.files[0]);
-      setUserAvatar({ localURL: url, details: event.target.files[0] });
+      setUserAvatar({ localURL: url, details: event.target.files[0]});
     }
     return;
   };
 
   // update user's datas
-  const handleUpdateUserProfile = (data) => {
-    console.log(data);
-    console.log(background.details);
-    console.log(userAvatar.details);
+  const handleUpdateUserProfile = async (data) => {
+    setShowSpinner(true);
+    console.log("Function is running...");
+    setTimeout(async () => {
+      const imagesURL = [];
+      if (background.details) {
+        const storageRef = ref(storage, `/userImages/${background.details.name}`); // create reference to storage in products folder
+        const uploadTask = uploadBytesResumable(storageRef, background.details); // upload image to storage
+        uploadTask.on(
+          //keep tracking upload process to display nescessary informations
+          "state_changed",
+          (snapshot) => {
+            // return percent of completed upload
+            const percent = Math.round(
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            );
+          },
+          (error) => {
+            console.log(error);
+            handleShowNotification(
+              "Kết nối mạng không ổn định! Hãy thử lại.",
+              "error"
+            );
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+              imagesURL.push(url);
+              console.log(url);
+            });
+          }
+        );
+      }
+      if (userAvatar.details) {
+        const storageRef = ref(storage, `/userImages/${userAvatar.details.name}`); // create reference to storage in products folder
+        const uploadTask = uploadBytesResumable(storageRef, userAvatar.details); // upload image to storage
+        uploadTask.on(
+          //keep tracking upload process to display nescessary informations
+          "state_changed",
+          (snapshot) => {
+            // return percent of completed upload
+            const percent = Math.round(
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            );
+          },
+          (error) => {
+            console.log(error);
+            handleShowNotification(
+              "Kết nối mạng không ổn định! Hãy thử lại.",
+              "error"
+            );
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+              imagesURL.push(url);
+              console.log(url);
+            });
+          }
+        );
+      }
+      const userAccountRef = doc(db, "user_accounts", userInfo.userId);
+      if (imagesURL.length === 1) {
+        await updateDoc(userAccountRef, {
+          backgroundURL: imagesURL[0],
+          address: data.address,
+          phoneNumber: data.phoneNumber,
+          username: data.username,
+        });
+        setShowSpinner(false);
+      } else if (imagesURL.length === 2) {
+        await updateDoc(userAccountRef, {
+          backgroundURL: imagesURL[0],
+          photoURL: imagesURL[1],
+          address: data.address,
+          phoneNumber: data.phoneNumber,
+          username: data.username,
+        });
+        setShowSpinner(false);
+      } else {
+        await updateDoc(userAccountRef, {
+          address: data.address,
+          phoneNumber: data.phoneNumber,
+          username: data.username,
+        });
+        setShowSpinner(false);
+      }
+    });
   };
   return (
     <Transitions>
@@ -95,7 +192,7 @@ const UpdateProfile = () => {
             className="relative w-full h-[500px] bg-cover bg-center bg-no-repeat"
             style={{
               backgroundImage: `url(${
-                background
+                background.localURL
                   ? background.localURL
                   : session && session.backgroundURL !== ""
                   ? session.backgroundURL
@@ -126,7 +223,7 @@ const UpdateProfile = () => {
               <div
                 style={{
                   backgroundImage: `url(${
-                    userAvatar
+                    userAvatar.localURL
                       ? userAvatar.localURL
                       : session && session.photoURL !== ""
                       ? session.photoURL
@@ -187,7 +284,9 @@ const UpdateProfile = () => {
                   id="address"
                   name="address"
                   placeholder={
-                    session && session.address !== "" ? session.address : "Nhập địa chỉ ..."
+                    session && session.address !== ""
+                      ? session.address
+                      : "Nhập địa chỉ ..."
                   }
                   {...register("address")}
                 />
@@ -238,6 +337,7 @@ const UpdateProfile = () => {
               </div>
               <div className="mt-5 flex justify-end">
                 <button
+                  
                   type="submit"
                   className="text-white bg-[#0B60B0] h-[40px] px-5 hover:opacity-80"
                 >

@@ -193,7 +193,7 @@ const SignUp = () => {
       const userData = {
         username: user.displayName,
         email: user.email,
-        phoneNumber: null,
+        phoneNumber: "",
         password: user.uid,
         create_at:
           date.getDay() + "/" + date.getMonth() + 1 + "/" + date.getFullYear(),

@@ -44,13 +44,14 @@ const UserBox = () => {
     setShowSpinner(true);
       setTimeout(() => {
         setShowSpinner(false);
-        localStorage.removeItem("userEmail");
+        localStorage.removeItem("userInfo");
         setSession(null);
         setOpenUserBox(false);
         handleShowNotification("Đăng xuất tài khoản thành công!", "success");
         navigate("/real+estate/signin");
       }, 3000);
   }
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
   return (
     <motion.div
       variants={userBoxVariants}
@@ -62,14 +63,14 @@ const UserBox = () => {
         <div
           style={{
             backgroundImage: `url(${
-              session?.photoURL !== "" ? session?.photoURL : defaultUserAvatar
+              userInfo && userInfo.photoURL !== "" ? userInfo.photoURL : defaultUserAvatar
             } )`,
           }}
           className="w-[60px] h-[60px] rounded-full bg-center bg-no-repeat bg-cover border-[4px] border-solid border-slate-200"
         ></div>
         <div className="self-end flex flex-col gap-y-1">
-          <p className="text-2xl font-medium">{session?.username}</p>
-          <p className="text-md opacity-80">{session?.email}</p>
+          <p className="text-2xl font-medium">{userInfo ? userInfo.userName : "Lỗi hiển thị"}</p>
+          <p className="text-md opacity-80">{userInfo ? userInfo.userEmail : "Lỗi hiển thị"}</p>
         </div>
       </div>
 
@@ -100,7 +101,7 @@ const UserBox = () => {
       </ul>
 
       <ul className="flex flex-col gap-y-1 px-5 py-5">
-        {session ? (
+        {userInfo ? (
           <li onClick={handleSignOut} className="flex gap-x-2 text-lg cursor-pointer items-center">
             <CiLogout /> Đăng xuất
           </li>

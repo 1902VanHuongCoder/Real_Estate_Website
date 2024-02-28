@@ -51,10 +51,10 @@ const Login = () => {
           if (auth.currentUser.emailVerified) {
             window.scrollTo(0, 0);
             handleShowNotification("Đăng nhập thành công!", "success");
-            localStorage.setItem("userEmail", doc.data().email);
+            const dataToStoreToLocalStorage = {userEmail: doc.data().email, userName: doc.data().username, userId: doc.id, photoURL: doc.data().photoURL};
+            localStorage.setItem("userInfo", JSON.stringify(dataToStoreToLocalStorage));
             const data = {...doc.data(),id: doc.id};
             setSession(data);
-            navigate("/");
           } else {
             handleShowNotification(
               "Email của bạn chưa được xác thực. Xác thực ngay!",
@@ -71,9 +71,12 @@ const Login = () => {
     }
   };
 
-  if (localStorage.getItem("userEmail")) {
-    navigate("/");
-  }
+  useEffect(() => {
+    const userInfo = localStorage.getItem("userInfo");
+      if(userInfo){
+          window.location.href = "/";
+      }
+  })
   return (
     <Transitions>
       <div className="w-full h-fit flex justify-center items-center">

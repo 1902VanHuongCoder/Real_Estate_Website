@@ -94,7 +94,7 @@ const NavigationBar = () => {
         {/* User icons  */}
 
         <div className="relative flex items-center gap-x-4 md:gap-x-4">
-          {localStorage.getItem("userEmail") ? (
+          {localStorage.getItem("userInfo") ? (
             <button
               onClick={() => {
                 setOpenUserBox(!openUserBox);
