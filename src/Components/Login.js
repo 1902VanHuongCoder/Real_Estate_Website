@@ -9,8 +9,6 @@ import { Link, useNavigate } from "react-router-dom";
 // import firebase services
 import {
   collection,
-  doc,
-  getDoc,
   getDocs,
   query,
   where,
@@ -29,7 +27,7 @@ const Login = () => {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const { setSession, setShowSpinner, session } = useContext(AppContext);
+  const { setSession, setShowSpinner, session, setShowCongratulation } = useContext(AppContext);
 
   const [email, setEmail] = useState("");
 
@@ -70,6 +68,7 @@ const Login = () => {
             );
             const data = { ...doc.data(), id: doc.id };
             setSession(data);
+            setShowCongratulation(true);
           } else {
             handleShowNotification(
               "Email của bạn chưa được xác thực. Xác thực ngay!",
@@ -153,7 +152,7 @@ const Login = () => {
             <div className="flex justify-center items-center gap-x-1 pb-6">
               <span>Nếu bạn chưa có tài khoản! </span>
               <span className="text-[#40A2D8] underline">
-                <Link to="/signup">Đăng ký ngay</Link>
+                <Link to="/real+estate/signup">Đăng ký ngay</Link>
               </span>
             </div>
           </form>

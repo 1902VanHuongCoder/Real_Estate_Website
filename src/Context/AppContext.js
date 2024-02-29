@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { createContext } from "react";
 export const AppContext = createContext();
 const AppProvider = ({ children }) => {
@@ -11,8 +11,12 @@ const AppProvider = ({ children }) => {
   const [showSpinner, setShowSpinner] = useState(false);
   const [realEstateDetail, setRealEstateDetail] = useState(null);
   const [postsWasFiltered, setPostsWasFiltered] = useState(null);
+  const [showCongratulation, setShowCongratulation] = useState(false);
   
   const userInfo = {
+    showCongratulation: showCongratulation,
+    setShowCongratulation: setShowCongratulation,
+
     sideBarOpen: sideBarOpen,
     setSideBarOpen: setSideBarOpen,
 
@@ -36,6 +40,8 @@ const AppProvider = ({ children }) => {
 
     postsWasFiltered: postsWasFiltered,
     setPostsWasFiltered: setPostsWasFiltered,
+
+
   };
 
   return <AppContext.Provider value={userInfo}>{children}</AppContext.Provider>;

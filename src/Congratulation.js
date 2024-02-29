@@ -1,28 +1,18 @@
-import React, { useCallback, useMemo } from "react";
-import Particles from "react-tsparticles";
-// import { loadFull } from "tsparticles";
-import { loadSlim } from "tsparticles-slim";
+import React, { useContext } from "react";
+import useWindowSize from "react-use/lib/useWindowSize";
+import Confetti from "react-confetti";
+import { AppContext } from "./Context/AppContext";
+
 const Congratulation = () => {
-  const option = useMemo(() => {
-    return {
-        particles:{
-            links: {
-                enable: true,
-            },
-            move: {
-                enable: true,
-            }
-        }
-    };
-  }, []);
-
-  const particlesInit = useCallback((engine) => {
-    loadSlim(engine);
-  }, []);
-
-  return <div className="bg-slate-900">
-     <Particles init={particlesInit} options={option} />;
-  </div>
+  const { width, height } = useWindowSize();
+  const { showCongratulation, setShowCongratulation } = useContext(AppContext);
+  return (
+    showCongratulation && (
+      <div className="fixed top-0 left-0 w-full h-full z-50">
+        <Confetti width={width} height={height} />
+      </div>
+    )
+  );
 };
 
 export default Congratulation;

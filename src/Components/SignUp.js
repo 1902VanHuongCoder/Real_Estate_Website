@@ -45,7 +45,7 @@ import googleIcon from "../images/google_logo.png";
 const SignUp = () => {
   const auth = getAuth(app);
 
-  const { setSession, setShowSpinner } = useContext(AppContext);
+  const { setSession, setShowSpinner, setShowCongratulation } = useContext(AppContext);
 
   const [handleShowNotification] = useNotification(); //custom hook
 
@@ -253,6 +253,7 @@ const SignUp = () => {
         );
         const data = { ...doc.data(), id: doc.id };
         setSession(data);
+        setShowCongratulation(true);
       });
       navigate("/");
     }

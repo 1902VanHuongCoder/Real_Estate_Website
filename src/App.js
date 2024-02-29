@@ -44,6 +44,7 @@ function App() {
     <div className="relative">
       <Loading />
       <ImageContainer />
+      <Congratulation />
       <div className="relative max-w-[1200px] mx-auto overflow-hidden">
         <NavigationBar />
         <Notification />
@@ -61,7 +62,6 @@ function App() {
                <Route path="/real+estate/update+profile" element={<UpdateProfile />}></Route>
                <Route path="/real+estate/post" element={<Post />}></Route>
                <Route path="/admin" element={<AdminDashboard />}></Route>
-               <Route path="/congratulation" element={<Congratulation />}></Route>
             {/* <Route path="/details/*" element={<Details />}></Route>
             <Route path="/uploadimage" element={<UploadImage/>}></Route>
             <Route path="/admin" element={<AdminDashboard />}></Route>
