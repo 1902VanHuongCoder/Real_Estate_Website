@@ -71,7 +71,17 @@ const UpdateProfile = () => {
     }
     return;
   };
-   
+
+  const updateSession = async (userId) => {
+    const userAccountRef = collection(db, "user_accounts"); // reference to user accounts in database
+    const q = query(userAccountRef, where("userId", "==", userId)); // query whether this email had existed in database
+    const result = await getDocs(q); // the query command will reuturn a document list that equal to email
+    result.docs.forEach((doc) => {
+      const data = { ...doc.data(), id: doc.id };
+      setSession(data);
+    });
+    console.log("Update session is successful");
+  };
   // update user's datas
   const handleUpdateUserProfile = async (data) => {
     setShowSpinner(true);
@@ -109,7 +119,8 @@ const UpdateProfile = () => {
               });
 
               console.log("Update background after url");
-              setSession({...session, backgroundURL: url});
+              // setSession({ ...session, backgroundURL: url });
+              updateSession(session.userId);
               setShowSpinner(false);
             });
           }
@@ -145,7 +156,9 @@ const UpdateProfile = () => {
                 photoURL: url,
               });
               console.log("Update user avatar after url");
-              setSession({...session, photoURL: url})
+              // console.log(session);
+              // setSession({ ...session, photoURL: url });
+              updateSession(session.userId);
               setShowSpinner(false);
             });
           }
@@ -157,7 +170,7 @@ const UpdateProfile = () => {
           username: data.username,
         });
         console.log("Username was updated");
-        setSession({...session, username: data.username});
+        setSession({ ...session, username: data.username });
       }
 
       if (data.phoneNumber !== "") {
@@ -165,16 +178,15 @@ const UpdateProfile = () => {
           phoneNumber: data.phoneNumber,
         });
         console.log("Phone number was updated");
-        setSession({...session, phoneNumber: data.phoneNumber});
+        setSession({ ...session, phoneNumber: data.phoneNumber });
       }
 
       if (data.address !== "") {
         await updateDoc(userAccountRef, {
           address: data.address,
         });
-        setSession({...session, address: data.address});
+        setSession({ ...session, address: data.address });
         console.log("Address was updated");
-
       }
 
       if (!background.details && !userAvatar.details) {

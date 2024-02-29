@@ -100,7 +100,7 @@ const NavigationBar = () => {
               onClick={() => {
                 setOpenUserBox(!openUserBox);
               }}
-              className="w-[30px] h-[30px] flex justify-center items-center bg-white border-[2px] border-solid border-slate-400 rounded-full"
+              className="w-[40px] h-[40px] flex justify-center items-center bg-white border-[2px] border-solid border-slate-400 rounded-full"
             >
               <FaUser className="text-[#0B60B0]" />
             </button>
