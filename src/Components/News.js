@@ -23,7 +23,7 @@ const News = () => {
 
   const handleViewDetails = (postData) => {
       setRealEstateDetail(postData);
-      navigate("/test2");
+      navigate("/details");
   };
 
   const fetchData = async () => {

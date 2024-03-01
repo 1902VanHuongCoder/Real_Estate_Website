@@ -2,26 +2,23 @@
 import React, { useCallback, useContext, useState } from "react";
 
 // import icons
-import { GoDotFill } from "react-icons/go";
-import { MdBedroomParent, MdOutlineZoomOutMap } from "react-icons/md";
-import {
-  FaBuilding,
-  FaRulerCombined,
-  FaRulerHorizontal,
-} from "react-icons/fa6";
-import { GiMultiDirections } from "react-icons/gi";
-import { PiToiletFill } from "react-icons/pi";
+import { MdZoomInMap } from "react-icons/md";
+import { FaLightbulb } from "react-icons/fa";
+import { IoIosArrowBack } from "react-icons/io";
+import { IoIosArrowForward } from "react-icons/io";
 
-//import context
+// import contexts
 import { AppContext } from "./Context/AppContext";
 
-//import library
-import { htmlToText } from "html-to-text";
-import { motion, AnimatePresence } from "framer-motion";
-import { wrap } from "popmotion";
+// import library
+import ImageZoom from "react-image-zooom";
+import { Link } from "react-router-dom";
+import { wrap } from "framer-motion";
 
+import { motion, AnimatePresence } from "framer-motion";
 const Example = () => {
-  const { setShowImage, realEstateDetail } = useContext(AppContext);
+  const { realEstateDetail, showImage, setShowImage } = useContext(AppContext);
+
   const [[page, direction], setPage] = useState([0, 0]);
 
   const variants = {
@@ -49,18 +46,22 @@ const Example = () => {
     return Math.abs(offset) * velocity;
   };
 
+  const paginate = (newDirection) => {
+    setPage([page + newDirection, newDirection]);
+  };
+
   const extractImageIntoArray = useCallback(() => {
     const images = [];
     if (realEstateDetail) {
       images.push(realEstateDetail.titleImageURL);
       realEstateDetail.besideImageURLs.map((item, i) => images.push(item));
+      // console.log("Function run");
     }
 
     return images;
   }, [realEstateDetail]);
 
   const images = extractImageIntoArray();
-
   const handleViewImages = (index) => {
     if (index < page) {
       setPage([index, -1]);
@@ -72,180 +73,81 @@ const Example = () => {
   };
 
   const imageIndex = wrap(0, images.length, page);
-
-  const paginate = (newDirection) => {
-    setPage([page + newDirection, newDirection]);
-  };
-
   return (
-    <div>
-      <div className="flex gap-x-5 lg:flex-row flex-col">
-        <div className="relative lg:basis-[70%] w-full h-[400px] overflow-hidden">
-          <div className="absolute left-0 w-full       h-[50px]   bottom-5    z-40 flex justify-between px-5">
-            <div
-              onClick={() => {
-                setShowImage(true);
-              }}
-              className="flex justify-center items-center rounded-md hover:opacity-80 cursor-pointer w-[50px] h-[50px] bg-[rgba(0,0,0,.7)] text-white text-2xl"
-            >
-              <MdOutlineZoomOutMap />
-            </div>
-            <div className="flex justify-center items-center rounded-md hover:opacity-80 cursor-pointer w-[50px] h-[50px] bg-[rgba(0,0,0,.7)] text-white text-xl">
-              {imageIndex + 1}/{images.length}
-            </div>
-          </div>
-          <div className="relative w-full h-full flex justify-center items-center ">
-            <AnimatePresence initial={false} custom={direction}>
-              <motion.div
-                className="absolute bg-cover bg-no-repeat bg-center w-full h-full"
-                key={page}
-                style={{ backgroundImage: `url("${images[imageIndex]}")` }}
-                custom={direction}
-                variants={variants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={{
-                  x: { type: "spring", stiffness: 300, damping: 30 },
-                  opacity: { duration: 0.2 },
-                }}
-                drag="x"
-                dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={1}
-                onDragEnd={(e, { offset, velocity }) => {
-                  const swipe = swipePower(offset.x, velocity.x);
+    <div
+      className={`fixed top-0 left-0 w-screen h-screen flex flex-col gap-y-5 justify-between py-10 items-center bg-[rgba(0,0,0,.9)] z-50`}
+    >
+      <div className="h-[50px] sm:h-[60px] w-[90%] sm:w-4/5 lg:w-3/5 flex  justify-between items-center">
+        <p className="text-white flex items-center gap-x-2">
+          <span>
+            <FaLightbulb />
+          </span>
+          <span>Click on image to zoom</span>
+        </p>
+        <button
+          onClick={() => {
+            setShowImage(false);
+          }}
+          className="hover:opacity-80 text-white w-[40px] h-[40px] sm:w-[60px] sm:h-[60px] rounded-md bg-[rgba(255,255,255,.2)] flex justify-center items-center text-2xl"
+        >
+          <MdZoomInMap />
+        </button>
+      </div>
+      <div className="relative w-[90%] sm:w-4/5 lg:w-3/5 h-4/5 flex items-center overflow-hidden">
+        <AnimatePresence initial={false} custom={direction}>
+          <motion.div
+            className="absolute bg-cover bg-no-repeat bg-center w-full h-fit"
+            key={page}
+            custom={direction}
+            variants={variants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{
+              x: { type: "spring", stiffness: 300, damping: 30 },
+              opacity: { duration: 0.2 },
+            }}
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={1}
+            onDragEnd={(e, { offset, velocity }) => {
+              const swipe = swipePower(offset.x, velocity.x);
 
-                  if (swipe < -swipeConfidenceThreshold) {
-                    paginate(1);
-                  } else if (swipe > swipeConfidenceThreshold) {
-                    paginate(-1);
-                  }
-                }}
-              />
-            </AnimatePresence>
-          </div>
-        </div>
-        <div className="flex gap-x-3 lg:grid grid-cols-1 gap-y-5 p-2 sm:p-5 border-l-[1px] border-l-solid border-l-slate-200 basis-[25%] w-full h-[400px] overflow-x-scroll sm:overflow-x-hidden sm:overflow-y-scroll">
-          {images.map((item, index) => {
-            return (
-              <div
-                key={index}
-                onClick={() => handleViewImages(index)}
-                className="hover:opacity-70 w-full h-[60px] sm:h-[150px] bg-red-400 bg-cover bg-center bg-no-repeat"
-                style={{ backgroundImage: `url("${item}")` }}
-              ></div>
-            );
-          })}
-        </div>
+              if (swipe < -swipeConfidenceThreshold) {
+                paginate(1);
+              } else if (swipe > swipeConfidenceThreshold) {
+                paginate(-1);
+              }
+            }}
+          >
+            <ImageZoom
+              src={images[imageIndex]}
+              alt="Ảnh chi tiết"
+              zoom="200"
+              className=""
+            />
+          </motion.div>
+        </AnimatePresence>
+      </div>
+      <div className=" w-[90%] sm:w-4/5 lg:w-3/5 h-fit flex gap-x-3 overflow-x-auto overflow-y-hidden">
+        {images.map((item, index) => {
+          return (
+            <div
+              key={index}
+              onClick={() => handleViewImages(index)}
+              className="shrink-0 cursor-pointer border-[2px] border-solid border-white hover:opacity-70 h-[70px] w-[100px] bg-cover bg-center bg-no-repeat"
+              style={{ backgroundImage: `url("${item}")` }}
+            ></div>
+          );
+        })}
+        ;
       </div>
 
-      <div className="flex lg:flex-row flex-col">
-        <div className="px-5 lg:px-0 lg:pl-5 lg:basis-[70%]">
-          <div className="py-5 border-b-[1px] border-b-solid border-b-slate-200">
-            <h1 className="text-2xl mb-1 font-medium">
-              {realEstateDetail?.postTitle}
-            </h1>
-            <p>{realEstateDetail?.address}</p>
-          </div>
-          <div className="border-b-[1px] border-b-solid border-b-slate-200 py-5 basis-[75%] grid grid-cols-2 sm:grid-cols-3 gap-2 lg:grid-cols-4 lg:gap-x-5 justify-evenly">
-            <div className="flex items-center gap-x-2">
-              <span>
-                <FaRulerCombined />
-              </span>
-              <span className="flex gap-x-1 items-center">
-                <span className="opacity-60">Diện tích: </span>
-                <span>
-                  {realEstateDetail?.acreage} m<sup>2</sup>
-                </span>
-              </span>
-            </div>
-            <div className="flex items-center gap-x-2">
-              <span>
-                <GiMultiDirections />
-              </span>
-              <span className="flex gap-x-1 items-center">
-                <span className="opacity-60">Hướng: </span>
-                <span> {realEstateDetail?.direction}</span>
-              </span>
-            </div>
-            <div className="flex items-center gap-x-2">
-              <span>
-                <FaBuilding />
-              </span>
-              <span className="flex gap-x-1 items-center">
-                <span className="opacity-60">Số tầng: </span>
-                <span> {realEstateDetail?.floors}</span>
-              </span>
-            </div>
-            <div className="flex items-center gap-x-2">
-              <span>
-                <FaRulerHorizontal />
-              </span>
-              <span className="flex gap-x-1 items-center">
-                <span className="opacity-60">Mặt tiền: </span>
-                <span> {realEstateDetail?.facade} m</span>
-              </span>
-            </div>
-            <div className="flex items-center gap-x-2">
-              <span>
-                <MdBedroomParent />
-              </span>
-              <span className="flex gap-x-1 items-center">
-                <span className="opacity-60">Phòng ngủ: </span>
-                <span> {realEstateDetail?.bedrooms}</span>
-              </span>
-            </div>
-            <div className="flex items-center gap-x-2">
-              <span>
-                <PiToiletFill />
-              </span>
-              <span className="flex gap-x-1 items-center">
-                <span className="opacity-60">Số toilet: </span>
-                <span> {realEstateDetail?.toilets}</span>
-              </span>
-            </div>
-          </div>
-          <div className="py-5 border-b-[1px] border-b-solid border-b-slate-200">
-            <h2 className="flex items-center gap-x-1 mb-1">
-              <span>
-                <GoDotFill />
-              </span>
-              <span>Thông tin mô tả:</span>
-            </h2>
-            <p className="text-justify">
-              {htmlToText(realEstateDetail?.description)}
-            </p>
-          </div>
-          <div className="flex gap-x-10 border-b-[1px] border-b-solid border-b-slate-200 py-5">
-            <div className="flex flex-col gap-y-1 items-center">
-              <span className="opacity-80">Ngày đăng</span>
-              <span className="text-lg">{realEstateDetail?.createdAt}</span>
-            </div>
-            <div className="flex flex-col gap-y-1 items-center">
-              <span className="opacity-80">Ngày cập nhật</span>
-              <span className="text-lg">{realEstateDetail?.updatedAt}</span>
-            </div>
-            <div className="flex flex-col gap-y-1 items-center">
-              <span className="opacity-80">Liên hệ công ty</span>
-              <span className="text-lg">0334745377</span>
-            </div>
-          </div>
-        </div>
-        {/* <div className="lg:basis-[30%]">
-          <div className="h-[270px] w-4/5 mx-auto mt-5 rounded-md bg-white border-[1px] border-solid border-slate-200 shadow-md py-5 px-10">
-            <div className="flex flex-col items-center gap-y-1">
-              <div
-                className="w-[60px] rounded-full h-[60px] bg-cover bg-center"
-                style={{ backgroundImage: `url("./images/user.jpg")` }}
-              ></div>
-              <p className="text-xl font-medium">Paul9999</p>
-              <p className="opacity-80">huongb2105616@student.ctu.edu.vn</p>
-            </div>
-            <div className="text-xl mt-6 px-3 py-5 rounded-md bg-[#0B60B0] text-center font-bold text-white">
-              0334745377
-            </div>
-          </div>
-        </div> */}
+      <div onClick={() => paginate(-1)} className="absolute left-20 top-[50%] -translate-y-[50%] w-[60px] h-[60px] bg-[rgba(255,255,255,.2)] text-white rounded-full flex justify-center items-center">
+        <IoIosArrowBack />
+      </div>
+       <div onClick={() => paginate(1)} className="absolute right-20 top-[50%] -translate-y-[50%] w-[60px] h-[60px] bg-[rgba(255,255,255,.2)] text-white rounded-full flex justify-center items-center">
+        <IoIosArrowForward />
       </div>
     </div>
   );

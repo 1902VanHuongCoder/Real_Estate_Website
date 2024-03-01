@@ -20,9 +20,7 @@ import { htmlToText } from "html-to-text";
 import { motion, AnimatePresence } from "framer-motion";
 import { wrap } from "popmotion";
 
-
-
-const DetailContent = () => {
+const Example = () => {
   const { setShowImage, realEstateDetail } = useContext(AppContext);
   const [[page, direction], setPage] = useState([0, 0]);
 
@@ -56,13 +54,22 @@ const DetailContent = () => {
     if (realEstateDetail) {
       images.push(realEstateDetail.titleImageURL);
       realEstateDetail.besideImageURLs.map((item, i) => images.push(item));
-      console.log("extractImageIntoArray is running...");
     }
 
     return images;
   }, [realEstateDetail]);
 
   const images = extractImageIntoArray();
+
+  const handleViewImages = (index) => {
+    if (index < page) {
+      setPage([index, -1]);
+    }
+    if (index > page) {
+      setPage([index, 1]);
+    }
+    return;
+  };
 
   const imageIndex = wrap(0, images.length, page);
 
@@ -74,6 +81,19 @@ const DetailContent = () => {
     <div>
       <div className="flex gap-x-5 lg:flex-row flex-col">
         <div className="relative lg:basis-[70%] w-full h-[400px] overflow-hidden">
+          <div className="absolute left-0 w-full       h-[50px]   bottom-5    z-40 flex justify-between px-5">
+            <div
+              onClick={() => {
+                setShowImage(true);
+              }}
+              className="flex justify-center items-center rounded-md hover:opacity-80 cursor-pointer w-[50px] h-[50px] bg-[rgba(0,0,0,.7)] text-white text-2xl"
+            >
+              <MdOutlineZoomOutMap />
+            </div>
+            <div className="flex justify-center items-center rounded-md hover:opacity-80 cursor-pointer w-[50px] h-[50px] bg-[rgba(0,0,0,.7)] text-white text-xl">
+              {imageIndex + 1}/{images.length}
+            </div>
+          </div>
           <div className="relative w-full h-full flex justify-center items-center ">
             <AnimatePresence initial={false} custom={direction}>
               <motion.div
@@ -104,26 +124,13 @@ const DetailContent = () => {
               />
             </AnimatePresence>
           </div>
-          <div className="absolute top-0 left-0 w-full h-full">
-            <div
-              onClick={() => {
-                setShowImage(true);
-              }}
-              className="absolute bottom-5 left-5 flex justify-center items-center rounded-md hover:opacity-80 cursor-pointer w-[50px] h-[50px] bg-[rgba(0,0,0,.7)] text-white text-2xl"
-            >
-              <MdOutlineZoomOutMap />
-            </div>
-            <div className="absolute bottom-5 right-5 flex justify-center items-center rounded-md hover:opacity-80 cursor-pointer w-[50px] h-[50px] bg-[rgba(0,0,0,.7)] text-white text-xl">
-              1/{images.length}
-            </div>
-          </div>
         </div>
         <div className="flex gap-x-3 lg:grid grid-cols-1 gap-y-5 p-2 sm:p-5 border-l-[1px] border-l-solid border-l-slate-200 basis-[25%] w-full h-[400px] overflow-x-scroll sm:overflow-x-hidden sm:overflow-y-scroll">
           {images.map((item, index) => {
             return (
               <div
                 key={index}
-                // onClick={() => setCurrentImg(index)}
+                onClick={() => handleViewImages(index)}
                 className="hover:opacity-70 w-full h-[60px] sm:h-[150px] bg-red-400 bg-cover bg-center bg-no-repeat"
                 style={{ backgroundImage: `url("${item}")` }}
               ></div>
@@ -224,24 +231,9 @@ const DetailContent = () => {
             </div>
           </div>
         </div>
-        {/* <div className="lg:basis-[30%]">
-          <div className="h-[270px] w-4/5 mx-auto mt-5 rounded-md bg-white border-[1px] border-solid border-slate-200 shadow-md py-5 px-10">
-            <div className="flex flex-col items-center gap-y-1">
-              <div
-                className="w-[60px] rounded-full h-[60px] bg-cover bg-center"
-                style={{ backgroundImage: `url("./images/user.jpg")` }}
-              ></div>
-              <p className="text-xl font-medium">Paul9999</p>
-              <p className="opacity-80">huongb2105616@student.ctu.edu.vn</p>
-            </div>
-            <div className="text-xl mt-6 px-3 py-5 rounded-md bg-[#0B60B0] text-center font-bold text-white">
-              0334745377
-            </div>
-          </div>
-        </div> */}
       </div>
     </div>
   );
 };
 
-export default DetailContent;
+export default Example;

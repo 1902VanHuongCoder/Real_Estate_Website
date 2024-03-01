@@ -61,7 +61,7 @@ function App() {
                <Route path="/real+estate/post" element={<Post />}></Route>
                <Route path="/admin" element={<AdminDashboard />}></Route>
 
-               <Route path="/test2" element={<Example />}></Route>
+               {/* <Route path="/test2" element={<Example />}></Route> */}
 
             {/* <Route path="/details/*" element={<Details />}></Route>
             <Route path="/uploadimage" element={<UploadImage/>}></Route>
