@@ -16,74 +16,93 @@ import { PiToiletFill } from "react-icons/pi";
 import { AppContext } from "../../Context/AppContext";
 
 //import library
-import { htmlToText } from 'html-to-text';
+import { htmlToText } from "html-to-text";
+import { motion, AnimatePresence } from "framer-motion";
+import { wrap } from "popmotion";
 
-const test = [1, 2, 3, 4, 5,6,7,8,9,10];
+
+
 const DetailContent = () => {
-  
-  const [currentImg, setCurrentImg] = useState(0);
   const { setShowImage, realEstateDetail } = useContext(AppContext);
+  const [[page, direction], setPage] = useState([0, 0]);
+
+  const variants = {
+    enter: (direction) => {
+      return {
+        x: direction > 0 ? 1000 : -1000,
+        opacity: 0,
+      };
+    },
+    center: {
+      zIndex: 1,
+      x: 0,
+      opacity: 1,
+    },
+    exit: (direction) => {
+      return {
+        zIndex: 0,
+        x: direction < 0 ? 1000 : -1000,
+        opacity: 0,
+      };
+    },
+  };
+  const swipeConfidenceThreshold = 10000;
+  const swipePower = (offset, velocity) => {
+    return Math.abs(offset) * velocity;
+  };
 
   const extractImageIntoArray = useCallback(() => {
-    const imageList = [];
+    const images = [];
     if (realEstateDetail) {
-      imageList.push(realEstateDetail.titleImageURL);
-      realEstateDetail.besideImageURLs.map((item, i) => imageList.push(item));
-      console.log("Function run");
+      images.push(realEstateDetail.titleImageURL);
+      realEstateDetail.besideImageURLs.map((item, i) => images.push(item));
+      console.log("extractImageIntoArray is running...");
     }
-    
-    return imageList;
+
+    return images;
   }, [realEstateDetail]);
 
-  const imageList = extractImageIntoArray();
+  const images = extractImageIntoArray();
 
-  console.log(realEstateDetail);
+  const imageIndex = wrap(0, images.length, page);
 
-  var translate = `-translate-x-[${parseInt(currentImg * 100)}%]`;
+  const paginate = (newDirection) => {
+    setPage([page + newDirection, newDirection]);
+  };
+
   return (
     <div>
-      {/* <div className="w-full bg-amber-500 h-[400px] flex justify-center items-center flex-col ">
-        <div className="relative w-[100px] h-[100px] border-4 border-solid border-slate-800">
-          <div className={`relative ${translate} w-full h-full flex`}>
-            {test.map((item, index) => {
-              return (
-                <div
-                  key={index}
-                  className={`w-full h-full bg-purple-400 shrink-0`}
-                >
-                  {item}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-        <div className="flex gap-x-1">
-          {test.map((item, index) => {
-            return (
-              <button
-                onClick={() => setTest1(index)}
-                key={index}
-                className="w-[80px] h-[60px] bg-green-400"
-              >
-                {item}
-              </button>
-            );
-          })}
-        </div>
-      </div> */}
       <div className="flex gap-x-5 lg:flex-row flex-col">
         <div className="relative lg:basis-[70%] w-full h-[400px] overflow-hidden">
-          <div className="w-full h-full flex">
-            {imageList?.map((item, index) => {
-              return (
-                <div
-                  key={index}
-                  className={`relative ${translate} transition-transform duration-500 w-full h-full 
-                   shrink-0 bg-cover bg-center bg-no-repeat`}
-                  style={{ backgroundImage: `url("${item}")` }}
-                ></div>
-              );
-            })}
+          <div className="relative w-full h-full flex justify-center items-center ">
+            <AnimatePresence initial={false} custom={direction}>
+              <motion.div
+                className="absolute bg-cover bg-no-repeat bg-center w-full h-full"
+                key={page}
+                style={{ backgroundImage: `url("${images[imageIndex]}")` }}
+                custom={direction}
+                variants={variants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{
+                  x: { type: "spring", stiffness: 300, damping: 30 },
+                  opacity: { duration: 0.2 },
+                }}
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={1}
+                onDragEnd={(e, { offset, velocity }) => {
+                  const swipe = swipePower(offset.x, velocity.x);
+
+                  if (swipe < -swipeConfidenceThreshold) {
+                    paginate(1);
+                  } else if (swipe > swipeConfidenceThreshold) {
+                    paginate(-1);
+                  }
+                }}
+              />
+            </AnimatePresence>
           </div>
           <div className="absolute top-0 left-0 w-full h-full">
             <div
@@ -95,16 +114,16 @@ const DetailContent = () => {
               <MdOutlineZoomOutMap />
             </div>
             <div className="absolute bottom-5 right-5 flex justify-center items-center rounded-md hover:opacity-80 cursor-pointer w-[50px] h-[50px] bg-[rgba(0,0,0,.7)] text-white text-xl">
-              1/{imageList.length}
+              1/{images.length}
             </div>
           </div>
         </div>
         <div className="flex gap-x-3 lg:grid grid-cols-1 gap-y-5 p-2 sm:p-5 border-l-[1px] border-l-solid border-l-slate-200 basis-[25%] w-full h-[400px] overflow-x-scroll sm:overflow-x-hidden sm:overflow-y-scroll">
-          {imageList.map((item, index) => {
+          {images.map((item, index) => {
             return (
               <div
                 key={index}
-                onClick={() => setCurrentImg(index)}
+                // onClick={() => setCurrentImg(index)}
                 className="hover:opacity-70 w-full h-[60px] sm:h-[150px] bg-red-400 bg-cover bg-center bg-no-repeat"
                 style={{ backgroundImage: `url("${item}")` }}
               ></div>
@@ -187,7 +206,7 @@ const DetailContent = () => {
               <span>Thông tin mô tả:</span>
             </h2>
             <p className="text-justify">
-            {htmlToText(realEstateDetail?.description)}
+              {htmlToText(realEstateDetail?.description)}
             </p>
           </div>
           <div className="flex gap-x-10 border-b-[1px] border-b-solid border-b-slate-200 py-5">

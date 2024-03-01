@@ -26,7 +26,7 @@ const ImageContainer = () => {
     if (realEstateDetail) {
       imageList.push(realEstateDetail.titleImageURL);
       realEstateDetail.besideImageURLs.map((item, i) => imageList.push(item));
-      console.log("Function run");
+      // console.log("Function run");
     }
     
     return imageList;

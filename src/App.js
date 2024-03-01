@@ -20,8 +20,6 @@ import {
   Sidebar,
   ImageContainer,
 } from "./Components/Middle";
-import Particles from "react-tsparticles";
-import { loadFull } from "tsparticles";
 
 import { useLocation } from "react-router-dom";
 
@@ -33,13 +31,13 @@ import LoginTest from "./LoginTTest";
 import UploadImage from "./Components/Partials/UploadImage";
 import { useContext, useEffect } from "react";
 import { AppContext } from "./Context/AppContext";
-import Test2 from "./test2";
+import   Example  from "./test2";
 import Loading from "./Components/Partials/Loading";
 import Congratulation from "./Congratulation";
 function App() {
   const location = useLocation();
-  const { session, component } = useContext(AppContext);
-  // console.log("Render");
+  const { session, component, realEstateDetail } = useContext(AppContext);
+  // console.log(realEstateDetail);
   return (
     <div className="relative">
       <Loading />
@@ -62,6 +60,9 @@ function App() {
                <Route path="/real+estate/update+profile" element={<UpdateProfile />}></Route>
                <Route path="/real+estate/post" element={<Post />}></Route>
                <Route path="/admin" element={<AdminDashboard />}></Route>
+
+               <Route path="/test2" element={<Example />}></Route>
+
             {/* <Route path="/details/*" element={<Details />}></Route>
             <Route path="/uploadimage" element={<UploadImage/>}></Route>
             <Route path="/admin" element={<AdminDashboard />}></Route>

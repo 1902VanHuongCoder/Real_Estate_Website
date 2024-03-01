@@ -85,6 +85,9 @@ const UpdateProfile = () => {
   // update user's datas
   const handleUpdateUserProfile = async (data) => {
     setShowSpinner(true);
+    if(data.username === "" && data.phoneNumber === "" && data.address === "" && !background.details && !userAvatar.details){
+      return;
+    }
     const userAccountRef = doc(db, "user_accounts", session.id);
 
     setTimeout(async () => {
@@ -121,6 +124,7 @@ const UpdateProfile = () => {
               console.log("Update background after url");
               // setSession({ ...session, backgroundURL: url });
               updateSession(session.userId);
+              handleShowNotification("Cập nhật hồ sơ thành công.", "success");
               setShowSpinner(false);
             });
           }
@@ -156,9 +160,8 @@ const UpdateProfile = () => {
                 photoURL: url,
               });
               console.log("Update user avatar after url");
-              // console.log(session);
-              // setSession({ ...session, photoURL: url });
               updateSession(session.userId);
+              handleShowNotification("Cập nhật hồ sơ thành công.", "success");
               setShowSpinner(false);
             });
           }
@@ -191,6 +194,7 @@ const UpdateProfile = () => {
 
       if (!background.details && !userAvatar.details) {
         setShowSpinner(false);
+        handleShowNotification("Cập nhật hồ sơ thành công.", "success");
         console.log("No background and avatar is running....");
       }
     }, 3000);
