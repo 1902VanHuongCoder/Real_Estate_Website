@@ -1,153 +1,249 @@
 // import hooks
-import React, { useCallback, useContext, useState } from "react";
+import React, { useContext } from "react";
 
 // import icons
-import { MdZoomInMap } from "react-icons/md";
-import { FaLightbulb } from "react-icons/fa";
-import { IoIosArrowBack } from "react-icons/io";
-import { IoIosArrowForward } from "react-icons/io";
-
-// import contexts
+import { GoDotFill } from "react-icons/go";
 import { AppContext } from "./Context/AppContext";
 
-// import library
-import ImageZoom from "react-image-zooom";
-import { Link } from "react-router-dom";
-import { wrap } from "framer-motion";
-
-import { motion, AnimatePresence } from "framer-motion";
 const Example = () => {
-  const { realEstateDetail, showImage, setShowImage } = useContext(AppContext);
+  const { setPostsWasFiltered, setShowSpinner, news } = useContext(AppContext);
 
-  const [[page, direction], setPage] = useState([0, 0]);
-
-  const variants = {
-    enter: (direction) => {
-      return {
-        x: direction > 0 ? 1000 : -1000,
-        opacity: 0,
-      };
-    },
-    center: {
-      zIndex: 1,
-      x: 0,
-      opacity: 1,
-    },
-    exit: (direction) => {
-      return {
-        zIndex: 0,
-        x: direction < 0 ? 1000 : -1000,
-        opacity: 0,
-      };
-    },
-  };
-  const swipeConfidenceThreshold = 10000;
-  const swipePower = (offset, velocity) => {
-    return Math.abs(offset) * velocity;
+  const isInRange = (value, min, max) => {
+    return value >= min && value <= max;
   };
 
-  const paginate = (newDirection) => {
-    setPage([page + newDirection, newDirection]);
+  const handleFilterPostsBasedOnAcreage = (min, max) => {
+    setShowSpinner(true);
+    setTimeout(() => {
+      const postsWereFilteredBasedOnAcreage = [];
+      news.forEach((element) => {
+        if (isInRange(element.acreage, min, max)) {
+          postsWereFilteredBasedOnAcreage.push(element);
+        }
+      });
+      setPostsWasFiltered(postsWereFilteredBasedOnAcreage);
+      setShowSpinner(false);
+    }, 2000);
   };
 
-  const extractImageIntoArray = useCallback(() => {
-    const images = [];
-    if (realEstateDetail) {
-      images.push(realEstateDetail.titleImageURL);
-      realEstateDetail.besideImageURLs.map((item, i) => images.push(item));
-      // console.log("Function run");
-    }
-
-    return images;
-  }, [realEstateDetail]);
-
-  const images = extractImageIntoArray();
-  const handleViewImages = (index) => {
-    if (index < page) {
-      setPage([index, -1]);
-    }
-    if (index > page) {
-      setPage([index, 1]);
-    }
-    return;
+  const handleShowAllOfPosts = () => {
+    setShowSpinner(true);
+    setTimeout(() => {
+      setPostsWasFiltered(news);
+      setShowSpinner(false);
+    }, 1500);
   };
 
-  const imageIndex = wrap(0, images.length, page);
+  const handleFilterPostsBasedOnDirection = (direction) => {
+    setShowSpinner(true);
+    setTimeout(() => {
+      const postsWereFilteredBasedOnAcreage = [];
+      news.forEach((element) => {
+        if (direction === element.direction) {
+          postsWereFilteredBasedOnAcreage.push(element);
+        }
+      });
+      setPostsWasFiltered(postsWereFilteredBasedOnAcreage);
+      setShowSpinner(false);
+    }, 1500);
+  };
+
+  const handleFilterPostsBasedOnFloor = (floor) => {
+    setShowSpinner(true);
+    setTimeout(() => {
+      const postsWereFilteredBasedOnAcreage = [];
+      news.forEach((element) => {
+        if (floor === element.floors) {
+          postsWereFilteredBasedOnAcreage.push(element);
+        }
+
+        if (floor >= 7) {
+          if (element.floors >= 7) {
+            postsWereFilteredBasedOnAcreage.push(element);
+          }
+        }
+      });
+      setPostsWasFiltered(postsWereFilteredBasedOnAcreage);
+      setShowSpinner(false);
+    }, 1500);
+  };
+
   return (
-    <div
-      className={`fixed top-0 left-0 w-screen h-screen flex flex-col gap-y-5 justify-between py-10 items-center bg-[rgba(0,0,0,.9)] z-50`}
-    >
-      <div className="h-[50px] sm:h-[60px] w-[90%] sm:w-4/5 lg:w-3/5 flex  justify-between items-center">
-        <p className="text-white flex items-center gap-x-2">
-          <span>
-            <FaLightbulb />
-          </span>
-          <span>Click on image to zoom</span>
-        </p>
-        <button
-          onClick={() => {
-            setShowImage(false);
-          }}
-          className="hover:opacity-80 text-white w-[40px] h-[40px] sm:w-[60px] sm:h-[60px] rounded-md bg-[rgba(255,255,255,.2)] flex justify-center items-center text-2xl"
-        >
-          <MdZoomInMap />
+    <div className="hidden sm:block basis-[30%] h-fit w-full pt-14">
+      <h2 className="text-2xl border-l-[6px] border-l-solid border-l-[#0B60B0] pl-3">
+        Tìm kiếm
+      </h2>
+      <div
+        onClick={handleShowAllOfPosts}
+        className="w-full flex items-center gap-x-1 font-medium bg-[#0B60B0] text-white h-fit mt-5 p-5 border-[1px] border-solid border-slate-200"
+      >
+        <span>
+          <GoDotFill />
+        </span>
+        <button className="text-lg hover:text-xl hover:font-medium">
+          Tất cả bài đăng
         </button>
       </div>
-      <div className="relative w-[90%] sm:w-4/5 lg:w-3/5 h-4/5 flex items-center overflow-hidden">
-        <AnimatePresence initial={false} custom={direction}>
-          <motion.div
-            className="absolute bg-cover bg-no-repeat bg-center w-full h-fit"
-            key={page}
-            custom={direction}
-            variants={variants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{
-              x: { type: "spring", stiffness: 300, damping: 30 },
-              opacity: { duration: 0.2 },
-            }}
-            drag="x"
-            dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={1}
-            onDragEnd={(e, { offset, velocity }) => {
-              const swipe = swipePower(offset.x, velocity.x);
+      <div className="w-full h-fit mt-5 p-5 border-[1px] border-solid border-slate-200">
+        <p className="flex gap-x-1 items-center">
+          <span>
+            <GoDotFill />
+          </span>
 
-              if (swipe < -swipeConfidenceThreshold) {
-                paginate(1);
-              } else if (swipe > swipeConfidenceThreshold) {
-                paginate(-1);
-              }
-            }}
+          <span className="text-xl font-medium">Diện tích</span>
+        </p>
+        <ul className="text-lg pl-5 mt-3 flex flex-col gap-y-2">
+          <li
+            onClick={() => handleFilterPostsBasedOnAcreage(1, 40)}
+            className="cursor-pointer hover:text-xl hover:font-medium pb-2"
           >
-            <ImageZoom
-              src={images[imageIndex]}
-              alt="Ảnh chi tiết"
-              zoom="200"
-              className=""
-            />
-          </motion.div>
-        </AnimatePresence>
+            <span>
+              Dưới 40 m<sup>2</sup>
+            </span>
+          </li>
+          <li
+            onClick={() => handleFilterPostsBasedOnAcreage(40, 80)}
+            className="cursor-pointer hover:text-xl hover:font-medium pb-2"
+          >
+            <span>
+              40 m<sup>2</sup>
+            </span>
+            <span>-</span>
+            <span>
+              80 m<sup>2</sup>
+            </span>
+          </li>
+          <li
+            onClick={() => handleFilterPostsBasedOnAcreage(81, 140)}
+            className="cursor-pointer hover:text-xl hover:font-medium pb-2"
+          >
+            <span>
+              81 m<sup>2</sup>
+            </span>{" "}
+            <span>-</span>{" "}
+            <span>
+              140 m<sup>2</sup>
+            </span>
+          </li>
+          <li
+            onClick={() => handleFilterPostsBasedOnAcreage(141, 5000)}
+            className="cursor-pointer hover:text-xl hover:font-medium pb-2"
+          >
+            <span>
+              Trên 140 m<sup>2</sup>
+            </span>
+          </li>
+        </ul>
       </div>
-      <div className=" w-[90%] sm:w-4/5 lg:w-3/5 h-fit flex gap-x-3 overflow-x-auto overflow-y-hidden">
-        {images.map((item, index) => {
-          return (
-            <div
-              key={index}
-              onClick={() => handleViewImages(index)}
-              className="shrink-0 cursor-pointer border-[2px] border-solid border-white hover:opacity-70 h-[70px] w-[100px] bg-cover bg-center bg-no-repeat"
-              style={{ backgroundImage: `url("${item}")` }}
-            ></div>
-          );
-        })}
-        ;
+      <div className="w-full h-fit mt-5 p-5 border-[1px] border-solid border-slate-200">
+        <p className="flex gap-x-1 items-center">
+          <span>
+            <GoDotFill />
+          </span>
+          <span className="text-xl font-medium">Hướng nhà</span>
+        </p>
+        <ul className="text-lg pl-5 mt-3 flex flex-col gap-y-2">
+          <li
+            onClick={() => handleFilterPostsBasedOnDirection("Đông")}
+            className="cursor-pointer hover:text-xl hover:font-medium pb-2"
+          >
+            <span>Đông</span>
+          </li>
+          <li
+            onClick={() => handleFilterPostsBasedOnDirection("Đông bắc")}
+            className="cursor-pointer hover:text-xl hover:font-medium pb-2"
+          >
+            <span>Đông Bắc</span>
+          </li>
+          <li
+            onClick={() => handleFilterPostsBasedOnDirection("Đông nam")}
+            className="cursor-pointer hover:text-xl hover:font-medium pb-2"
+          >
+            <span>Đông Nam</span>
+          </li>
+          <li
+            onClick={() => handleFilterPostsBasedOnDirection("Tây nam")}
+            className="cursor-pointer hover:text-xl hover:font-medium pb-2"
+          >
+            <span>Tây Nam</span>
+          </li>
+          <li
+            onClick={() => handleFilterPostsBasedOnDirection("Nam")}
+            className="cursor-pointer hover:text-xl hover:font-medium pb-2"
+          >
+            <span>Nam</span>
+          </li>
+          <li
+            onClick={() => handleFilterPostsBasedOnDirection("Tây bắc")}
+            className="cursor-pointer hover:text-xl hover:font-medium pb-2"
+          >
+            <span>Tây Bắc</span>
+          </li>
+          <li
+            onClick={() => handleFilterPostsBasedOnDirection("Bắc")}
+            className="cursor-pointer hover:text-xl hover:font-medium pb-2"
+          >
+            <span>Bắc</span>
+          </li>
+          <li
+            onClick={() => handleFilterPostsBasedOnDirection("Tây")}
+            className="cursor-pointer hover:text-xl hover:font-medium pb-2"
+          >
+            <span>Tây</span>
+          </li>
+        </ul>
       </div>
-
-      <div onClick={() => paginate(-1)} className="absolute left-20 top-[50%] -translate-y-[50%] w-[60px] h-[60px] bg-[rgba(255,255,255,.2)] text-white rounded-full flex justify-center items-center">
-        <IoIosArrowBack />
-      </div>
-       <div onClick={() => paginate(1)} className="absolute right-20 top-[50%] -translate-y-[50%] w-[60px] h-[60px] bg-[rgba(255,255,255,.2)] text-white rounded-full flex justify-center items-center">
-        <IoIosArrowForward />
+      <div className="w-full h-fit mt-5 p-5 border-[1px] border-solid border-slate-200">
+        <p className="flex gap-x-1 items-center">
+          <span>
+            <GoDotFill />
+          </span>
+          <span className="text-xl font-medium">Số tầng</span>
+        </p>
+        <ul className="text-lg pl-5 mt-3 flex flex-col gap-y-2">
+          <li
+            onClick={() => handleFilterPostsBasedOnFloor(1)}
+            className="cursor-pointer hover:text-xl hover:font-medium pb-2"
+          >
+            <span>1 tầng</span>
+          </li>
+          <li
+            onClick={() => handleFilterPostsBasedOnFloor(2)}
+            className="cursor-pointer hover:text-xl hover:font-medium pb-2"
+          >
+            <span>2 tầng</span>
+          </li>
+          <li
+            onClick={() => handleFilterPostsBasedOnFloor(3)}
+            className="cursor-pointer hover:text-xl hover:font-medium pb-2"
+          >
+            <span>3 tầng</span>
+          </li>
+          <li
+            onClick={() => handleFilterPostsBasedOnFloor(4)}
+            className="cursor-pointer hover:text-xl hover:font-medium pb-2"
+          >
+            <span>4 tầng</span>
+          </li>
+          <li
+            onClick={() => handleFilterPostsBasedOnFloor(5)}
+            className="cursor-pointer hover:text-xl hover:font-medium pb-2"
+          >
+            <span>5 tầng</span>
+          </li>
+          <li
+            onClick={() => handleFilterPostsBasedOnFloor(6)}
+            className="cursor-pointer hover:text-xl hover:font-medium pb-2"
+          >
+            <span>6 tầng</span>
+          </li>
+          <li
+            onClick={() => handleFilterPostsBasedOnFloor(7)}
+            className="cursor-pointer hover:text-xl hover:font-medium pb-2"
+          >
+            <span>Nhiều hơn 6 tầng</span>
+          </li>
+        </ul>
       </div>
     </div>
   );

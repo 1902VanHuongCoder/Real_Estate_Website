@@ -12,6 +12,7 @@ const AppProvider = ({ children }) => {
   const [realEstateDetail, setRealEstateDetail] = useState(null);
   const [postsWasFiltered, setPostsWasFiltered] = useState(null);
   const [showCongratulation, setShowCongratulation] = useState(false);
+  const [news, setNews] = useState(null);
   
   const userInfo = {
     showCongratulation: showCongratulation,
@@ -37,6 +38,9 @@ const AppProvider = ({ children }) => {
 
     realEstateDetail: realEstateDetail,
     setRealEstateDetail: setRealEstateDetail,
+
+    news: news,
+    setNews: setNews,
 
     postsWasFiltered: postsWasFiltered,
     setPostsWasFiltered: setPostsWasFiltered,

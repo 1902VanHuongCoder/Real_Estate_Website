@@ -2,6 +2,7 @@ import React from "react";
 import News from "./News";
 import Filter from "./Filter";
 import FilterOnMobile from "./FilterOnMobile";
+import Example from "../test2";
 
 const MainContent = () => {
   return (
@@ -9,6 +10,7 @@ const MainContent = () => {
       <FilterOnMobile />
       <News />
       <Filter />
+      {/* <Example /> */}
     </div>
   );
 };

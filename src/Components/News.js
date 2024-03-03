@@ -1,5 +1,5 @@
 // import hooks
-import React, { useContext, useEffect} from "react";
+import React, { useContext, useEffect } from "react";
 
 // import icons
 import { FaLocationDot } from "react-icons/fa6";
@@ -18,12 +18,18 @@ import { AppContext } from "../Context/AppContext";
 import { useNavigate } from "react-router-dom";
 
 const News = () => {
-  const { setShowSpinner, setRealEstateDetail,postsWasFiltered, setPostsWasFiltered } = useContext(AppContext);
+  const {
+    setShowSpinner,
+    setRealEstateDetail,
+    postsWasFiltered,
+    setPostsWasFiltered,
+    setNews,
+  } = useContext(AppContext);
   const navigate = useNavigate();
 
   const handleViewDetails = (postData) => {
-      setRealEstateDetail(postData);
-      navigate("/details");
+    setRealEstateDetail(postData);
+    navigate("/details");
   };
 
   const fetchData = async () => {
@@ -33,10 +39,12 @@ const News = () => {
         ...doc.data(),
         id: doc.id,
       }));
+      setNews(dataResponsed);
       setPostsWasFiltered(dataResponsed);
     });
     setShowSpinner(false);
   };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -142,7 +150,9 @@ const News = () => {
           </div>
         ))
       ) : (
-        <div>Hiện tại chưa có bài đăng nào</div>
+        <div className="w-full border-dashed border-[2px] border-slate-500 mt-[21px] flex justify-center items-center h-[200px] text-[20px]">
+          Không có dữ liệu
+        </div>
       )}
     </div>
   );
