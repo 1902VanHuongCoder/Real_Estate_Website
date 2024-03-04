@@ -2,7 +2,8 @@
 import React from "react";
 
 // import images
-import logo from '../images/logo.png';
+import logo from "../images/logo.png";
+import { useNavigate } from "react-router-dom";
 
 const rentItems = [
   "Thuê căn hộ chung cư",
@@ -26,13 +27,23 @@ const saleItems = [
   "Bán trang trại, khu nghĩ dưỡng",
 ];
 
-
 const Footer = () => {
+  const navigate = useNavigate();
+  const handleSearch = (item) => {
+    navigate(`/real+estate/search+result/query=?${item}`, {
+      state: item,
+    });
+    window.scrollTo(0,0);
+  };
   return (
     <div className="w-full bg-[#40A2D8] h-fit mt-5 py-5 px-5 lg:px-10">
       <div className="flex flex-col gap-y-5 sm:flex-row">
         <div className="flex flex-col gap-y-5 basis-[100%] sm:basis-[30%]">
-          <img className="w-[100px] sm:w-[150px] lg:w-[200px]" src={logo} alt="logo" />
+          <img
+            className="w-[100px] sm:w-[150px] lg:w-[200px]"
+            src={logo}
+            alt="logo"
+          />
           <div className="flex flex-col gap-y-2 text-white">
             <p className="text-2xl text-[#F0EDCF]">
               Công ty TNHH MTV Bất động sản Văn Hưởng
@@ -48,7 +59,15 @@ const Footer = () => {
             <p className="text-xl font-medium">Bán nhà đất</p>
             <ul className="mt-4 sm:mt-5">
               {saleItems.map((item, index) => {
-                return <li className="cursor-pointer" key={index}>{item}</li>;
+                return (
+                  <li
+                    onClick={() => handleSearch(item)}
+                    className="cursor-pointer"
+                    key={index}
+                  >
+                    {item}
+                  </li>
+                );
               })}
             </ul>
           </div>
@@ -56,14 +75,22 @@ const Footer = () => {
             <p className="text-xl font-medium">Thuê nhà đất</p>
             <ul className="mt-4 sm:mt-5">
               {rentItems.map((item, index) => {
-                return <li className="cursor-pointer" key={index}>{item}</li>;
+                return (
+                  <li
+                    onClick={() => handleSearch(item)}
+                    className="cursor-pointer"
+                    key={index}
+                  >
+                    {item}
+                  </li>
+                );
               })}
             </ul>
           </div>
         </div>
       </div>
       <div className="border-t-[1px] border-solid border-white w-full h-[50px] mt-5 text-center py-5">
-            <span>ấp Hòa Đức - xã Hòa An huyện Phụng Hiệp - tỉnh Hậu Giang</span>
+        <span>ấp Hòa Đức - xã Hòa An huyện Phụng Hiệp - tỉnh Hậu Giang</span>
       </div>
     </div>
   );

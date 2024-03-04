@@ -1,380 +1,164 @@
 // import hooks
-import { collection, getDocs } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import React, { useContext } from "react";
 
 // import icons
 import {
   FaBuilding,
   FaLocationDot,
-  FaPhone,
   FaRulerCombined,
   FaRulerHorizontal,
 } from "react-icons/fa6";
 import { GiMultiDirections } from "react-icons/gi";
 import { MdBedroomParent } from "react-icons/md";
 import { PiToiletFill } from "react-icons/pi";
-import { useLocation } from "react-router-dom";
-import { db } from "../FirebaseConfig/firebase";
+import { useLocation, useNavigate } from "react-router-dom";
+import { AppContext } from "../Context/AppContext";
+
+// import images
+import label from "../images/label.png";
 
 const OptionResults = () => {
+  const { setRealEstateDetail, news } = useContext(AppContext);
   const { state } = useLocation();
-  // const [posts, setPosts] = useState([]);
-  const [results, setResults] = useState([]);
+  const navigate = useNavigate();
+  const queryResult = [];
+  const keyWordsArray = state.split(" ");
 
-  const filterPosts = (keywordsArray, string) => {
-    let flag = false;
-    keywordsArray.forEach((element) => {
-      if (string.includes(element)) {
-        flag = true;
-        return flag;
+  console.log(keyWordsArray);
+
+  for (let j = 0; j < news.length; j++) {
+    const typeOfPropertyLowerCase = news[j].typeOfProperty.toLowerCase();
+    const keyWord = state.substring(4).toLowerCase();
+    if (typeOfPropertyLowerCase === keyWord) {
+      queryResult.push(news[j]);
+      break;
+    }
+
+    for (let i = 0; i < keyWordsArray.length; i++) {
+      let postTitle = news[j].postTitle.toLowerCase();
+      let keyW = keyWordsArray[i].toLowerCase();
+
+      console.log("Posttitle" + j + " :" + postTitle);
+      console.log("Keyword" + i + " :" + keyW);
+      console.log("Result: " + postTitle.includes(keyW));
+      if (postTitle.includes(keyW)) {
+        queryResult.push(news[j]);
+        break;
       }
-      return flag;
-    });
-  };
-  const fetchData = async () => {
-    // setLoading(true);
-    await getDocs(collection(db, "posts")).then((response) => {
-      const dataResponsed = response.docs.map((doc) => ({
-        ...doc.data(),
-      }));
+    }
+  }
 
-      const resultFiltered = [];
-      const valuesFromQueryString = state.split(" ");
-      
-      dataResponsed.forEach((element) => {
-        if (filterPosts(valuesFromQueryString, element.typeOfProperty)) {
-          resultFiltered.push(element);
-        }
-      });
-      if(resultFiltered.length > 0){
-        setResults(resultFiltered);
-        console.log("set run");
-      }
-      
-    });
-    // setLoading(false);
+  const handleViewDetails = (postData) => {
+    setRealEstateDetail(postData);
+    navigate("/details");
+    window.scrollTo(0, 0);
   };
-  useEffect(() => {
-    fetchData();
-  }, []);
 
-  console.log(results);
   return (
     <div className="w-full h-fit p-5">
       <h1 className="pl-4 text-xl font-medium uppercase border-l-[5px] border-l-solid border-l-[#0B60B0]">
-        Thuê căn hộ chung cư
+        TỪ KHÓA TÌM KIẾM "{state}"
       </h1>
-      <div className="w-full mt-5 grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <div className="w-full mt-5 border-[1px] border-solid border-slate-200 h-fit">
-          <div
-            className="relative w-full h-[350px] bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url("./images/Home+Image+2.jpg")` }}
-          >
+      {queryResult.length > 0 ? (
+        <div className="w-full mt-5 grid grid-cols-1 sm:grid-cols-2 gap-5">
+          {queryResult.map((element, index) => (
             <div
-              className="absolute top-5 -left-1 w-fit h-[50px] bg-cover bg-right bg-no-repeat text-white text-lg flex pl-4 pr-6 items-center"
-              style={{ backgroundImage: `url("./images/label.png")` }}
+              key={index}
+              className="w-full mt-5 border-[1px] border-solid border-slate-200 h-fit"
             >
-              10,9 tỷ
-            </div>
-            <div className="absolute right-5 bottom-5 sm:top-5 flex gap-x-5 text-[#40A2D8]">
-              <div className="flex items-center gap-x-2 bg-white rounded-md h-[50px] px-2">
-                <span>0334745377</span>
-                <span>
-                  <FaPhone />
-                </span>
-              </div>
-              <div className="relative flex justify-start items-center bg-transparent lg:bg-white h-[50px]  lg:px-2 lg:pr-16 rounded-md">
-                <p className="text-xl hidden lg:block">Nguyễn Văn Tám</p>
+              <div
+                className="relative w-full h-[350px] bg-cover bg-center bg-no-repeat"
+                style={{ backgroundImage: `url("${element.titleImageURL}")` }}
+              >
                 <div
-                  className="lg:absolute lg:-top-1 lg:-right-3 border-[2px] border-solid border-white w-[60px] h-[60px] bg-cover bg-center bg-no-repeat rounded-full"
-                  style={{ backgroundImage: `url("./images/user.jpg")` }}
-                ></div>
+                  className="absolute top-5 -left-1 w-fit h-[50px] bg-cover bg-right bg-no-repeat text-white text-lg flex pl-4 pr-6 items-center"
+                  style={{ backgroundImage: `url("${label}")` }}
+                >
+                  {element.price}
+                </div>
               </div>
-            </div>
-          </div>
-          <div className="flex flex-col gap-y-2 p-2">
-            <h3 className="font-medium text-lg">
-              TÒA NHÀ 7 TẦNG CHUNG CƯ MINI CẦU GIẤY, THANG MÁY, GẦN PHỐ, DÒNG
-              TIỀN TỐT; DT70M2; 7T; MT4M; GIÁ 10.9 TỶ; LH. MR BẮC: 0971877631.
-            </h3>
-            <p className="flex items-center gap-x-1 text-base">
-              <span className="text-lg text-red-600">
-                <FaLocationDot />
-              </span>
-              Cầu Giấy, Quan Hoa, Cầu Giấy, Phường Quan Hoa, Quận Cầu Giấy, Hà
-              Nội
-            </p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 lg:grid-cols-4 lg:gap-x-5 justify-evenly">
-              <div className="flex items-center gap-x-2">
-                <span>
-                  <FaRulerCombined />
-                </span>
-                <span className="flex gap-x-1 items-center">
-                  <span className="opacity-60">Diện tích: </span>
-                  <span>
-                    54 m<sup>2</sup>
+              <div className="flex flex-col gap-y-2 p-2">
+                <h3 className="font-medium text-lg">{element.postTitle}</h3>
+                <p className="flex items-center gap-x-1 text-base">
+                  <span className="text-lg text-red-600">
+                    <FaLocationDot />
                   </span>
-                </span>
-              </div>
-              <div className="flex items-center gap-x-2">
-                <span>
-                  <GiMultiDirections />
-                </span>
-                <span className="flex gap-x-1 items-center">
-                  <span className="opacity-60">Hướng: </span>
-                  <span>Tây</span>
-                </span>
-              </div>
-              <div className="flex items-center gap-x-2">
-                <span>
-                  <FaBuilding />
-                </span>
-                <span className="flex gap-x-1 items-center">
-                  <span className="opacity-60">Số tầng: </span>
-                  <span>7</span>
-                </span>
-              </div>
-              <div className="flex items-center gap-x-2">
-                <span>
-                  <FaRulerHorizontal />
-                </span>
-                <span className="flex gap-x-1 items-center">
-                  <span className="opacity-60">Mặt tiền: </span>
-                  <span>4m</span>
-                </span>
-              </div>
-              <div className="flex items-center gap-x-2">
-                <span>
-                  <MdBedroomParent />
-                </span>
-                <span className="flex gap-x-1 items-center">
-                  <span className="opacity-60">Phòng ngủ: </span>
-                  <span>4</span>
-                </span>
-              </div>
-              <div className="flex items-center gap-x-2">
-                <span>
-                  <PiToiletFill />
-                </span>
-                <span className="flex gap-x-1 items-center">
-                  <span className="opacity-60">Số toilet: </span>
-                  <span>6</span>
-                </span>
+                  {element.address}
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 lg:grid-cols-4 lg:gap-x-5 justify-evenly">
+                  <div className="flex items-center gap-x-2">
+                    <span>
+                      <FaRulerCombined />
+                    </span>
+                    <span className="flex gap-x-1 items-center">
+                      <span className="opacity-60">Diện tích: </span>
+                      <span>
+                        {element.acreage} m<sup>2</sup>
+                      </span>
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-x-2">
+                    <span>
+                      <GiMultiDirections />
+                    </span>
+                    <span className="flex gap-x-1 items-center">
+                      <span className="opacity-60">Hướng: </span>
+                      <span>{element.direction}</span>
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-x-2">
+                    <span>
+                      <FaBuilding />
+                    </span>
+                    <span className="flex gap-x-1 items-center">
+                      <span className="opacity-60">Số tầng: </span>
+                      <span>{element.floors}</span>
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-x-2">
+                    <span>
+                      <FaRulerHorizontal />
+                    </span>
+                    <span className="flex gap-x-1 items-center">
+                      <span className="opacity-60">Mặt tiền: </span>
+                      <span>{element.facade}m</span>
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-x-2">
+                    <span>
+                      <MdBedroomParent />
+                    </span>
+                    <span className="flex gap-x-1 items-center">
+                      <span className="opacity-60">Phòng ngủ: </span>
+                      <span>{element.bedrooms}</span>
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-x-2">
+                    <span>
+                      <PiToiletFill />
+                    </span>
+                    <span className="flex gap-x-1 items-center">
+                      <span className="opacity-60">Số toilet: </span>
+                      <span>{element.toilets}</span>
+                    </span>
+                  </div>
+                </div>
+                <div>Đã được đăng vào ngày: {element.createdAt}</div>
+                <button
+                  onClick={() => handleViewDetails(element)}
+                  className="w-[100px] h-[40px] border-[2px] border-solid border-[#0B60B0] hover:bg-[#0B60B0] hover:text-white"
+                >
+                  Chi tiết
+                </button>
               </div>
             </div>
-            <div>Đã được đăng vào ngày: 01/02/2024</div>
-            <button className="w-[100px] h-[40px] border-[2px] border-solid border-[#0B60B0] hover:bg-[#0B60B0] hover:text-white">
-              Chi tiết
-            </button>
-          </div>
+          ))}
         </div>
-        <div className="w-full mt-5 border-[1px] border-solid border-slate-200 h-fit">
-          <div
-            className="relative w-full h-[350px] bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url("./images/Home+Image+2.jpg")` }}
-          >
-            <div
-              className="absolute top-5 -left-1 w-fit h-[50px] bg-cover bg-right bg-no-repeat text-white text-lg flex pl-4 pr-6 items-center"
-              style={{ backgroundImage: `url("./images/label.png")` }}
-            >
-              10,9 tỷ
-            </div>
-            <div className="absolute right-5 bottom-5 sm:top-5 flex gap-x-5 text-[#40A2D8]">
-              <div className="flex items-center gap-x-2 bg-white rounded-md h-[50px] px-2">
-                <span>0334745377</span>
-                <span>
-                  <FaPhone />
-                </span>
-              </div>
-              <div className="relative flex justify-start items-center bg-transparent lg:bg-white h-[50px]  lg:px-2 lg:pr-16 rounded-md">
-                <p className="text-xl hidden lg:block">Nguyễn Văn Tám</p>
-                <div
-                  className="lg:absolute lg:-top-1 lg:-right-3 border-[2px] border-solid border-white w-[60px] h-[60px] bg-cover bg-center bg-no-repeat rounded-full"
-                  style={{ backgroundImage: `url("./images/user.jpg")` }}
-                ></div>
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-col gap-y-2 p-2">
-            <h3 className="font-medium text-lg">
-              TÒA NHÀ 7 TẦNG CHUNG CƯ MINI CẦU GIẤY, THANG MÁY, GẦN PHỐ, DÒNG
-              TIỀN TỐT; DT70M2; 7T; MT4M; GIÁ 10.9 TỶ; LH. MR BẮC: 0971877631.
-            </h3>
-            <p className="flex items-center gap-x-1 text-base">
-              <span className="text-lg text-red-600">
-                <FaLocationDot />
-              </span>
-              Cầu Giấy, Quan Hoa, Cầu Giấy, Phường Quan Hoa, Quận Cầu Giấy, Hà
-              Nội
-            </p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 lg:grid-cols-4 lg:gap-x-5 justify-evenly">
-              <div className="flex items-center gap-x-2">
-                <span>
-                  <FaRulerCombined />
-                </span>
-                <span className="flex gap-x-1 items-center">
-                  <span className="opacity-60">Diện tích: </span>
-                  <span>
-                    54 m<sup>2</sup>
-                  </span>
-                </span>
-              </div>
-              <div className="flex items-center gap-x-2">
-                <span>
-                  <GiMultiDirections />
-                </span>
-                <span className="flex gap-x-1 items-center">
-                  <span className="opacity-60">Hướng: </span>
-                  <span>Tây</span>
-                </span>
-              </div>
-              <div className="flex items-center gap-x-2">
-                <span>
-                  <FaBuilding />
-                </span>
-                <span className="flex gap-x-1 items-center">
-                  <span className="opacity-60">Số tầng: </span>
-                  <span>7</span>
-                </span>
-              </div>
-              <div className="flex items-center gap-x-2">
-                <span>
-                  <FaRulerHorizontal />
-                </span>
-                <span className="flex gap-x-1 items-center">
-                  <span className="opacity-60">Mặt tiền: </span>
-                  <span>4m</span>
-                </span>
-              </div>
-              <div className="flex items-center gap-x-2">
-                <span>
-                  <MdBedroomParent />
-                </span>
-                <span className="flex gap-x-1 items-center">
-                  <span className="opacity-60">Phòng ngủ: </span>
-                  <span>4</span>
-                </span>
-              </div>
-              <div className="flex items-center gap-x-2">
-                <span>
-                  <PiToiletFill />
-                </span>
-                <span className="flex gap-x-1 items-center">
-                  <span className="opacity-60">Số toilet: </span>
-                  <span>6</span>
-                </span>
-              </div>
-            </div>
-            <div>Đã được đăng vào ngày: 01/02/2024</div>
-            <button className="w-[100px] h-[40px] border-[2px] border-solid border-[#0B60B0] hover:bg-[#0B60B0] hover:text-white">
-              Chi tiết
-            </button>
-          </div>
+      ) : (
+        <div className="w-full border-dashed border-[2px] border-slate-500 mt-[21px] flex justify-center items-center h-[400px] text-[20px]">
+          Không có kết quả phù hợp
         </div>
-        <div className="w-full mt-5 border-[1px] border-solid border-slate-200 h-fit">
-          <div
-            className="relative w-full h-[350px] bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url("./images/Home+Image+2.jpg")` }}
-          >
-            <div
-              className="absolute top-5 -left-1 w-fit h-[50px] bg-cover bg-right bg-no-repeat text-white text-lg flex pl-4 pr-6 items-center"
-              style={{ backgroundImage: `url("./images/label.png")` }}
-            >
-              10,9 tỷ
-            </div>
-            <div className="absolute right-5 bottom-5 sm:top-5 flex gap-x-5 text-[#40A2D8]">
-              <div className="flex items-center gap-x-2 bg-white rounded-md h-[50px] px-2">
-                <span>0334745377</span>
-                <span>
-                  <FaPhone />
-                </span>
-              </div>
-              <div className="relative flex justify-start items-center bg-transparent lg:bg-white h-[50px]  lg:px-2 lg:pr-16 rounded-md">
-                <p className="text-xl hidden lg:block">Nguyễn Văn Tám</p>
-                <div
-                  className="lg:absolute lg:-top-1 lg:-right-3 border-[2px] border-solid border-white w-[60px] h-[60px] bg-cover bg-center bg-no-repeat rounded-full"
-                  style={{ backgroundImage: `url("./images/user.jpg")` }}
-                ></div>
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-col gap-y-2 p-2">
-            <h3 className="font-medium text-lg">
-              TÒA NHÀ 7 TẦNG CHUNG CƯ MINI CẦU GIẤY, THANG MÁY, GẦN PHỐ, DÒNG
-              TIỀN TỐT; DT70M2; 7T; MT4M; GIÁ 10.9 TỶ; LH. MR BẮC: 0971877631.
-            </h3>
-            <p className="flex items-center gap-x-1 text-base">
-              <span className="text-lg text-red-600">
-                <FaLocationDot />
-              </span>
-              Cầu Giấy, Quan Hoa, Cầu Giấy, Phường Quan Hoa, Quận Cầu Giấy, Hà
-              Nội
-            </p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 lg:grid-cols-4 lg:gap-x-5 justify-evenly">
-              <div className="flex items-center gap-x-2">
-                <span>
-                  <FaRulerCombined />
-                </span>
-                <span className="flex gap-x-1 items-center">
-                  <span className="opacity-60">Diện tích: </span>
-                  <span>
-                    54 m<sup>2</sup>
-                  </span>
-                </span>
-              </div>
-              <div className="flex items-center gap-x-2">
-                <span>
-                  <GiMultiDirections />
-                </span>
-                <span className="flex gap-x-1 items-center">
-                  <span className="opacity-60">Hướng: </span>
-                  <span>Tây</span>
-                </span>
-              </div>
-              <div className="flex items-center gap-x-2">
-                <span>
-                  <FaBuilding />
-                </span>
-                <span className="flex gap-x-1 items-center">
-                  <span className="opacity-60">Số tầng: </span>
-                  <span>7</span>
-                </span>
-              </div>
-              <div className="flex items-center gap-x-2">
-                <span>
-                  <FaRulerHorizontal />
-                </span>
-                <span className="flex gap-x-1 items-center">
-                  <span className="opacity-60">Mặt tiền: </span>
-                  <span>4m</span>
-                </span>
-              </div>
-              <div className="flex items-center gap-x-2">
-                <span>
-                  <MdBedroomParent />
-                </span>
-                <span className="flex gap-x-1 items-center">
-                  <span className="opacity-60">Phòng ngủ: </span>
-                  <span>4</span>
-                </span>
-              </div>
-              <div className="flex items-center gap-x-2">
-                <span>
-                  <PiToiletFill />
-                </span>
-                <span className="flex gap-x-1 items-center">
-                  <span className="opacity-60">Số toilet: </span>
-                  <span>6</span>
-                </span>
-              </div>
-            </div>
-            <div>Đã được đăng vào ngày: 01/02/2024</div>
-            <button className="w-[100px] h-[40px] border-[2px] border-solid border-[#0B60B0] hover:bg-[#0B60B0] hover:text-white">
-              Chi tiết
-            </button>
-          </div>
-        </div>
-      </div>
+      )}
     </div>
   );
 };

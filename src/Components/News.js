@@ -30,6 +30,7 @@ const News = () => {
   const handleViewDetails = (postData) => {
     setRealEstateDetail(postData);
     navigate("/details");
+    window.scrollTo(0, 0);
   };
 
   const fetchData = async () => {

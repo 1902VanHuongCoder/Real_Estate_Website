@@ -125,17 +125,19 @@ const Example = () => {
             </AnimatePresence>
           </div>
         </div>
-        <div className="flex gap-x-3 lg:grid grid-cols-1 gap-y-5 p-2 sm:p-5 border-l-[1px] border-l-solid border-l-slate-200 basis-[25%] w-full h-[400px] overflow-x-scroll sm:overflow-x-hidden sm:overflow-y-scroll">
-          {images.map((item, index) => {
-            return (
-              <div
-                key={index}
-                onClick={() => handleViewImages(index)}
-                className="hover:opacity-70 w-full h-[60px] sm:h-[150px] bg-red-400 bg-cover bg-center bg-no-repeat"
-                style={{ backgroundImage: `url("${item}")` }}
-              ></div>
-            );
-          })}
+        <div className="basis-[25%] w-full h-[400px] overflow-auto">
+          <div className="flex flex-row sm:flex-col gap-2">
+            {images.map((item, index) => {
+              return (
+                <div
+                  key={index}
+                  onClick={() => handleViewImages(index)}
+                  className="hover:opacity-70 shrink-0 w-full h-[60px] sm:h-[150px] bg-cover bg-center bg-no-repeat"
+                  style={{ backgroundImage: `url("${item}")` }}
+                ></div>
+              );
+            })}
+          </div>
         </div>
       </div>
 

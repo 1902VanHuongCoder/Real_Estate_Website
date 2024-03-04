@@ -19,18 +19,16 @@ import { Link, useNavigate } from "react-router-dom";
 // import images
 import logo from "../images/logo.png";
 const NavigationBar = () => {
-  const {
-    sideBarOpen,
-    setSideBarOpen,
-    openUserBox,
-    setOpenUserBox,
-    session
-  } = useContext(AppContext);
+  const { sideBarOpen, setSideBarOpen, openUserBox, setOpenUserBox, session } =
+    useContext(AppContext);
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
-  const handleSearch = (e) => {
-    e.preventDefault();
-    navigate(`/real+estate/search+result/query=?${search}`, { state: search });
+  const handleSearch = () => {
+    if (search !== "") {
+      navigate(`/real+estate/search+result/query=?${search}`, {
+        state: search,
+      });
+    }
   };
   return (
     <div className="sticky top-0 w-full px-5 md:px-10 pb-5 sm:py-1 z-40 bg-transparent flex flex-col gap-y-4">
@@ -43,7 +41,7 @@ const NavigationBar = () => {
         </Link>
 
         {/* Search input */}
-        <form className="hidden sm:block">
+        <div className="hidden sm:block">
           <input
             type="text"
             name="query"
@@ -59,14 +57,14 @@ const NavigationBar = () => {
           >
             Tìm kiếm
           </button>
-        </form>
+        </div>
 
         {/* Nav items  */}
         <ul className="hidden lg:flex gap-x-3 text-lg">
           <li className="group relative flex gap-x-1 items-center cursor-pointer h-[40px]">
             <span className="">Nhà đất thuê</span>
             <div className="group-hover:rotate-180 transition-transform flex justify-center items-center w-[30px] h-[30px] border-[1px] border-solid border-slate-200 rounded-full">
-              <span >
+              <span>
                 <IoIosArrowDown />
               </span>
             </div>
@@ -79,8 +77,8 @@ const NavigationBar = () => {
           </li>
           <li className="relative group flex gap-x-1 items-center cursor-pointer h-[40px]">
             <span>Nhà đất bán</span>
-              <div className="group-hover:rotate-180 transition-transform flex justify-center items-center w-[30px] h-[30px] border-[1px] border-solid border-slate-200 rounded-full">
-              <span >
+            <div className="group-hover:rotate-180 transition-transform flex justify-center items-center w-[30px] h-[30px] border-[1px] border-solid border-slate-200 rounded-full">
+              <span>
                 <IoIosArrowDown />
               </span>
             </div>
@@ -105,7 +103,12 @@ const NavigationBar = () => {
               <FaUser className="text-[#0B60B0]" />
             </button>
           ) : (
-            <Link to="/real+estate/signup" className="h-[40px] text-lg font-bold px-5 border-[#0B60B0] border-[2px] border-solid flex justify-center items-center rounded-xl">Đăng ký</Link>
+            <Link
+              to="/real+estate/signup"
+              className="h-[40px] text-lg font-bold px-5 border-[#0B60B0] border-[2px] border-solid flex justify-center items-center rounded-xl"
+            >
+              Đăng ký
+            </Link>
           )}
           <button
             className="block lg:hidden"
