@@ -7,12 +7,7 @@ import md5 from "md5";
 import { Link, useNavigate } from "react-router-dom";
 
 // import firebase services
-import {
-  collection,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { app, db } from "../FirebaseConfig/firebase";
 import { AppContext } from "../Context/AppContext";
 
@@ -27,7 +22,8 @@ const Login = () => {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const { setSession, setShowSpinner, session, setShowCongratulation } = useContext(AppContext);
+  const { setSession, setShowSpinner, session, setShowCongratulation } =
+    useContext(AppContext);
 
   const [email, setEmail] = useState("");
 
@@ -87,8 +83,10 @@ const Login = () => {
 
   const userInfo = localStorage.getItem("userInfo");
 
-  if (userInfo && session) {
+  if (userInfo && session && session.role === "user") {
     navigate("/");
+  } else if (userInfo && session && session.role === "admin") {
+    navigate("/admin/list+of+posts");
   }
   return (
     <Transitions>

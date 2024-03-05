@@ -3,7 +3,7 @@ import { GoDotFill } from "react-icons/go";
 
 const PostsList = () => {
   return (
-    <div className="p-5 border-[1px] border-solid border-slate-200 mt-5 rounded-t-xl">
+    <div className="p-5 border-[1px] border-solid border-slate-200 mt-5 mb-5 rounded-t-xl">
       <div className="flex items-center gap-x-2 text-xl">
         <span>
           <GoDotFill />

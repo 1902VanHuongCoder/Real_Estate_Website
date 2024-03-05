@@ -31,13 +31,16 @@ import LoginTest from "./LoginTTest";
 import UploadImage from "./Components/Partials/UploadImage";
 import { useContext, useEffect } from "react";
 import { AppContext } from "./Context/AppContext";
-import   Example  from "./test2";
+import Example from "./test2";
 import Loading from "./Components/Partials/Loading";
 import Congratulation from "./Congratulation";
+import WaitingPosts from "./Components/Partials/WaitingPosts";
+import AccountList from "./Components/Partials/AccountList";
+import FeedbackList from "./Components/Partials/FeebacksList";
 function App() {
   const location = useLocation();
   const { session, component, realEstateDetail } = useContext(AppContext);
-  // console.log(realEstateDetail);
+  console.log(session);
   return (
     <div className="relative">
       <Loading />
@@ -46,6 +49,7 @@ function App() {
       <div className="relative max-w-[1200px] mx-auto overflow-hidden">
         <NavigationBar />
         <Notification />
+        {session && session.role === "admin" && <AdminDashboard />}
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             <Route index path="/" element={<Home />}></Route>
@@ -55,13 +59,32 @@ function App() {
               path="/real+estate/search+result/*"
               element={<OptionResults />}
             ></Route>
-               <Route path="/details" element={<Details />}></Route>
-               <Route path="/real+estate/your+profile" element={<Profile />}></Route>
-               <Route path="/real+estate/update+profile" element={<UpdateProfile />}></Route>
-               <Route path="/real+estate/post" element={<Post />}></Route>
-               <Route path="/admin" element={<AdminDashboard />}></Route>
+            <Route path="/details" element={<Details />}></Route>
+            <Route
+              path="/real+estate/your+profile"
+              element={<Profile />}
+            ></Route>
+            <Route
+              path="/real+estate/update+profile"
+              element={<UpdateProfile />}
+            ></Route>
+            <Route path="/real+estate/post" element={<Post />}></Route>
+            <Route
+              path="/admin/list+of+posts"
+              element={<WaitingPosts />}
+            ></Route>
+            <Route
+              path="/admin/list+of+user+accounts"
+              element={<AccountList />}
+            ></Route>
+            <Route
+              path="/admin/list+of+feedbacks"
+              element={<FeedbackList />}
+            ></Route>
 
-               {/* <Route path="/test2" element={<Example />}></Route> */}
+            {/* <Route path="/admin/list+of+feedbacks" element={<AccountList />}></Route> */}
+
+            {/* <Route path="/test2" element={<Example />}></Route> */}
 
             {/* <Route path="/details/*" element={<Details />}></Route>
             <Route path="/uploadimage" element={<UploadImage/>}></Route>
@@ -78,7 +101,7 @@ function App() {
 
         <Feedback />
         <ToTop />
-        <Footer />
+        {session && session.role === "user" && <Footer />}
         <Sidebar />
       </div>
     </div>

@@ -1,11 +1,10 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createContext } from "react";
 export const AppContext = createContext();
 const AppProvider = ({ children }) => {
-
   const [sideBarOpen, setSideBarOpen] = useState(false); // state to store and control sidebar
   const [isOpenUserBox, setOpenUserBox] = useState(false); // state to store and control userbox
-  const [showImage, setShowImage] = useState(false);  // toggle to view images in detail page
+  const [showImage, setShowImage] = useState(false); // toggle to view images in detail page
   const [session, setSession] = useState(null);
   const [showNotification, setShowNotification] = useState(null);
   const [showSpinner, setShowSpinner] = useState(false);
@@ -13,7 +12,13 @@ const AppProvider = ({ children }) => {
   const [postsWasFiltered, setPostsWasFiltered] = useState(null);
   const [showCongratulation, setShowCongratulation] = useState(false);
   const [news, setNews] = useState(null);
-  
+
+  useEffect(() => {
+    setTimeout(() => {
+      setShowNotification(false);
+    }, 3000);
+  }, [showNotification]);
+
   const userInfo = {
     showCongratulation: showCongratulation,
     setShowCongratulation: setShowCongratulation,
@@ -28,7 +33,7 @@ const AppProvider = ({ children }) => {
     setShowImage: setShowImage,
 
     session: session,
-    setSession:setSession,
+    setSession: setSession,
 
     showNotification: showNotification,
     setShowNotification: setShowNotification,
@@ -44,8 +49,6 @@ const AppProvider = ({ children }) => {
 
     postsWasFiltered: postsWasFiltered,
     setPostsWasFiltered: setPostsWasFiltered,
-
-
   };
 
   return <AppContext.Provider value={userInfo}>{children}</AppContext.Provider>;
