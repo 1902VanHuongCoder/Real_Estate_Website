@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { createContext } from "react";
 export const AppContext = createContext();
 const AppProvider = ({ children }) => {
+
   const [sideBarOpen, setSideBarOpen] = useState(false); // state to store and control sidebar
   const [isOpenUserBox, setOpenUserBox] = useState(false); // state to store and control userbox
   const [showImage, setShowImage] = useState(false); // toggle to view images in detail page
@@ -12,6 +13,7 @@ const AppProvider = ({ children }) => {
   const [postsWasFiltered, setPostsWasFiltered] = useState(null);
   const [showCongratulation, setShowCongratulation] = useState(false);
   const [news, setNews] = useState(null);
+  const [showConfirmBox, setShowConfirmBox] = useState({show: false, content: "", dataToDelete: null, typeOfCollection: null});
 
   useEffect(() => {
     setTimeout(() => {
@@ -49,6 +51,9 @@ const AppProvider = ({ children }) => {
 
     postsWasFiltered: postsWasFiltered,
     setPostsWasFiltered: setPostsWasFiltered,
+
+    showConfirmBox: showConfirmBox,
+    setShowConfirmBox: setShowConfirmBox,
   };
 
   return <AppContext.Provider value={userInfo}>{children}</AppContext.Provider>;

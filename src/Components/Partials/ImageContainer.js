@@ -67,8 +67,8 @@ const Example = () => {
   const extractImageIntoArray = useCallback(() => {
     const images = [];
     if (realEstateDetail) {
-      images.push(realEstateDetail.titleImageURL);
-      realEstateDetail.besideImageURLs.map((item, i) => images.push(item));
+      images.push(realEstateDetail.titleImageURL.imageURL);
+      realEstateDetail.besideImageURLs.map((item, i) => images.push(item.imageURL));
       // console.log("Function run");
     }
 

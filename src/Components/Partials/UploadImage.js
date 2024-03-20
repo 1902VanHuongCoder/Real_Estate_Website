@@ -12,6 +12,7 @@ import { FaCloudUploadAlt } from "react-icons/fa";
 import { AnimatePresence, motion } from "framer-motion";
 
 const UploadImage = ({
+  titleImageURL,
   setTitleImageURL,
   listOfImageURLs,
   setListOfImageURLs,
@@ -54,6 +55,17 @@ const UploadImage = ({
   // handle to remove list of selected images
   const handleRemoveImage = (index) => {
     const urlArray = [];
+    if (listOfImageURLs.length > 0) {
+      listOfImageURLs.map((item, i) => {
+        if (index !== i) {
+          return urlArray.push(item);
+        } else {
+          return null;
+        }
+      });
+      setListOfImageURLs(urlArray);
+      return;
+    }
     listOfImages.imglist.map((item, i) => {
       if (index !== i) {
         return urlArray.push(item);
@@ -61,7 +73,6 @@ const UploadImage = ({
         return null;
       }
     });
-
     const detailsArray = [];
     listOfImages.details.map((item, i) => {
       if (index !== i) {
@@ -97,8 +108,7 @@ const UploadImage = ({
         (error) => console.log(error),
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-            setTitleImageURL(url);
-            console.log("Upload to storage succeed");
+            setTitleImageURL({ imageURL: url, name: titleImage.details.name });
           });
         }
       );
@@ -131,8 +141,16 @@ const UploadImage = ({
           (error) => console.log(error),
           () => {
             getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-              setListOfImageURLs([...listOfImageURLs, url]);
-              console.log("URL" + i);
+              // setListOfImageURLs([
+              //   ...listOfImageURLs,
+              //   { imageURL: url, name: listOfImages.details[i].name },
+              // ]);
+              listOfImageURLs.push({
+                imageURL: url,
+                name: listOfImages.details[i].name,
+              });
+              console.log("List url:" + listOfImageURLs.length);
+              setListOfImages({ details: [], imglist: [] });
             });
           }
         );
@@ -166,12 +184,14 @@ const UploadImage = ({
           Chọn ảnh cho phần tiêu đề
         </label>
         <div className="relative flex p-5 my-5 justify-center items-center w-full sm:w-4/5 min-h-[300px] mx-auto border-[2px] border-dashed border-slate-400">
-          {titleImage && (
+          {titleImage || titleImageURL ? (
             <img
-              src={titleImage.localURL}
-              alt="test"
+              src={titleImage ? titleImage.localURL : titleImageURL.imageURL}
+              alt="title_image"
               className="w-[300px] h-auto"
             />
+          ) : (
+            ""
           )}
           <div className="absolute bottom-0 right-0 px-4 py-2 bg-[rgba(0,0,0,.5)]">
             <label className="flex gap-x-1" htmlFor="titleImage">
@@ -232,28 +252,53 @@ const UploadImage = ({
         </label>
         <div className="relative p-5 my-5 flex flex-col gap-y-3 justify-center items-center w-full sm:w-4/5 min-h-[300px] mx-auto border-[2px] border-dashed border-slate-400">
           <div className="flex flex-wrap w-full justify-center gap-2">
-            {listOfImages.imglist?.map((url, index) => {
-              return (
-                <div
-                  key={index}
-                  className="relative w-[200px] h-auto shrink-0 grow-0"
-                >
-                  <img
-                    src={url}
-                    className="w-full h-auto border-[4px] border-solid boder-slate-400"
-                    alt="test"
-                  />
-                  <button
-                    onClick={() => {
-                      handleRemoveImage(index);
-                    }}
-                    className="absolute -right-[5px] -top-[10px] w-[20px] h-[20px] bg-red-500 text-white rounded-full text-sm"
+            {listOfImageURLs.length > 0 &&
+              listOfImageURLs.map((url, index) => {
+                return (
+                  <div
+                    key={index}
+                    className="relative w-[200px] h-auto shrink-0 grow-0"
                   >
-                    X
-                  </button>
-                </div>
-              );
-            })}
+                    <img
+                      src={url.imageURL}
+                      className="w-full h-auto border-[4px] border-solid boder-slate-400"
+                      alt="test"
+                    />
+                    <button
+                      onClick={() => {
+                        handleRemoveImage(index);
+                      }}
+                      className="absolute -right-[5px] -top-[10px] w-[20px] h-[20px] bg-red-500 text-white rounded-full text-sm"
+                    >
+                      X
+                    </button>
+                  </div>
+                );
+              })}
+
+            {listOfImages.imglist.length > 0 &&
+              listOfImages.imglist?.map((url, index) => {
+                return (
+                  <div
+                    key={index}
+                    className="relative w-[200px] h-auto shrink-0 grow-0 bg-red-700 opacity-55"
+                  >
+                    <img
+                      src={url}
+                      className="w-full h-auto border-[4px] border-solid boder-slate-400"
+                      alt="test"
+                    />
+                    <button
+                      onClick={() => {
+                        handleRemoveImage(index);
+                      }}
+                      className="absolute -right-[5px] -top-[10px] w-[20px] h-[20px] bg-red-500 text-white rounded-full text-sm"
+                    >
+                      X
+                    </button>
+                  </div>
+                );
+              })}
           </div>
           <div className="absolute bottom-0 right-0 px-4 py-2 bg-[rgba(0,0,0,.5)]">
             <label className="flex gap-x-1" htmlFor="listOfImages">
@@ -316,4 +361,3 @@ const UploadImage = ({
 export default UploadImage;
 
 // THIS FILE WAS BEING BLOCK
-

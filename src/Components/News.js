@@ -51,7 +51,7 @@ const News = () => {
   }, []);
 
   return (
-    <div className="lg:basis-[70%] h-fit w-full px-5 lg:px-10 pt-10 sm:pt-14">
+    <div className="lg:basis-[70%] h-fit w-full pr-5 lg:pr-10 pt-10 sm:pt-14">
       <h2 className="text-2xl border-l-[6px] border-l-solid border-l-[#0B60B0] pl-3">
         Nhà đất nổi bật
       </h2>
@@ -65,7 +65,7 @@ const News = () => {
           >
             <div
               className="relative w-full h-[350px] bg-cover bg-center bg-no-repeat"
-              style={{ backgroundImage: `url("${item.titleImageURL}")` }}
+              style={{ backgroundImage: `url("${item.titleImageURL.imageURL}")` }}
             >
               <div
                 className="absolute top-5 -left-1 w-fit h-[50px] bg-cover bg-right bg-no-repeat text-white text-lg flex pl-4 pr-6 items-center"

@@ -1,11 +1,23 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+// import hooks
+import React, { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+// import icons
 import { GoDotFill } from "react-icons/go";
 import { AppContext } from "../../Context/AppContext";
 
-const WaitingPosts = () => {
-  const { news } = useContext(AppContext);
-  const [currentPage, setCurrentPage] = useState(1);
 
+// import custom hooks
+import useConfirmBox from "../../Hooks/useConfirmBox";
+import { useNotification } from "../../Hooks/useNotification";
+
+const WaitingPosts = () => {
+  const { news, showConfirmBox } = useContext(AppContext);
+  const [display] = useConfirmBox();
+  const [ handleShowNotification ] = useNotification();
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const navigate = useNavigate();
   const listOfPostsWereDevided = [];
   for (let i = currentPage * 6 - 6; i < currentPage * 6; i++) {
     if (i >= news.length) {
@@ -19,6 +31,17 @@ const WaitingPosts = () => {
     buttonsArray.push(j);
   }
 
+  const handleToDeletePost = async (element) => {
+    display("Bạn có chắc chắn muốn xóa bài đăng này?", element, "posts");
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
+  const handleUpdatePost = (element) => {
+    navigate("/test2", { state: element });
+  };
   return (
     <div className="p-5 border-[1px] border-solid border-slate-200 mt-5 mb-5 rounded-t-xl">
       <div className="flex items-center gap-x-2 text-xl">
@@ -29,18 +52,6 @@ const WaitingPosts = () => {
       </div>
 
       <div className="w-full mt-5 h-fit">
-        {/* Search Input */}
-        {/* <div className="w-full flex justify-end items-center gap-x-1 border-b-[1px] border-b-solid border-b-slate-200 pb-10">
-          <input
-            className="pl-2 w-[200px] sm:w-[250px] h-[40px] border-solid border-[2px] border-slate-400 outline-none focus:border-[#0B60B0]"
-            type="text"
-            placeholder="Tên bài đăng"
-          />
-          <button className="text-white h-[40px] px-3 bg-[#0B60B0]">
-            Tìm kiếm
-          </button>
-        </div> */}
-
         {/* List posts that are waiting accepting */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-10">
           {news.length > 0 ? (
@@ -53,7 +64,7 @@ const WaitingPosts = () => {
                   <div
                     className="w-full h-[60%] bg-cover bg-center"
                     style={{
-                      backgroundImage: `url("${element.titleImageURL}")`,
+                      backgroundImage: `url("${element.titleImageURL.imageURL}")`,
                     }}
                   ></div>
                   <div className="py-3 px-2 flex flex-col gap-y-2">
@@ -65,10 +76,16 @@ const WaitingPosts = () => {
                   </div>
                 </div>
                 <div className="flex gap-x-2 mr-5 mb-5 justify-end">
-                  <button className="hover:opacity-80 px-5 py-3 border-[2px] border-solid border-[#0B60B0] font-medium">
+                  <button
+                    onClick={() => handleUpdatePost(element)}
+                    className="hover:opacity-80 px-5 py-3 border-[2px] border-solid border-[#0B60B0] font-medium"
+                  >
                     Cập nhật
                   </button>
-                  <button className="hover:opacity-80 px-5 py-3 font-medium bg-red-500 text-white">
+                  <button
+                    onClick={() => handleToDeletePost(element)}
+                    className="hover:opacity-80 px-5 py-3 font-medium bg-red-500 text-white"
+                  >
                     Xóa
                   </button>
                 </div>

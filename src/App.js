@@ -11,6 +11,7 @@ import SignUp from "./Components/SignUp";
 import OptionResults from "./Components/OptionResults";
 import Profile from "./Components/Profile";
 import Notification from "./Components/Partials/Notification";
+
 import "./App.css";
 import {
   Feedback,
@@ -37,14 +38,16 @@ import Congratulation from "./Congratulation";
 import WaitingPosts from "./Components/Partials/WaitingPosts";
 import AccountList from "./Components/Partials/AccountList";
 import FeedbackList from "./Components/Partials/FeebacksList";
+import ConfirmBox from "./Components/Partials/ConfirmBox";
 function App() {
   const location = useLocation();
   const { session, component, realEstateDetail } = useContext(AppContext);
-  console.log(session);
+  // console.log(session);
   return (
     <div className="relative">
       <Loading />
       <ImageContainer />
+      <ConfirmBox />
       <Congratulation />
       <div className="relative max-w-[1200px] mx-auto overflow-hidden">
         <NavigationBar />
@@ -84,7 +87,7 @@ function App() {
 
             {/* <Route path="/admin/list+of+feedbacks" element={<AccountList />}></Route> */}
 
-            {/* <Route path="/test2" element={<Example />}></Route> */}
+            <Route path="/test2" element={<Example />}></Route>
 
             {/* <Route path="/details/*" element={<Details />}></Route>
             <Route path="/uploadimage" element={<UploadImage/>}></Route>

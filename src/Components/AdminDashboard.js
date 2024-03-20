@@ -116,7 +116,7 @@ const AdminDashboard = () => {
   return (
     <div className="w-full h-fit mb-5">
       <div
-        className="relative text-white w-full h-[400px] bg-green-300 bg-cover rounded-b-xl overflow-hidden"
+        className="relative text-white w-full h-[400px] bg-cover rounded-b-xl overflow-hidden"
         style={{ backgroundImage: `url("${building}")` }}
       >
         <div className="top-0 left-0 absolute w-full h-full flex justify-center items-center flex-col gap-y-4 bg-[rgba(0,0,0,.2)]">

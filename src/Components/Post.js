@@ -21,8 +21,7 @@ import { db } from "../FirebaseConfig/firebase";
 import { AppContext } from "../Context/AppContext";
 
 const Post = () => {
-
-  const { setShowSpinner} = useContext(AppContext);
+  const { setShowSpinner } = useContext(AppContext);
 
   const [handleShowNotification] = useNotification();
 
@@ -31,6 +30,9 @@ const Post = () => {
   const [titleImageURL, setTitleImageURL] = useState(null); // store url of title image
 
   const [listOfImageURLs, setListOfImageURLs] = useState([]); // list of images
+
+  // console.log("Title image:" + titleImageURL);
+  // console.log("List of images: " + listOfImageURLs + ", Length: " + listOfImageURLs.length);
 
   const schema = yup.object().shape({
     // schema to validate form datas
@@ -82,7 +84,7 @@ const Post = () => {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
-  }); 
+  });
 
   const handleToPost = async (data) => {
     const date = new Date();
@@ -107,15 +109,22 @@ const Post = () => {
           titleImageURL: titleImageURL,
           besideImageURLs: listOfImageURLs,
           excepted: false,
-          createdAt: date.getDay() + "/" + date.getMonth() + 1 + "/" + date.getFullYear(),
-          updatedAt: date.getDay() + "/" + date.getMonth() + 1 + "/" + date.getFullYear(),
+          createdAt:
+            date.getDate() +
+            "/" +
+            (date.getMonth() + 1) +
+            "/" +
+            date.getFullYear(),
+          updatedAt:
+            date.getDate() +
+            "/" +
+            (date.getMonth() + 1) +
+            "/" +
+            date.getFullYear(),
         };
         try {
           await addDoc(collection(db, "posts"), dataToStore);
-          handleShowNotification(
-            "Đăng bài thành công.",
-            "success"
-          );
+          handleShowNotification("Đăng bài thành công.", "success");
           window.scrollTo({
             top: 0,
             behavior: "smooth",

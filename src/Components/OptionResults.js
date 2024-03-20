@@ -68,7 +68,7 @@ const OptionResults = () => {
             >
               <div
                 className="relative w-full h-[350px] bg-cover bg-center bg-no-repeat"
-                style={{ backgroundImage: `url("${element.titleImageURL}")` }}
+                style={{ backgroundImage: `url("${element.titleImageURL.imageURL}")` }}
               >
                 <div
                   className="absolute top-5 -left-1 w-fit h-[50px] bg-cover bg-right bg-no-repeat text-white text-lg flex pl-4 pr-6 items-center"
