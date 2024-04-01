@@ -12,11 +12,14 @@ import { AppContext } from "../../Context/AppContext";
 
 //import library
 import { motion } from "framer-motion";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 // import images
 import defaultUserAvatar from "../../images/user_icon.png";
-import { Link, useNavigate } from "react-router-dom";
+
+// import custome hooks
 import { useNotification } from "../../Hooks/useNotification";
+
 
 //Create animation for user box when it comes and outs
 const userBoxVariants = {
@@ -39,8 +42,15 @@ const userBoxVariants = {
 const UserBox = () => {
   const { openUserBox, session, setSession, setShowSpinner, setOpenUserBox } =
     useContext(AppContext);
+
   const navigate = useNavigate();
+
   const [handleShowNotification] = useNotification();
+
+  const currentPath = useLocation();
+
+
+
   const handleSignOut = () => {
     setShowSpinner(true);
     setTimeout(() => {
@@ -81,24 +91,26 @@ const UserBox = () => {
 
       <ul className="flex flex-col gap-y-1 px-5 py-5 border-b-[1px] border-solid border-slate-200">
         <Link to="/">
-          <span className="flex gap-x-2 text-lg cursor-pointer items-center">
+          <span className={`${
+                (currentPath.pathname === "/" ) ? "text-[#0B60B0] font-bold" : ""
+              } flex gap-x-2 text-lg cursor-pointer items-center`}>
             <IoHomeOutline /> Trang chủ
           </span>
         </Link>
         <Link to="/real+estate/your+profile">
-          <span className="flex gap-x-2 text-lg cursor-pointer items-center">
+          <span className={`${(currentPath.pathname === "/real+estate/your+profile" ) ? "text-[#0B60B0] font-bold" : ""} flex gap-x-2 text-lg cursor-pointer items-center`}>
             <CiUser /> Hồ sơ của bạn
           </span>
         </Link>
         <Link to="/real+estate/update+profile">
-          <span className="flex gap-x-2 text-lg cursor-pointer items-center">
+          <span className={` ${(currentPath.pathname === "/real+estate/update+profile" ) ? "text-[#0B60B0] font-bold" : ""} flex gap-x-2 text-lg cursor-pointer items-center`}>
             {" "}
             <LuUserCog /> Cập nhật hồ sơ
           </span>
         </Link>
         {session?.role === "admin" && (
           <Link to="/real+estate/post">
-            <span className="flex gap-x-2 text-lg cursor-pointer items-center">
+            <span className={` ${(currentPath.pathname === "/real+estate/post" ) ? "text-[#0B60B0] font-bold" : ""} flex gap-x-2 text-lg cursor-pointer items-center`}>
               <SlNote /> Đăng tin
             </span>
           </Link>

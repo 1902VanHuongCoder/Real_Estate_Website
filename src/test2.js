@@ -21,7 +21,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import { db } from "./FirebaseConfig/firebase";
 
 // import firebase services
-import { storage } from "../../FirebaseConfig/firebase";
+import { storage } from "./FirebaseConfig/firebase";
 import { deleteObject, ref } from "firebase/storage";
 import { deleteDoc } from "firebase/firestore";
 
@@ -43,14 +43,6 @@ const Post = () => {
   const [listOfImageURLs, setListOfImageURLs] = useState(
     postObject.besideImageURLs
   ); // store list of beside image urls
-
-  console.log("Title image:" + titleImageURL);
-  console.log(
-    "List of images: " +
-      postObject.besideImageURLs +
-      ", Length: " +
-      postObject.besideImageURLs.length
-  );
 
   const schema = yup.object().shape({
     // schema to validate form datas
@@ -109,21 +101,33 @@ const Post = () => {
         });
     }
 
+
+
     if (listOfImageURLs.length !== postObject.besideImageURLs.length) {
       // check user whether user has changed list of beside images
       valuesThatNeedToUpdate.besideImageURLs = listOfImageURLs;
+
+      console.log("Update beside images");
+
     }
 
-    for (let i = 0; i < listOfImageURLs.length; i++) {
-      // check user whether user has changed list of beside images
-      if (listOfImageURLs[i] !== postObject.besideImageURLs[i]) {
-        valuesThatNeedToUpdate.besideImageURLs = listOfImageURLs;
-        break;
-      }
-    }
+    console.log( valuesThatNeedToUpdate);
 
     const postsRef = doc(db, "posts", postObject.id); // reference to posts of database
-    updateDoc(postsRef, valuesThatNeedToUpdate); // update datas that have changed
+
+    try{
+      updateDoc(postsRef, valuesThatNeedToUpdate); // update datas that have changed
+      handleShowNotification(
+        "Cập nhật bài đăng thành công",
+        "success"
+      );
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }catch(error){
+      console.log("Update post failed!");
+    }
   };
 
   return (

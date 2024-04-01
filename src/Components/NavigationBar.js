@@ -1,23 +1,20 @@
 // import hooks
 import React, { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 // import icons
-import { IoIosArrowDown } from "react-icons/io";
 import { TiThMenu } from "react-icons/ti";
 import { FaUser } from "react-icons/fa";
 
 // import components
-import { UserBox, NavItems } from "./Middle";
+import { UserBox } from "./Middle";
 
 // import contexts
 import { AppContext } from "../Context/AppContext";
 
-// import datas for navigation bar
-import { rentItems, saleItems } from "../datas/navdatas";
-import { Link, useNavigate } from "react-router-dom";
-
 // import images
 import logo from "../images/logo.png";
+
 const NavigationBar = () => {
   const { sideBarOpen, setSideBarOpen, openUserBox, setOpenUserBox, session } =
     useContext(AppContext);
@@ -59,56 +56,36 @@ const NavigationBar = () => {
           </button>
         </div>
 
-        {/* Nav items  */}
-        <ul className="hidden lg:flex gap-x-3 text-lg">
-          <li className="group relative flex gap-x-1 items-center cursor-pointer h-[40px]">
-            <span className="">Nhà đất thuê</span>
-            <div className="group-hover:rotate-180 transition-transform flex justify-center items-center w-[30px] h-[30px] border-[1px] border-solid border-slate-200 rounded-full">
-              <span>
-                <IoIosArrowDown />
-              </span>
-            </div>
-
-            <ul className="absolute rounded-lg hidden bg-white shadow-lg top-[35px] w-[320px] p-5 z-10 border-[1px] border-solid border-slate-200 group-hover:block">
-              {rentItems.map((item, index) => {
-                return <NavItems key={index} content={item} />;
-              })}
-            </ul>
-          </li>
-          <li className="relative group flex gap-x-1 items-center cursor-pointer h-[40px]">
-            <span>Nhà đất bán</span>
-            <div className="group-hover:rotate-180 transition-transform flex justify-center items-center w-[30px] h-[30px] border-[1px] border-solid border-slate-200 rounded-full">
-              <span>
-                <IoIosArrowDown />
-              </span>
-            </div>
-            <ul className="absolute hidden bg-white rounded-lg shadow-lg top-[35px] opacity-0 group-hover:opacity-100 w-[320px] p-5 z-10 border-[1px] border-solid border-slate-200 group-hover:block transition-all">
-              {saleItems.map((item, index) => {
-                return <NavItems key={index} content={item} />;
-              })}
-            </ul>
-          </li>
-        </ul>
-
         {/* User icons  */}
 
         <div className="relative flex items-center gap-x-4 md:gap-x-4">
           {localStorage.getItem("userInfo") && session ? (
-            <button
-              onClick={() => {
-                setOpenUserBox(!openUserBox);
-              }}
-              className="w-[40px] h-[40px] flex justify-center items-center bg-white border-[2px] border-solid border-slate-400 rounded-full"
-            >
-              <FaUser className="text-[#0B60B0]" />
-            </button>
+            <div className="flex justify-between items-center gap-x-2">
+              {session ? session.username : "Không xác định"}
+              <button
+                onClick={() => {
+                  setOpenUserBox(!openUserBox);
+                }}
+                className="w-[40px] h-[40px] flex justify-center items-center bg-white border-[2px] border-solid border-slate-400 rounded-full"
+              >
+                <FaUser className="text-[#0B60B0]" />
+              </button>
+            </div>
           ) : (
-            <Link
-              to="/real+estate/signup"
-              className="h-[40px] text-lg font-bold px-5 border-[#0B60B0] border-[2px] border-solid flex justify-center items-center rounded-xl"
-            >
-              Đăng ký
-            </Link>
+            <div className="flex gap-x-2">
+              <Link
+                to="/real+estate/signup"
+                className="h-[40px] text-lg font-bold px-5 border-[#0B60B0] border-[2px] border-solid flex justify-center items-center rounded-xl"
+              >
+                Đăng ký
+              </Link>
+              <Link
+                to="/real+estate/signin"
+                className="h-[40px] text-lg font-bold px-5 bg-[#0b60b0] border-[2px] border-solid flex justify-center items-center rounded-xl text-white"
+              >
+                Đăng nhập
+              </Link>
+            </div>
           )}
           <button
             className="block lg:hidden"

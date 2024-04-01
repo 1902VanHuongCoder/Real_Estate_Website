@@ -118,6 +118,9 @@ const UploadImage = ({
   // handle store list of post's images to firebase storage
   const handleUploadMultipleImageToStorage = (e) => {
     e.preventDefault();
+    
+    console.log(listOfImages.details);
+
     if (listOfImages.details) {
       for (let i = 0; i < listOfImages.details.length; i++) {
         const storageRef = ref(
@@ -149,7 +152,6 @@ const UploadImage = ({
                 imageURL: url,
                 name: listOfImages.details[i].name,
               });
-              console.log("List url:" + listOfImageURLs.length);
               setListOfImages({ details: [], imglist: [] });
             });
           }
