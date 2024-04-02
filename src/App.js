@@ -26,11 +26,7 @@ import { useLocation } from "react-router-dom";
 
 // import context
 import { AnimatePresence } from "framer-motion";
-import Test1 from "./Test1";
-import Veryfy from "./VeryfyEmail";
-import LoginTest from "./LoginTTest";
-import UploadImage from "./Components/Partials/UploadImage";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { AppContext } from "./Context/AppContext";
 import Example from "./test2";
 import Loading from "./Components/Partials/Loading";
@@ -41,7 +37,7 @@ import FeedbackList from "./Components/Partials/FeebacksList";
 import ConfirmBox from "./Components/Partials/ConfirmBox";
 function App() {
   const location = useLocation();
-  const { session, component, realEstateDetail } = useContext(AppContext);
+  const { session, setOpenUserBox } = useContext(AppContext);
   // console.log(session);
   return (
     <div className="relative">
@@ -53,43 +49,44 @@ function App() {
         <NavigationBar />
         <Notification />
         {session && session.role === "admin" && <AdminDashboard />}
-        <AnimatePresence mode="wait">
-          <Routes location={location} key={location.pathname}>
-            <Route index path="/" element={<Home />}></Route>
-            <Route path="/real+estate/signup" element={<SignUp />}></Route>
-            <Route path="/real+estate/signin" element={<Login />}></Route>
-            <Route
-              path="/real+estate/search+result/*"
-              element={<OptionResults />}
-            ></Route>
-            <Route path="/details" element={<Details />}></Route>
-            <Route
-              path="/real+estate/your+profile"
-              element={<Profile />}
-            ></Route>
-            <Route
-              path="/real+estate/update+profile"
-              element={<UpdateProfile />}
-            ></Route>
-            <Route path="/real+estate/post" element={<Post />}></Route>
-            <Route
-              path="/admin/list+of+posts"
-              element={<WaitingPosts />}
-            ></Route>
-            <Route
-              path="/admin/list+of+user+accounts"
-              element={<AccountList />}
-            ></Route>
-            <Route
-              path="/admin/list+of+feedbacks"
-              element={<FeedbackList />}
-            ></Route>
+        <div onClick={() => setOpenUserBox(false)}>
+          <AnimatePresence mode="wait">
+            <Routes location={location} key={location.pathname}>
+              <Route index path="/" element={<Home />}></Route>
+              <Route path="/real+estate/signup" element={<SignUp />}></Route>
+              <Route path="/real+estate/signin" element={<Login />}></Route>
+              <Route
+                path="/real+estate/search+result/*"
+                element={<OptionResults />}
+              ></Route>
+              <Route path="/details" element={<Details />}></Route>
+              <Route
+                path="/real+estate/your+profile"
+                element={<Profile />}
+              ></Route>
+              <Route
+                path="/real+estate/update+profile"
+                element={<UpdateProfile />}
+              ></Route>
+              <Route path="/real+estate/post" element={<Post />}></Route>
+              <Route
+                path="/admin/list+of+posts"
+                element={<WaitingPosts />}
+              ></Route>
+              <Route
+                path="/admin/list+of+user+accounts"
+                element={<AccountList />}
+              ></Route>
+              <Route
+                path="/admin/list+of+feedbacks"
+                element={<FeedbackList />}
+              ></Route>
 
-            {/* <Route path="/admin/list+of+feedbacks" element={<AccountList />}></Route> */}
+              {/* <Route path="/admin/list+of+feedbacks" element={<AccountList />}></Route> */}
 
-            <Route path="/test2" element={<Example />}></Route>
+              <Route path="/test2" element={<Example />}></Route>
 
-            {/* <Route path="/details/*" element={<Details />}></Route>
+              {/* <Route path="/details/*" element={<Details />}></Route>
             <Route path="/uploadimage" element={<UploadImage/>}></Route>
             <Route path="/admin" element={<AdminDashboard />}></Route>
             <Route path="/test" element={<Test />}></Route>
@@ -99,8 +96,9 @@ function App() {
             <Route path="/profile" element={<Profile />}></Route>
             <Route path="/test1" element={<Test1 />}></Route>
             <Route path="/test2" element={<Veryfy />}></Route> */}
-          </Routes>
-        </AnimatePresence>
+            </Routes>
+          </AnimatePresence>
+        </div>
 
         <Feedback />
         <ToTop />

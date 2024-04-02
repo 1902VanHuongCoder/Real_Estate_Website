@@ -20,7 +20,6 @@ import defaultUserAvatar from "../../images/user_icon.png";
 // import custome hooks
 import { useNotification } from "../../Hooks/useNotification";
 
-
 //Create animation for user box when it comes and outs
 const userBoxVariants = {
   open: {
@@ -49,8 +48,6 @@ const UserBox = () => {
 
   const currentPath = useLocation();
 
-
-
   const handleSignOut = () => {
     setShowSpinner(true);
     setTimeout(() => {
@@ -63,6 +60,7 @@ const UserBox = () => {
     }, 3000);
   };
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+
   return (
     <motion.div
       variants={userBoxVariants}
@@ -74,7 +72,9 @@ const UserBox = () => {
         <div
           style={{
             backgroundImage: `url(${
-              session && session.photoURL !== "" ? session.photoURL : defaultUserAvatar
+              session && session.photoURL !== ""
+                ? session.photoURL
+                : defaultUserAvatar
             } )`,
           }}
           className="w-[60px] h-[60px] rounded-full bg-center bg-no-repeat bg-cover border-[4px] border-solid border-slate-200"
@@ -91,26 +91,46 @@ const UserBox = () => {
 
       <ul className="flex flex-col gap-y-1 px-5 py-5 border-b-[1px] border-solid border-slate-200">
         <Link to="/">
-          <span className={`${
-                (currentPath.pathname === "/" ) ? "text-[#0B60B0] font-bold" : ""
-              } flex gap-x-2 text-lg cursor-pointer items-center`}>
+          <span
+            className={`${
+              currentPath.pathname === "/" ? "text-[#0B60B0] font-bold" : ""
+            } flex gap-x-2 text-lg cursor-pointer items-center`}
+          >
             <IoHomeOutline /> Trang chủ
           </span>
         </Link>
         <Link to="/real+estate/your+profile">
-          <span className={`${(currentPath.pathname === "/real+estate/your+profile" ) ? "text-[#0B60B0] font-bold" : ""} flex gap-x-2 text-lg cursor-pointer items-center`}>
+          <span
+            className={`${
+              currentPath.pathname === "/real+estate/your+profile"
+                ? "text-[#0B60B0] font-bold"
+                : ""
+            } flex gap-x-2 text-lg cursor-pointer items-center`}
+          >
             <CiUser /> Hồ sơ của bạn
           </span>
         </Link>
         <Link to="/real+estate/update+profile">
-          <span className={` ${(currentPath.pathname === "/real+estate/update+profile" ) ? "text-[#0B60B0] font-bold" : ""} flex gap-x-2 text-lg cursor-pointer items-center`}>
+          <span
+            className={` ${
+              currentPath.pathname === "/real+estate/update+profile"
+                ? "text-[#0B60B0] font-bold"
+                : ""
+            } flex gap-x-2 text-lg cursor-pointer items-center`}
+          >
             {" "}
             <LuUserCog /> Cập nhật hồ sơ
           </span>
         </Link>
         {session?.role === "admin" && (
           <Link to="/real+estate/post">
-            <span className={` ${(currentPath.pathname === "/real+estate/post" ) ? "text-[#0B60B0] font-bold" : ""} flex gap-x-2 text-lg cursor-pointer items-center`}>
+            <span
+              className={` ${
+                currentPath.pathname === "/real+estate/post"
+                  ? "text-[#0B60B0] font-bold"
+                  : ""
+              } flex gap-x-2 text-lg cursor-pointer items-center`}
+            >
               <SlNote /> Đăng tin
             </span>
           </Link>
