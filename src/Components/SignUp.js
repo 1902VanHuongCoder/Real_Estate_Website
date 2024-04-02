@@ -282,7 +282,7 @@ const SignUp = () => {
                 id="username"
                 name="username"
                 type="text"
-                autoComplete="off"
+                autoComplete="on"
                 {...register("username")}
               />
               {errors.username && (

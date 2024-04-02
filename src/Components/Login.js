@@ -17,6 +17,7 @@ import { getAuth } from "firebase/auth";
 
 //import component
 import Transitions from "./Partials/Transition";
+
 const Login = () => {
   const [handleShowNotification] = useNotification(); //custom hook
 
@@ -83,11 +84,14 @@ const Login = () => {
 
   const userInfo = localStorage.getItem("userInfo");
 
-  if (userInfo && session && session.role === "user") {
-    navigate("/");
-  } else if (userInfo && session && session.role === "admin") {
-    navigate("/admin/list+of+posts");
-  }
+  useEffect(() => {
+    if (userInfo && session && session.role === "user") {
+      navigate("/");
+    } else if (userInfo && session && session.role === "admin") {
+      navigate("/admin/list+of+posts");
+    }
+  },[userInfo, session]);
+
   return (
     <Transitions>
       <div className="w-full h-fit flex justify-center items-center">
@@ -134,6 +138,7 @@ const Login = () => {
               w-full text-base pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
                   id="password"
                   name="password"
+                  autoComplete="on"
                   type={showPassword ? "text" : "password"}
                   onChange={(e) => setPassword(e.target.value)}
                 />

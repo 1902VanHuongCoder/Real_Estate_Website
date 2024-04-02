@@ -26,7 +26,7 @@ import { useLocation } from "react-router-dom";
 
 // import context
 import { AnimatePresence } from "framer-motion";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AppContext } from "./Context/AppContext";
 import Example from "./test2";
 import Loading from "./Components/Partials/Loading";
@@ -35,10 +35,38 @@ import WaitingPosts from "./Components/Partials/WaitingPosts";
 import AccountList from "./Components/Partials/AccountList";
 import FeedbackList from "./Components/Partials/FeebacksList";
 import ConfirmBox from "./Components/Partials/ConfirmBox";
+
+//import firebase services
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "./FirebaseConfig/firebase";
+
 function App() {
   const location = useLocation();
-  const { session, setOpenUserBox } = useContext(AppContext);
-  // console.log(session);
+  const {
+    session,
+    setOpenUserBox,
+    setShowSpinner,
+    setNews,
+    setPostsWasFiltered,
+  } = useContext(AppContext);
+
+  const fetchData = async () => {
+    setShowSpinner(true);
+    await getDocs(collection(db, "posts")).then((response) => {
+      const dataResponsed = response.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      setNews(dataResponsed);
+      setPostsWasFiltered(dataResponsed);
+    });
+    setShowSpinner(false);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <div className="relative">
       <Loading />

@@ -33,22 +33,22 @@ const News = () => {
     window.scrollTo(0, 0);
   };
 
-  const fetchData = async () => {
-    setShowSpinner(true);
-    await getDocs(collection(db, "posts")).then((response) => {
-      const dataResponsed = response.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-      setNews(dataResponsed);
-      setPostsWasFiltered(dataResponsed);
-    });
-    setShowSpinner(false);
-  };
+  // const fetchData = async () => {
+  //   setShowSpinner(true);
+  //   await getDocs(collection(db, "posts")).then((response) => {
+  //     const dataResponsed = response.docs.map((doc) => ({
+  //       ...doc.data(),
+  //       id: doc.id,
+  //     }));
+  //     setNews(dataResponsed);
+  //     setPostsWasFiltered(dataResponsed);
+  //   });
+  //   setShowSpinner(false);
+  // };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
   return (
     <div className="lg:basis-[70%] h-fit w-full pr-5 lg:pr-10 pt-10 sm:pt-14">
