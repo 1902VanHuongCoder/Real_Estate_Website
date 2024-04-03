@@ -19,9 +19,13 @@ import { AppContext } from "../../Context/AppContext";
 import { htmlToText } from "html-to-text";
 import { motion, AnimatePresence } from "framer-motion";
 import { wrap } from "popmotion";
+import { useLocation } from "react-router-dom";
 
 const Example = () => {
-  const { setShowImage, realEstateDetail } = useContext(AppContext);
+  const { setShowImage } = useContext(AppContext);
+
+  const {state} = useLocation();
+
   const [[page, direction], setPage] = useState([0, 0]);
 
   const variants = {
@@ -51,13 +55,13 @@ const Example = () => {
 
   const extractImageIntoArray = useCallback(() => {
     const images = [];
-    if (realEstateDetail) {
-      images.push(realEstateDetail.titleImageURL.imageURL);
-      realEstateDetail.besideImageURLs.map((item, i) => images.push(item.imageURL));
+    if (state) {
+      images.push(state.titleImageURL.imageURL);
+      state.besideImageURLs.map((item, i) => images.push(item.imageURL));
     }
 
     return images;
-  }, [realEstateDetail]);
+  }, [state]);
 
   const images = extractImageIntoArray();
 
@@ -145,9 +149,9 @@ const Example = () => {
         <div className="px-5 lg:px-0 lg:pl-5 lg:basis-[70%]">
           <div className="py-5 border-b-[1px] border-b-solid border-b-slate-200">
             <h1 className="text-2xl mb-1 font-medium">
-              {realEstateDetail?.postTitle}
+              {state?.postTitle}
             </h1>
-            <p>{realEstateDetail?.address}</p>
+            <p>{state?.address}</p>
           </div>
           <div className="border-b-[1px] border-b-solid border-b-slate-200 py-5 basis-[75%] grid grid-cols-2 sm:grid-cols-3 gap-2 lg:grid-cols-4 lg:gap-x-5 justify-evenly">
             <div className="flex items-center gap-x-2">
@@ -157,7 +161,7 @@ const Example = () => {
               <span className="flex gap-x-1 items-center">
                 <span className="opacity-60">Diện tích: </span>
                 <span>
-                  {realEstateDetail?.acreage} m<sup>2</sup>
+                  {state?.acreage} m<sup>2</sup>
                 </span>
               </span>
             </div>
@@ -167,7 +171,7 @@ const Example = () => {
               </span>
               <span className="flex gap-x-1 items-center">
                 <span className="opacity-60">Hướng: </span>
-                <span> {realEstateDetail?.direction}</span>
+                <span> {state?.direction}</span>
               </span>
             </div>
             <div className="flex items-center gap-x-2">
@@ -176,7 +180,7 @@ const Example = () => {
               </span>
               <span className="flex gap-x-1 items-center">
                 <span className="opacity-60">Số tầng: </span>
-                <span> {realEstateDetail?.floors}</span>
+                <span> {state?.floors}</span>
               </span>
             </div>
             <div className="flex items-center gap-x-2">
@@ -185,7 +189,7 @@ const Example = () => {
               </span>
               <span className="flex gap-x-1 items-center">
                 <span className="opacity-60">Mặt tiền: </span>
-                <span> {realEstateDetail?.facade} m</span>
+                <span> {state?.facade} m</span>
               </span>
             </div>
             <div className="flex items-center gap-x-2">
@@ -194,7 +198,7 @@ const Example = () => {
               </span>
               <span className="flex gap-x-1 items-center">
                 <span className="opacity-60">Phòng ngủ: </span>
-                <span> {realEstateDetail?.bedrooms}</span>
+                <span> {state?.bedrooms}</span>
               </span>
             </div>
             <div className="flex items-center gap-x-2">
@@ -203,7 +207,7 @@ const Example = () => {
               </span>
               <span className="flex gap-x-1 items-center">
                 <span className="opacity-60">Số toilet: </span>
-                <span> {realEstateDetail?.toilets}</span>
+                <span> {state?.toilets}</span>
               </span>
             </div>
           </div>
@@ -215,17 +219,17 @@ const Example = () => {
               <span>Thông tin mô tả:</span>
             </h2>
             <p className="text-justify">
-              {htmlToText(realEstateDetail?.description)}
+              {htmlToText(state?.description)}
             </p>
           </div>
           <div className="flex gap-x-10 border-b-[1px] border-b-solid border-b-slate-200 py-5">
             <div className="flex flex-col gap-y-1 items-center">
               <span className="opacity-80">Ngày đăng</span>
-              <span className="text-lg">{realEstateDetail?.createdAt}</span>
+              <span className="text-lg">{state?.createdAt}</span>
             </div>
             <div className="flex flex-col gap-y-1 items-center">
               <span className="opacity-80">Ngày cập nhật</span>
-              <span className="text-lg">{realEstateDetail?.updatedAt}</span>
+              <span className="text-lg">{state?.updatedAt}</span>
             </div>
             <div className="flex flex-col gap-y-1 items-center">
               <span className="opacity-80">Liên hệ công ty</span>

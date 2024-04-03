@@ -51,14 +51,18 @@ const Login = () => {
       result.docs.forEach((doc) => {
         if (doc.data().password === md5(password)) {
           if (auth.currentUser.emailVerified) {
+
             window.scrollTo(0, 0);
+
             handleShowNotification("Đăng nhập thành công!", "success");
+
             const dataToStoreToLocalStorage = {
               userEmail: doc.data().email,
               userName: doc.data().username,
               userId: doc.id,
               photoURL: doc.data().photoURL,
             };
+            
             localStorage.setItem(
               "userInfo",
               JSON.stringify(dataToStoreToLocalStorage)

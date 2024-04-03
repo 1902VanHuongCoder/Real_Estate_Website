@@ -1,5 +1,5 @@
 // import hooks
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 
 // import icons
 import { FaLocationDot } from "react-icons/fa6";
@@ -9,46 +9,23 @@ import { FaBuilding } from "react-icons/fa";
 import { MdBedroomParent } from "react-icons/md";
 import { PiToiletFill } from "react-icons/pi";
 
-//import firebase services
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../FirebaseConfig/firebase";
+//import contexts
 import { AppContext } from "../Context/AppContext";
 
-//import images
+//import library
 import { useNavigate } from "react-router-dom";
 
 const News = () => {
-  const {
-    setShowSpinner,
-    setRealEstateDetail,
-    postsWasFiltered,
-    setPostsWasFiltered,
-    setNews,
-  } = useContext(AppContext);
+  const { postsWasFiltered } = useContext(AppContext);
   const navigate = useNavigate();
 
   const handleViewDetails = (postData) => {
-    setRealEstateDetail(postData);
-    navigate("/details");
-    window.scrollTo(0, 0);
+    navigate("/details", { state: postData });
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
-
-  // const fetchData = async () => {
-  //   setShowSpinner(true);
-  //   await getDocs(collection(db, "posts")).then((response) => {
-  //     const dataResponsed = response.docs.map((doc) => ({
-  //       ...doc.data(),
-  //       id: doc.id,
-  //     }));
-  //     setNews(dataResponsed);
-  //     setPostsWasFiltered(dataResponsed);
-  //   });
-  //   setShowSpinner(false);
-  // };
-
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
 
   return (
     <div className="lg:basis-[70%] h-fit w-full pr-5 lg:pr-10 pt-10 sm:pt-14">
@@ -65,7 +42,9 @@ const News = () => {
           >
             <div
               className="relative w-full h-[350px] bg-cover bg-center bg-no-repeat"
-              style={{ backgroundImage: `url("${item.titleImageURL.imageURL}")` }}
+              style={{
+                backgroundImage: `url("${item.titleImageURL.imageURL}")`,
+              }}
             >
               <div
                 className="absolute top-5 -left-1 w-fit h-[50px] bg-cover bg-right bg-no-repeat text-white text-lg flex pl-4 pr-6 items-center"

@@ -37,7 +37,7 @@ import FeedbackList from "./Components/Partials/FeebacksList";
 import ConfirmBox from "./Components/Partials/ConfirmBox";
 
 //import firebase services
-import { collection, getDocs } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
 import { db } from "./FirebaseConfig/firebase";
 
 function App() {
@@ -48,9 +48,11 @@ function App() {
     setShowSpinner,
     setNews,
     setPostsWasFiltered,
+    setSession,
   } = useContext(AppContext);
 
-  const fetchData = async () => {
+  const fetchNewsData = async () => {
+
     setShowSpinner(true);
     await getDocs(collection(db, "posts")).then((response) => {
       const dataResponsed = response.docs.map((doc) => ({
@@ -63,8 +65,30 @@ function App() {
     setShowSpinner(false);
   };
 
+  const fetchUserData = async (id) => {
+    try {
+      const docRef = doc(db, "user_accounts", id);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        setSession(docSnap.data());
+      } else {
+        // docSnap.data() will be undefined in this case
+        console.log("No such document!");
+      }
+
+    } catch (error) {
+      console.log(error); // display error messages in console panel
+    }
+  };
+
   useEffect(() => {
-    fetchData();
+    fetchNewsData();
+    const userInfo = localStorage.getItem("userInfo"); // get user data from local storage
+    let userId = JSON.parse(userInfo).userId; // parse JSON to Object
+    if (userInfo) {
+      // if user has logged in
+      fetchUserData(userId); // fetch user datas from database
+    }
   }, []);
 
   return (

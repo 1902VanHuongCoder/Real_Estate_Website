@@ -13,10 +13,13 @@ import { AppContext } from "../../Context/AppContext";
 // import library
 import ImageZoom from "react-image-zooom";
 import { wrap } from "framer-motion";
-
 import { motion, AnimatePresence } from "framer-motion";
+import { useLocation } from "react-router-dom";
+
 const Example = () => {
-  const { realEstateDetail, showImage, setShowImage } = useContext(AppContext);
+  const { showImage, setShowImage } = useContext(AppContext);
+
+  const {state} = useLocation();
 
   const [[page, direction], setPage] = useState([0, 0]);
 
@@ -66,14 +69,14 @@ const Example = () => {
 
   const extractImageIntoArray = useCallback(() => {
     const images = [];
-    if (realEstateDetail) {
-      images.push(realEstateDetail.titleImageURL.imageURL);
-      realEstateDetail.besideImageURLs.map((item, i) => images.push(item.imageURL));
+    if (state) {
+      images.push(state.titleImageURL.imageURL);
+      state.besideImageURLs.map((item, i) => images.push(item.imageURL));
       // console.log("Function run");
     }
 
     return images;
-  }, [realEstateDetail]);
+  }, [state]);
 
   const images = extractImageIntoArray();
   const handleViewImages = (index) => {
