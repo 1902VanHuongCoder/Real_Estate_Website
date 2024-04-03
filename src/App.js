@@ -37,7 +37,7 @@ import FeedbackList from "./Components/Partials/FeebacksList";
 import ConfirmBox from "./Components/Partials/ConfirmBox";
 
 //import firebase services
-import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { db } from "./FirebaseConfig/firebase";
 
 function App() {
@@ -49,10 +49,10 @@ function App() {
     setNews,
     setPostsWasFiltered,
     setSession,
+    showImage,
   } = useContext(AppContext);
 
   const fetchNewsData = async () => {
-
     setShowSpinner(true);
     await getDocs(collection(db, "posts")).then((response) => {
       const dataResponsed = response.docs.map((doc) => ({
@@ -75,7 +75,6 @@ function App() {
         // docSnap.data() will be undefined in this case
         console.log("No such document!");
       }
-
     } catch (error) {
       console.log(error); // display error messages in console panel
     }
@@ -94,7 +93,7 @@ function App() {
   return (
     <div className="relative">
       <Loading />
-      <ImageContainer />
+      {showImage && <ImageContainer />}
       <ConfirmBox />
       <Congratulation />
       <div className="relative max-w-[1200px] mx-auto overflow-hidden">

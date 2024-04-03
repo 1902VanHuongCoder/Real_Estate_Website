@@ -11,6 +11,9 @@ import {
 } from "react-icons/fa6";
 import { GiMultiDirections } from "react-icons/gi";
 import { PiToiletFill } from "react-icons/pi";
+import { FaTag } from "react-icons/fa";
+import { FaPenNib } from "react-icons/fa";
+import { BsSendFill } from "react-icons/bs";
 
 //import context
 import { AppContext } from "../../Context/AppContext";
@@ -22,11 +25,16 @@ import { wrap } from "popmotion";
 import { useLocation } from "react-router-dom";
 
 const Example = () => {
-  const { setShowImage } = useContext(AppContext);
+  const { setShowImage, session } = useContext(AppContext);
 
-  const {state} = useLocation();
+  const { state } = useLocation();
 
   const [[page, direction], setPage] = useState([0, 0]);
+
+  const [question, setQuestion] = useState("");
+
+  console.log(session);
+  console.log(state);
 
   const variants = {
     enter: (direction) => {
@@ -81,6 +89,7 @@ const Example = () => {
     setPage([page + newDirection, newDirection]);
   };
 
+  const handleToAskCompany = () => {};
   return (
     <div>
       <div className="flex gap-x-5 lg:flex-row flex-col">
@@ -136,7 +145,9 @@ const Example = () => {
                 <div
                   key={index}
                   onClick={() => handleViewImages(index)}
-                  className="hover:opacity-70 shrink-0 w-full h-[60px] sm:h-[150px] bg-cover bg-center bg-no-repeat"
+                  className={`${
+                    index === page && "border-[4px] border-solid border-black"
+                  } shrink-0 w-full h-[60px] sm:h-[150px] bg-cover bg-center bg-no-repeat`}
                   style={{ backgroundImage: `url("${item}")` }}
                 ></div>
               );
@@ -148,9 +159,7 @@ const Example = () => {
       <div className="flex lg:flex-row flex-col">
         <div className="px-5 lg:px-0 lg:pl-5 lg:basis-[70%]">
           <div className="py-5 border-b-[1px] border-b-solid border-b-slate-200">
-            <h1 className="text-2xl mb-1 font-medium">
-              {state?.postTitle}
-            </h1>
+            <h1 className="text-2xl mb-1 font-medium">{state?.postTitle}</h1>
             <p>{state?.address}</p>
           </div>
           <div className="border-b-[1px] border-b-solid border-b-slate-200 py-5 basis-[75%] grid grid-cols-2 sm:grid-cols-3 gap-2 lg:grid-cols-4 lg:gap-x-5 justify-evenly">
@@ -218,10 +227,9 @@ const Example = () => {
               </span>
               <span>Thông tin mô tả:</span>
             </h2>
-            <p className="text-justify">
-              {htmlToText(state?.description)}
-            </p>
+            <p className="text-justify">{htmlToText(state?.description)}</p>
           </div>
+
           <div className="flex gap-x-10 border-b-[1px] border-b-solid border-b-slate-200 py-5">
             <div className="flex flex-col gap-y-1 items-center">
               <span className="opacity-80">Ngày đăng</span>
@@ -234,6 +242,94 @@ const Example = () => {
             <div className="flex flex-col gap-y-1 items-center">
               <span className="opacity-80">Liên hệ công ty</span>
               <span className="text-lg">0334745377</span>
+            </div>
+          </div>
+
+          <div className="flex gap-y-5 flex-col border-b-[1px] border-b-solid border-b-slate-200 py-5">
+            <div className="flex items-center gap-x-2">
+              <span>
+                <FaTag />
+              </span>
+              <span>Bình luận</span>
+            </div>
+            <div className="w-full h-fit bg-slate-100">
+              <div>
+                <div className="p-5 flex-col items-center gap-2">
+                  <div className="flex items-center gap-x-2">
+                    <div className="flex justify-center items-center w-[50px] h-[50px] border-[2px] bg-white border-solid rounded-md overflow-hidden border-[#0b60b0]">
+                      <div
+                        className="w-[90%] h-[90%] p-4 bg-cover bg-no-repeat bg-center"
+                        style={{
+                          backgroundImage:
+                            "url('https://images.fpt.shop/unsafe/filters:quality(90)/fptshop.com.vn/uploads/images/tin-tuc/174965/Originals/meme-la-gi-3.jpg')",
+                        }}
+                      ></div>
+                    </div>
+                    <div>
+                      <p className="font-bold">Tô Văn Hưởng</p>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="w-fit h-fit p-2 bg-white rounded-md mt-3 ml-[30px]">
+                      <p>
+                        {" "}
+                        Nếu khách hàng chê bai sản phẩm dự án, bạn sẽ xử lý như
+                        thế nào? Và trong trường hợp nào bạn nên từ chối và
+                        ngưng theo đuổi khách hàng?
+                      </p>
+                    </div>
+                    <div>
+                        10:18 03/04/2024
+                    </div>
+                  </div>
+                </div>
+                <div className="pr-5 pb-5 flex-col items-center gap-2 ml-[48px]">
+                  <div className="flex items-center gap-x-2">
+                    <div className="flex justify-center items-center w-[50px] h-[50px] border-[2px] bg-white border-solid rounded-md overflow-hidden border-[#0b60b0]">
+                      <div
+                        className="w-[90%] h-[90%] p-4 bg-cover bg-no-repeat bg-center"
+                        style={{
+                          backgroundImage:
+                            "url('https://static.lag.vn/upload/news/23/10/27/meme-meo-huh-la-gi-tu-dau-ra-2_NPPF.jpg?w=800&encoder=wic&subsampling=444')",
+                        }}
+                      ></div>
+                    </div>
+                    <div>
+                      <p className="font-bold">Trinh Huy</p>
+                    </div>
+                  </div>
+
+                  <div className="w-fit h-fit p-2 bg-white rounded-md mt-3 ml-[30px]">
+                    <p>
+                      {" "}
+                      để có một giao dịch thành công, nhân viên kinh doanh bất
+                      động sản cần tự tin thuyết trình về dự án và thuyết phục
+                      người mua. Do đó, nghề sales sẽ giúp bạn tôi luyện
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex gap-y-5 flex-col border-b-[1px] border-b-solid border-b-slate-200 py-5">
+            <div className="flex items-center gap-x-2">
+              <span>
+                <FaPenNib />
+              </span>
+              <span>Đặt câu hỏi về bài đăng</span>
+            </div>
+            <div>
+              <textarea
+                onChange={(e) => setQuestion(e.target.value)}
+                className="w-full min-h-[200px] border-[1px] border-solid border-black p-2"
+              ></textarea>
+              <div className="flex justify-end mt-5">
+                <button className="flex items-center gap-x-2 bg-[#0b60b0] py-3 px-10 text-white">
+                  Gửi <BsSendFill />{" "}
+                </button>
+              </div>
             </div>
           </div>
         </div>

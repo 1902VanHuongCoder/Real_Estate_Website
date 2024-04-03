@@ -24,8 +24,6 @@ const OptionResults = () => {
   const queryResult = [];
   const keyWordsArray = state.split(" ");
 
-  console.log(keyWordsArray);
-
   for (let j = 0; j < news.length; j++) {
     const typeOfPropertyLowerCase = news[j].typeOfProperty.toLowerCase();
     const keyWord = state.substring(4).toLowerCase();
@@ -37,10 +35,6 @@ const OptionResults = () => {
     for (let i = 0; i < keyWordsArray.length; i++) {
       let postTitle = news[j].postTitle.toLowerCase();
       let keyW = keyWordsArray[i].toLowerCase();
-
-      console.log("Posttitle" + j + " :" + postTitle);
-      console.log("Keyword" + i + " :" + keyW);
-      console.log("Result: " + postTitle.includes(keyW));
       if (postTitle.includes(keyW)) {
         queryResult.push(news[j]);
         break;
@@ -68,7 +62,9 @@ const OptionResults = () => {
             >
               <div
                 className="relative w-full h-[350px] bg-cover bg-center bg-no-repeat"
-                style={{ backgroundImage: `url("${element.titleImageURL.imageURL}")` }}
+                style={{
+                  backgroundImage: `url("${element.titleImageURL.imageURL}")`,
+                }}
               >
                 <div
                   className="absolute top-5 -left-1 w-fit h-[50px] bg-cover bg-right bg-no-repeat text-white text-lg flex pl-4 pr-6 items-center"

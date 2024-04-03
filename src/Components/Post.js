@@ -20,8 +20,11 @@ import { addDoc, collection } from "firebase/firestore";
 import { db } from "../FirebaseConfig/firebase";
 import { AppContext } from "../Context/AppContext";
 
+//import library
+import { v4 as uuidv4 } from 'uuid';
+
 const Post = () => {
-  const { setShowSpinner } = useContext(AppContext);
+  const { setShowSpinner} = useContext(AppContext);
 
   const [handleShowNotification] = useNotification();
 
@@ -30,9 +33,6 @@ const Post = () => {
   const [titleImageURL, setTitleImageURL] = useState(null); // store url of title image
 
   const [listOfImageURLs, setListOfImageURLs] = useState([]); // list of images
-
-  // console.log("Title image:" + titleImageURL);
-  // console.log("List of images: " + listOfImageURLs + ", Length: " + listOfImageURLs.length);
 
   const schema = yup.object().shape({
     // schema to validate form datas
@@ -86,12 +86,14 @@ const Post = () => {
     resolver: yupResolver(schema),
   });
 
+
   const handleToPost = async (data) => {
     const date = new Date();
     setShowSpinner(true);
     if (titleImageURL) {
       if (value !== "" || value !== "<p><br></p>") {
         const dataToStore = {
+          postId: uuidv4(),
           postTitle: data.postTitle,
           address: data.address,
           price: data.price,
@@ -125,38 +127,26 @@ const Post = () => {
         try {
           await addDoc(collection(db, "posts"), dataToStore);
           handleShowNotification("Đăng bài thành công.", "success");
-          window.scrollTo({
-            top: 0,
-            behavior: "smooth",
-          });
         } catch (error) {
           console.log(error);
           handleShowNotification(
             "Đăng bài thất bại. Kiểm tra lại thông tin bài đăng.",
             "error"
           );
-          window.scrollTo({
-            top: 0,
-            behavior: "smooth",
-          });
         }
       } else {
         handleShowNotification(
           "Bạn phải nhập thông tin mô tả cho bất động sản.",
           "error"
         );
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth",
-        });
       }
     } else {
       handleShowNotification("Bạn chưa chọn ảnh tiêu đề bài đăng.", "error");
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
     }
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
     setShowSpinner(false);
   };
 
