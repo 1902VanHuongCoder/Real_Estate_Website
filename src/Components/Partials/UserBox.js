@@ -131,7 +131,7 @@ const UserBox = () => {
                   : ""
               } flex gap-x-2 text-lg cursor-pointer items-center`}
             >
-              <SlNote /> Đăng tin
+              <SlNote /> Thêm tài sản
             </span>
           </Link>
         )}

@@ -1,5 +1,6 @@
 // import hooks
 import React, { useCallback, useContext, useState } from "react";
+import { useNotification } from "../../Hooks/useNotification";
 
 // import icons
 import { GoDotFill } from "react-icons/go";
@@ -23,15 +24,22 @@ import { htmlToText } from "html-to-text";
 import { motion, AnimatePresence } from "framer-motion";
 import { wrap } from "popmotion";
 import { useLocation } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "../../FirebaseConfig/firebase";
 
 const Example = () => {
   const { setShowImage, session } = useContext(AppContext);
+
+  const [handleShowNotification] = useNotification();
 
   const { state } = useLocation();
 
   const [[page, direction], setPage] = useState([0, 0]);
 
   const [question, setQuestion] = useState("");
+
+  const randomId = uuidv4();
 
   console.log(session);
   console.log(state);
@@ -89,7 +97,40 @@ const Example = () => {
     setPage([page + newDirection, newDirection]);
   };
 
-  const handleToAskCompany = () => {};
+  const handleToAskCompany = async () => {
+    const date = new Date();
+    let hour = date.getHours();
+    let min = date.getMinutes();
+    let day = date.getDate();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
+    let date_string = hour + ":" + min + " " + day + "/" + month + "/" + year;
+
+    const dataToStoreToDatabase = {
+      commentId: randomId,
+      postId: state.postId,
+      commentContent: question,
+      create_at: date_string,
+    };
+
+    try {
+      const docRef = await addDoc(
+        collection(db, "comments"),
+        dataToStoreToDatabase
+      );
+      handleShowNotification("Bình luận thành công!", "success");
+    } catch (error) {
+      console.log(error);
+      handleShowNotification(
+        "Kết nối mạng không ổn định! Hãy thử lại.",
+        "error"
+      );
+    }
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
   return (
     <div>
       <div className="flex gap-x-5 lg:flex-row flex-col">
@@ -243,6 +284,10 @@ const Example = () => {
               <span className="opacity-80">Liên hệ công ty</span>
               <span className="text-lg">0334745377</span>
             </div>
+            <div className="flex flex-col gap-y-1 items-center">
+              <span className="opacity-80">Mã bài đăng</span>
+              <span className="text-lg">{state?.postId}</span>
+            </div>
           </div>
 
           <div className="flex gap-y-5 flex-col border-b-[1px] border-b-solid border-b-slate-200 py-5">
@@ -270,7 +315,7 @@ const Example = () => {
                     </div>
                   </div>
 
-                  <div>
+                  <div className="flex flex-col items-end">
                     <div className="w-fit h-fit p-2 bg-white rounded-md mt-3 ml-[30px]">
                       <p>
                         {" "}
@@ -279,12 +324,10 @@ const Example = () => {
                         ngưng theo đuổi khách hàng?
                       </p>
                     </div>
-                    <div>
-                        10:18 03/04/2024
-                    </div>
+                    <div className="pr-2 opacity-70">10:18 03/04/2024</div>
                   </div>
                 </div>
-                <div className="pr-5 pb-5 flex-col items-center gap-2 ml-[48px]">
+                <div className="pr-5 pb-5 flex-col items-center ml-[48px]">
                   <div className="flex items-center gap-x-2">
                     <div className="flex justify-center items-center w-[50px] h-[50px] border-[2px] bg-white border-solid rounded-md overflow-hidden border-[#0b60b0]">
                       <div
@@ -299,14 +342,16 @@ const Example = () => {
                       <p className="font-bold">Trinh Huy</p>
                     </div>
                   </div>
-
-                  <div className="w-fit h-fit p-2 bg-white rounded-md mt-3 ml-[30px]">
-                    <p>
-                      {" "}
-                      để có một giao dịch thành công, nhân viên kinh doanh bất
-                      động sản cần tự tin thuyết trình về dự án và thuyết phục
-                      người mua. Do đó, nghề sales sẽ giúp bạn tôi luyện
-                    </p>
+                  <div className="flex flex-col items-end">
+                    <div className="w-fit h-fit p-2 bg-white rounded-md mt-3 ml-[30px]">
+                      <p>
+                        {" "}
+                        Nếu khách hàng chê bai sản phẩm dự án, bạn sẽ xử lý như
+                        thế nào? Và trong trường hợp nào bạn nên từ chối và
+                        ngưng theo đuổi khách hàng?
+                      </p>
+                    </div>
+                    <div className="pr-2 opacity-70">10:18 03/04/2024</div>
                   </div>
                 </div>
               </div>
@@ -326,7 +371,11 @@ const Example = () => {
                 className="w-full min-h-[200px] border-[1px] border-solid border-black p-2"
               ></textarea>
               <div className="flex justify-end mt-5">
-                <button className="flex items-center gap-x-2 bg-[#0b60b0] py-3 px-10 text-white">
+                <button
+                  disabled={question === ""}
+                  onClick={handleToAskCompany}
+                  className={`flex items-center gap-x-2 bg-[#0b60b0] py-3 px-10 text-white outline-none disabled:opacity-50`}
+                >
                   Gửi <BsSendFill />{" "}
                 </button>
               </div>

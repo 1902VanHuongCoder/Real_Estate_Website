@@ -21,18 +21,22 @@ import { db } from "../FirebaseConfig/firebase";
 import { AppContext } from "../Context/AppContext";
 
 //import library
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 const Post = () => {
-  const { setShowSpinner} = useContext(AppContext);
+  const { setShowSpinner } = useContext(AppContext);
 
   const [handleShowNotification] = useNotification();
 
-  const [value, setValue] = useState(""); // value of Description Editor
+  const [value, setValueEditor] = useState(""); // value of Description Editor
 
   const [titleImageURL, setTitleImageURL] = useState(null); // store url of title image
 
   const [listOfImageURLs, setListOfImageURLs] = useState([]); // list of images
+
+  const [isHome, setIsHome] = useState(true);
+
+  const [isGround, setIsGround] = useState(false);
 
   const schema = yup.object().shape({
     // schema to validate form datas
@@ -81,11 +85,12 @@ const Post = () => {
   const {
     register,
     handleSubmit,
+    getValues,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
   });
-
 
   const handleToPost = async (data) => {
     const date = new Date();
@@ -150,14 +155,59 @@ const Post = () => {
     setShowSpinner(false);
   };
 
+  console.log("Rent: " + getValues("renting"));
+  console.log("Saling: " + getValues("saling"));
+
   return (
     <Transitions>
       <div className="w-4/5 sm:p-5 mx-auto">
         <h1 className="w-full text-center text-4xl font-md pt-10 mb-10 ">
           <span className="border-b-[5px] border-solid border-[#0B60B0] pb-2">
-            ĐĂNG BÀI
+            THÊM TÀI SẢN
           </span>
         </h1>
+        <p className="border-l-[5px] border-solid border-[#0B60B0] mb-5 text-xl pl-2">
+          Chọn loại tài sản
+        </p>
+        <div className="flex justify-between gap-x-2 mb-5">
+          <label
+            htmlFor="home"
+            className={`w-1/2 ${
+              isHome ? "bg-green-200" : "bg-slate-200"
+            }  h-[60px] rounded-md flex flex-row gap-x-2 items-center p-4`}
+          >
+            <input
+              checked={isHome}
+              onChange={(e) => {
+                setIsHome(e.target.checked);
+                setIsGround(!e.target.checked);
+              }}
+              name="home"
+              id="home"
+              type="checkbox"
+            />{" "}
+            <span>Nhà</span>
+          </label>
+
+          <label
+            htmlFor="ground"
+            className={`w-1/2 ${
+              isGround ? "bg-green-200" : "bg-slate-200"
+            }  h-[60px] rounded-md flex flex-row gap-x-2 items-center p-4`}
+          >
+            <input
+              checked={isGround}
+              onChange={(e) => {
+                setIsGround(e.target.checked);
+                setIsHome(!e.target.checked);
+              }}
+              type="checkbox"
+              name="ground"
+              id="ground"
+            />{" "}
+            <span>Đất</span>
+          </label>
+        </div>
         <form
           id="post_form"
           className="w-full h-fit flex flex-col gap-y-3"
@@ -216,7 +266,7 @@ const Post = () => {
               </p>
             )}
           </div>
-          <div className="flex flex-col gap-y-2">
+          {/* <div className="flex flex-col gap-y-2">
             <label className="text-slate-500" htmlFor="price">
               Giá khởi điểm
             </label>
@@ -238,9 +288,9 @@ const Post = () => {
                 <span>{errors.price.message}</span>
               </p>
             )}
-          </div>
+          </div> */}
           <div className="flex flex-col gap-y-5 sm:flex-row gap-x-5 pb-10 border-b-[1px] border-solid border-slate-200">
-            <div className="text-base basis-1/2 flex flex-col gap-y-1">
+            <div className="text-base basis-1/3 flex flex-col gap-y-1 ">
               <label htmlFor="typeOfProperty" className="text-slate-500">
                 Chọn loại tài sản
               </label>
@@ -265,28 +315,63 @@ const Post = () => {
                 </option>
               </select>
             </div>
-            <div className="text-base basis-1/2 flex flex-col gap-y-4">
-              <div className="text-slate-500">Hình thức bài đăng</div>
+            <div className="text-base basis-1/3 flex flex-col gap-y-4 ">
+              <div className="text-slate-500">Hình thức</div>
               <div className="flex gap-x-5">
                 <label className="flex items-center gap-x-1">
-                  Nhà đất cho thuê
+                  Cho thuê
                   <input
                     type="checkbox"
-                    id="post_method_reding_house"
-                    name="post_method_reding_house"
-                    {...register("post_method_reding_house")}
+                    name="renting"
+                    {...register("renting")}
+                    onChange={(e) => {
+                      setValue("saling", !e.target.checked);
+                    }}
                   />
                 </label>
                 <label className="flex items-center gap-x-1">
-                  Nhà đất bán
+                  Bán
                   <input
                     type="checkbox"
-                    id="post_method_selling_house"
-                    name="post_method_selling_house"
-                    {...register("post_method_selling_house")}
+                    name="saling"
+                    {...register("saling")}
+                    onChange={(e) => {
+                      setValue("renting", !e.target.checked);
+                    }}
                   />
                 </label>
               </div>
+            </div>
+
+            <div className="basis-1/3 flex flex-col gap-y-2 pb-5">
+              <label className="text-slate-500" htmlFor="acreage">
+                Giá tài sản
+              </label>
+              <div className="relative">
+                <input
+                  className={`${
+                    errors.price ? "border-red-500" : "border-slate-400"
+                  } w-full text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                  type="number"
+                  name="acreage"
+                  id="acreage"
+                  autoComplete="on"
+                  {...register("acreage")}
+                />
+                {getValues("renting") === true && (
+                  <span className="absolute h-[50px] w-[70px] flex justify-center items-center bg-slate-200 right-0 top-0 border-l-0 border-[1px] border-solid">
+                    /tháng
+                  </span>
+                )}
+              </div>
+              {errors.price && (
+                <p className="flex items-center gap-x-1 text-red-500">
+                  <span>
+                    <IoIosWarning />
+                  </span>
+                  <span>{errors.price.message}</span>
+                </p>
+              )}
             </div>
           </div>
           <div className="w-full py-5 border-b-[1px] border-solid border-slate-200">
@@ -477,7 +562,7 @@ const Post = () => {
             </div>
             <div className="flex flex-col gap-y-2">
               <p className="text-slate-400">Thông tin mô tả cụ thể</p>
-              <Editor value={value} setValue={setValue} />
+              <Editor value={value} setValueEditor={setValueEditor} />
             </div>
           </div>
           <UploadImage
