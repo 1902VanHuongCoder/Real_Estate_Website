@@ -10,10 +10,12 @@ const AppProvider = ({ children }) => {
   const [showNotification, setShowNotification] = useState(null);
   const [showSpinner, setShowSpinner] = useState(false);
   const [realEstateDetail, setRealEstateDetail] = useState(null);
-  const [postsWasFiltered, setPostsWasFiltered] = useState(null);
   const [showCongratulation, setShowCongratulation] = useState(false);
-  const [news, setNews] = useState(null);
+  const [news, setNews] = useState([]);
   const [showConfirmBox, setShowConfirmBox] = useState({show: false, content: "", dataToDelete: null, typeOfCollection: null});
+  const [houses, setHouses] = useState([]);
+  const [lands, setLands] = useState([]);
+  const [postsWasFiltered, setPostsWasFiltered] = useState([]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -54,6 +56,13 @@ const AppProvider = ({ children }) => {
 
     showConfirmBox: showConfirmBox,
     setShowConfirmBox: setShowConfirmBox,
+
+    houses: houses,
+    setHouses: setHouses,
+
+    lands: lands,
+    setLands: setLands,
+    
   };
 
   return <AppContext.Provider value={userInfo}>{children}</AppContext.Provider>;

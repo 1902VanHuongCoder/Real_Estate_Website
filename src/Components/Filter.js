@@ -6,7 +6,8 @@ import { GoDotFill } from "react-icons/go";
 import { AppContext } from "../Context/AppContext";
 
 const Example = () => {
-  const { setPostsWasFiltered, setShowSpinner, news } = useContext(AppContext);
+  const { setPostsWasFiltered, setShowSpinner, houses, lands } =
+    useContext(AppContext);
 
   const isInRange = (value, min, max) => {
     return value >= min && value <= max;
@@ -14,6 +15,7 @@ const Example = () => {
 
   const handleFilterPostsBasedOnAcreage = (min, max) => {
     setShowSpinner(true);
+    const news = [...houses, ...lands];
     setTimeout(() => {
       const postsWereFilteredBasedOnAcreage = [];
       news.forEach((element) => {
@@ -28,6 +30,7 @@ const Example = () => {
 
   const handleShowAllOfPosts = () => {
     setShowSpinner(true);
+    const news = [...houses, ...lands];
     setTimeout(() => {
       setPostsWasFiltered(news);
       setShowSpinner(false);
@@ -36,6 +39,7 @@ const Example = () => {
 
   const handleFilterPostsBasedOnDirection = (direction) => {
     setShowSpinner(true);
+    const news = [...houses, ...lands];
     setTimeout(() => {
       const postsWereFilteredBasedOnAcreage = [];
       news.forEach((element) => {
@@ -50,6 +54,7 @@ const Example = () => {
 
   const handleFilterPostsBasedOnFloor = (floor) => {
     setShowSpinner(true);
+    const news = [...houses, ...lands];
     setTimeout(() => {
       const postsWereFilteredBasedOnAcreage = [];
       news.forEach((element) => {

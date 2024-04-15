@@ -43,25 +43,48 @@ import { db } from "./FirebaseConfig/firebase";
 function App() {
   const location = useLocation();
   const {
+    lands,
+    houses,
     session,
     setOpenUserBox,
     setShowSpinner,
-    setNews,
     setPostsWasFiltered,
     setSession,
     showImage,
+    setHouses,
+    setLands,
   } = useContext(AppContext);
 
-  const fetchNewsData = async () => {
+  const fetchHouseDatas = async () => {
     setShowSpinner(true);
-    await getDocs(collection(db, "posts")).then((response) => {
-      const dataResponsed = response.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-      setNews(dataResponsed);
-      setPostsWasFiltered(dataResponsed);
-    });
+    let initialPostWasFiltered;
+
+    try {
+      await getDocs(collection(db, "posts")).then((response) => {
+        const dataResponsed = response.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        setHouses(dataResponsed);
+        initialPostWasFiltered = dataResponsed;
+        console.log("Fetching houses was success!"); // check later
+        console.log("Fetching houses was success - 1"); 
+      });
+
+      await getDocs(collection(db, "lands")).then((response) => {
+        const dataResponsed = response.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        setLands(dataResponsed);
+        initialPostWasFiltered = initialPostWasFiltered.concat(dataResponsed);
+        console.log("Fetching lands was success!");
+      });
+      setPostsWasFiltered(initialPostWasFiltered);
+    } catch (error) {
+      console.log("Error when fetching house datas");
+      console.log(error);
+    }
     setShowSpinner(false);
   };
 
@@ -80,8 +103,11 @@ function App() {
     }
   };
 
+  console.log("Render all of the components");
+
   useEffect(() => {
-    fetchNewsData();
+    fetchHouseDatas();
+    // fetchLandDatas();
     const userInfo = localStorage.getItem("userInfo"); // get user data from local storage
     let userId = JSON.parse(userInfo).userId; // parse JSON to Object
     if (userInfo) {

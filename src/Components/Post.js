@@ -24,9 +24,9 @@ import { AppContext } from "../Context/AppContext";
 import { v4 as uuidv4 } from "uuid";
 
 const Post = () => {
-  const { setShowSpinner } = useContext(AppContext);
+  const { setShowSpinner } = useContext(AppContext); // create loading animation when adding new property
 
-  const [handleShowNotification] = useNotification();
+  const [handleShowNotification] = useNotification(); // notify the state of adding property
 
   const [value, setValueEditor] = useState(""); // value of Description Editor
 
@@ -34,9 +34,14 @@ const Post = () => {
 
   const [listOfImageURLs, setListOfImageURLs] = useState([]); // list of images
 
-  const [isHome, setIsHome] = useState(true);
+  const [methodWithProperty, setMethodWithProperty] = useState({
+    renting: true,
+    saling: false,
+  }); // renting or saling
 
-  const [isGround, setIsGround] = useState(false);
+  const [isHouse, setIsHouse] = useState(true); // the property that need to add is home
+
+  const [isGround, setIsGround] = useState(false); // the property that need to add is ground
 
   const schema = yup.object().shape({
     // schema to validate form datas
@@ -85,8 +90,6 @@ const Post = () => {
   const {
     register,
     handleSubmit,
-    getValues,
-    setValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
@@ -97,45 +100,88 @@ const Post = () => {
     setShowSpinner(true);
     if (titleImageURL) {
       if (value !== "" || value !== "<p><br></p>") {
-        const dataToStore = {
-          postId: uuidv4(),
-          postTitle: data.postTitle,
-          address: data.address,
-          price: data.price,
-          typeOfProperty: data.typeOfProperty,
-          post_method_reding_house: data.post_method_reding_house,
-          post_method_selling_house: data.post_method_selling_house,
-          acreage: data.acreage,
-          facade: data.facade,
-          floors: data.floors,
-          livingrooms: data.livingrooms,
-          bedrooms: data.bedrooms,
-          toilets: data.toilets,
-          direction: data.direction,
-          description: value,
-          titleImageURL: titleImageURL,
-          besideImageURLs: listOfImageURLs,
-          excepted: false,
-          createdAt:
-            date.getDate() +
-            "/" +
-            (date.getMonth() + 1) +
-            "/" +
-            date.getFullYear(),
-          updatedAt:
-            date.getDate() +
-            "/" +
-            (date.getMonth() + 1) +
-            "/" +
-            date.getFullYear(),
-        };
+        let houseDatas;
+        let groundDatas;
+
+        if (isHouse) {
+          houseDatas = {
+            // general infomations
+            propertyId: uuidv4(),
+            title: data.postTitle,
+            address: data.address,
+            price: data.price,
+            typeOfHouse: data.typeOfProperty,
+            renting: methodWithProperty.renting,
+            saling: methodWithProperty.saling,
+
+            // details infos
+            acreage: data.acreage,
+            facade: data.facade,
+            floors: data.floors,
+            livingrooms: data.livingrooms,
+            bedrooms: data.bedrooms,
+            toilets: data.toilets,
+            direction: data.direction,
+            description: value,
+            titleImageURL: titleImageURL,
+            besideImageURLs: listOfImageURLs,
+
+            createdAt:
+              date.getDate() +
+              "/" +
+              (date.getMonth() + 1) +
+              "/" +
+              date.getFullYear(),
+            updatedAt:
+              date.getDate() +
+              "/" +
+              (date.getMonth() + 1) +
+              "/" +
+              date.getFullYear(),
+          };
+        } else {
+          console.log("Running....");
+          groundDatas = {
+            // general infomations
+            propertyId: uuidv4(),
+            title: data.postTitle,
+            address: data.address,
+            price: data.price,
+            renting: methodWithProperty.renting,
+            saling: methodWithProperty.saling,
+
+            // details infos
+            acreage: data.acreage,
+            direction: data.direction,
+            description: value,
+            titleImageURL: titleImageURL,
+            besideImageURLs: listOfImageURLs,
+
+            createdAt:
+              date.getDate() +
+              "/" +
+              (date.getMonth() + 1) +
+              "/" +
+              date.getFullYear(),
+            updatedAt:
+              date.getDate() +
+              "/" +
+              (date.getMonth() + 1) +
+              "/" +
+              date.getFullYear(),
+          };
+        }
+
         try {
-          await addDoc(collection(db, "posts"), dataToStore);
-          handleShowNotification("Đăng bài thành công.", "success");
+          await addDoc(
+            collection(db, isHouse ? "houses" : "lands"),
+            isHouse ? houseDatas : groundDatas
+          );
+          handleShowNotification("Thêm tài sản thành công.", "success");
         } catch (error) {
           console.log(error);
           handleShowNotification(
-            "Đăng bài thất bại. Kiểm tra lại thông tin bài đăng.",
+            "Thêm tài sản thất bại. Hãy thử lại!",
             "error"
           );
         }
@@ -149,14 +195,14 @@ const Post = () => {
       handleShowNotification("Bạn chưa chọn ảnh tiêu đề bài đăng.", "error");
     }
     window.scrollTo({
-      top: 0,
+      top: 500,
       behavior: "smooth",
     });
     setShowSpinner(false);
   };
 
-  console.log("Rent: " + getValues("renting"));
-  console.log("Saling: " + getValues("saling"));
+  console.log("Is home: " + isHouse);
+  console.log("Is ground: " + isGround);
 
   return (
     <Transitions>
@@ -173,13 +219,13 @@ const Post = () => {
           <label
             htmlFor="home"
             className={`w-1/2 ${
-              isHome ? "bg-green-200" : "bg-slate-200"
+              isHouse ? "bg-green-200" : "bg-slate-200"
             }  h-[60px] rounded-md flex flex-row gap-x-2 items-center p-4`}
           >
             <input
-              checked={isHome}
+              checked={isHouse}
               onChange={(e) => {
-                setIsHome(e.target.checked);
+                setIsHouse(e.target.checked);
                 setIsGround(!e.target.checked);
               }}
               name="home"
@@ -199,7 +245,7 @@ const Post = () => {
               checked={isGround}
               onChange={(e) => {
                 setIsGround(e.target.checked);
-                setIsHome(!e.target.checked);
+                setIsHouse(!e.target.checked);
               }}
               type="checkbox"
               name="ground"
@@ -266,85 +312,74 @@ const Post = () => {
               </p>
             )}
           </div>
-          {/* <div className="flex flex-col gap-y-2">
-            <label className="text-slate-500" htmlFor="price">
-              Giá khởi điểm
-            </label>
-            <input
-              className={`${
-                errors.price ? "border-red-500" : "border-slate-400"
-              } text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
-              type="text"
-              name="price"
-              id="price"
-              autoComplete="on"
-              {...register("price")}
-            />
-            {errors.price && (
-              <p className="flex items-center gap-x-1 text-red-500">
-                <span>
-                  <IoIosWarning />
-                </span>
-                <span>{errors.price.message}</span>
-              </p>
-            )}
-          </div> */}
           <div className="flex flex-col gap-y-5 sm:flex-row gap-x-5 pb-10 border-b-[1px] border-solid border-slate-200">
-            <div className="text-base basis-1/3 flex flex-col gap-y-1 ">
-              <label htmlFor="typeOfProperty" className="text-slate-500">
-                Chọn loại tài sản
-              </label>
-              <select
-                id="typeOfProperty"
-                name="typeOfProperty"
-                className="h-[50px] border-[1px] border-solid px-3 outline-none"
-                {...register("typeOfProperty")}
-              >
-                <option value="căn hộ chung cư">Căn hộ chung cư</option>
-                <option value="văn phòng">Văn phòng</option>
-                <option value="nhà riêng">Nhà riêng</option>
-                <option value="biệt thự và liền kề">Biệt thự, liền kề</option>
-                <option value="nhà mặt phố">Nhà mặt phố</option>
-                <option value="shop house và nhà phố thương mại">
-                  Shop house, nhà phố thương mại
-                </option>
-                <option value="warehouse">Kho, nhà xưởng</option>
-                <option value="boarding_house">Nhà phòng trọ</option>
-                <option value="farm_and_resort">
-                  Trang trại, khu nghĩ dưỡng
-                </option>
-              </select>
-            </div>
+            {isHouse && (
+              <div className="text-base basis-1/3 flex flex-col gap-y-1 ">
+                <label htmlFor="typeOfProperty" className="text-slate-500">
+                  Chọn loại tài sản
+                </label>
+                <select
+                  id="typeOfProperty"
+                  name="typeOfProperty"
+                  className="h-[50px] border-[1px] border-solid px-3 outline-none"
+                  {...register("typeOfProperty")}
+                >
+                  <option value="căn hộ chung cư">Căn hộ chung cư</option>
+                  <option value="văn phòng">Văn phòng</option>
+                  <option value="nhà riêng">Nhà riêng</option>
+                  <option value="biệt thự và liền kề">Biệt thự, liền kề</option>
+                  <option value="nhà mặt phố">Nhà mặt phố</option>
+                  <option value="shop house và nhà phố thương mại">
+                    Shop house, nhà phố thương mại
+                  </option>
+                  <option value="warehouse">Kho, nhà xưởng</option>
+                  <option value="boarding_house">Nhà phòng trọ</option>
+                  <option value="farm_and_resort">
+                    Trang trại, khu nghĩ dưỡng
+                  </option>
+                </select>
+              </div>
+            )}
             <div className="text-base basis-1/3 flex flex-col gap-y-4 ">
               <div className="text-slate-500">Hình thức</div>
               <div className="flex gap-x-5">
                 <label className="flex items-center gap-x-1">
                   Cho thuê
                   <input
+                    checked={methodWithProperty.renting}
                     type="checkbox"
                     name="renting"
-                    {...register("renting")}
                     onChange={(e) => {
-                      setValue("saling", !e.target.checked);
+                      setMethodWithProperty({
+                        saling: !e.target.checked,
+                        renting: e.target.checked,
+                      });
                     }}
                   />
                 </label>
                 <label className="flex items-center gap-x-1">
                   Bán
                   <input
+                    checked={methodWithProperty.saling}
                     type="checkbox"
                     name="saling"
-                    {...register("saling")}
                     onChange={(e) => {
-                      setValue("renting", !e.target.checked);
+                      setMethodWithProperty({
+                        renting: !e.target.checked,
+                        saling: e.target.checked,
+                      });
                     }}
                   />
                 </label>
               </div>
             </div>
 
-            <div className="basis-1/3 flex flex-col gap-y-2 pb-5">
-              <label className="text-slate-500" htmlFor="acreage">
+            <div
+              className={`${
+                isGround ? "basis-2/3" : "basis-1/3"
+              } flex flex-col gap-y-2 pb-5`}
+            >
+              <label className="text-slate-500" htmlFor="price">
                 Giá tài sản
               </label>
               <div className="relative">
@@ -352,13 +387,13 @@ const Post = () => {
                   className={`${
                     errors.price ? "border-red-500" : "border-slate-400"
                   } w-full text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
-                  type="number"
-                  name="acreage"
-                  id="acreage"
+                  type="text"
+                  name="price"
+                  id="price"
                   autoComplete="on"
-                  {...register("acreage")}
+                  {...register("price")}
                 />
-                {getValues("renting") === true && (
+                {methodWithProperty.renting === true && (
                   <span className="absolute h-[50px] w-[70px] flex justify-center items-center bg-slate-200 right-0 top-0 border-l-0 border-[1px] border-solid">
                     /tháng
                   </span>
@@ -379,7 +414,7 @@ const Post = () => {
               Mô tả tài sản
             </p>
             <div className="flex w-full gap-x-5">
-              <div className="basis-1/2">
+              <div className={`${isGround ? "basis-[100%]" : "basis-1/2"}`}>
                 <div className="flex flex-col gap-y-2 pb-5 ">
                   <label className="text-slate-500" htmlFor="acreage">
                     Diện tích
@@ -408,59 +443,65 @@ const Post = () => {
                     </p>
                   )}
                 </div>
-                <div className="flex flex-col gap-y-2 pb-5 ">
-                  <label className="text-slate-500" htmlFor="facade">
-                    Diện tích mặt tiền
-                  </label>
-                  <div className="relative">
-                    <input
-                      className={` ${
-                        errors.facade ? "border-red-500" : "border-slate-400"
-                      } w-full text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
-                      type="number"
-                      name="facade"
-                      id="facade"
-                      autoComplete="on"
-                      {...register("facade")}
-                    />
-                    <span className="absolute h-[50px] w-[70px] flex justify-center items-center bg-slate-200 right-0 top-0 border-l-0 border-[1px] border-solid">
-                      m<sup>2</sup>
-                    </span>
+                {isHouse && (
+                  <div className="flex flex-col gap-y-2 pb-5 ">
+                    <label className="text-slate-500" htmlFor="facade">
+                      Diện tích mặt tiền
+                    </label>
+                    <div className="relative">
+                      <input
+                        className={` ${
+                          errors.facade ? "border-red-500" : "border-slate-400"
+                        } w-full text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                        type="number"
+                        name="facade"
+                        id="facade"
+                        autoComplete="on"
+                        defaultValue={0}
+                        {...register("facade")}
+                      />
+                      <span className="absolute h-[50px] w-[70px] flex justify-center items-center bg-slate-200 right-0 top-0 border-l-0 border-[1px] border-solid">
+                        m<sup>2</sup>
+                      </span>
+                    </div>
+                    {errors.facade && (
+                      <p className="flex items-center gap-x-1 text-red-500">
+                        <span>
+                          <IoIosWarning />
+                        </span>
+                        <span>{errors.facade.message}</span>
+                      </p>
+                    )}
                   </div>
-                  {errors.facade && (
-                    <p className="flex items-center gap-x-1 text-red-500">
-                      <span>
-                        <IoIosWarning />
-                      </span>
-                      <span>{errors.facade.message}</span>
-                    </p>
-                  )}
-                </div>
-                <div className="flex flex-col gap-y-2 pb-5 ">
-                  <label className="text-slate-500" htmlFor="floors">
-                    Số tầng
-                  </label>
-                  <input
-                    className={`${
-                      errors.floors ? "border-red-500" : "border-slate-400"
-                    } text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
-                    type="number"
-                    name="floors"
-                    id="floors"
-                    min={0}
-                    max={300}
-                    autoComplete="on"
-                    {...register("floors")}
-                  />
-                  {errors.floors && (
-                    <p className="flex items-center gap-x-1 text-red-500">
-                      <span>
-                        <IoIosWarning />
-                      </span>
-                      <span>{errors.floors.message}</span>
-                    </p>
-                  )}
-                </div>
+                )}
+                {isHouse && (
+                  <div className="flex flex-col gap-y-2 pb-5 ">
+                    <label className="text-slate-500" htmlFor="floors">
+                      Số tầng
+                    </label>
+                    <input
+                      className={`${
+                        errors.floors ? "border-red-500" : "border-slate-400"
+                      } text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                      type="number"
+                      name="floors"
+                      id="floors"
+                      min={0}
+                      max={300}
+                      autoComplete="on"
+                      defaultValue={0}
+                      {...register("floors")}
+                    />
+                    {errors.floors && (
+                      <p className="flex items-center gap-x-1 text-red-500">
+                        <span>
+                          <IoIosWarning />
+                        </span>
+                        <span>{errors.floors.message}</span>
+                      </p>
+                    )}
+                  </div>
+                )}
                 <div className="flex flex-col gap-y-2 pb-5">
                   <label className="text-slate-500" htmlFor="postTitle">
                     Hướng
@@ -482,83 +523,90 @@ const Post = () => {
                   </select>
                 </div>
               </div>
-              <div className="basis-1/2">
-                <div className="flex flex-col gap-y-2 pb-5 ">
-                  <label className="text-slate-500" htmlFor="livingrooms">
-                    Số phòng khách
-                  </label>
-                  <input
-                    className={`${
-                      errors.livingrooms ? "border-red-500" : "border-slate-400"
-                    } text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
-                    type="number"
-                    name="livingrooms"
-                    id="livingrooms"
-                    min={0}
-                    max={300}
-                    autoComplete="on"
-                    {...register("livingrooms")}
-                  />
-                  {errors.livingrooms && (
-                    <p className="flex items-center gap-x-1 text-red-500">
-                      <span>
-                        <IoIosWarning />
-                      </span>
-                      <span>{errors.livingrooms.message}</span>
-                    </p>
-                  )}
+              {isHouse && (
+                <div className="basis-1/2">
+                  <div className="flex flex-col gap-y-2 pb-5 ">
+                    <label className="text-slate-500" htmlFor="livingrooms">
+                      Số phòng khách
+                    </label>
+                    <input
+                      className={`${
+                        errors.livingrooms
+                          ? "border-red-500"
+                          : "border-slate-400"
+                      } text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                      type="number"
+                      name="livingrooms"
+                      id="livingrooms"
+                      min={0}
+                      max={300}
+                      autoComplete="on"
+                      defaultValue={0}
+                      {...register("livingrooms")}
+                    />
+                    {errors.livingrooms && (
+                      <p className="flex items-center gap-x-1 text-red-500">
+                        <span>
+                          <IoIosWarning />
+                        </span>
+                        <span>{errors.livingrooms.message}</span>
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex flex-col gap-y-2 pb-5 ">
+                    <label className="text-slate-500" htmlFor="bedrooms">
+                      Số phòng ngủ
+                    </label>
+                    <input
+                      className={`${
+                        errors.bedrooms ? "border-red-500" : "border-slate-400"
+                      } text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                      type="number"
+                      name="bedrooms"
+                      id="bedrooms"
+                      min={0}
+                      max={300}
+                      autoComplete="on"
+                      defaultValue={0}
+                      {...register("bedrooms")}
+                    />
+                    {errors.bedrooms && (
+                      <p className="flex items-center gap-x-1 text-red-500">
+                        <span>
+                          <IoIosWarning />
+                        </span>
+                        <span>{errors.bedrooms.message}</span>
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex flex-col gap-y-2 pb-5 ">
+                    <label className="text-slate-500" htmlFor="toilets">
+                      Số toilet
+                    </label>
+                    <input
+                      className={`${
+                        errors.toilets ? "border-red-500" : "border-slate-400"
+                      } text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                      type="number"
+                      name="toilets"
+                      id="toilets"
+                      min={0}
+                      max={300}
+                      autoComplete="on"
+                      defaultValue={0}
+                      {...register("toilets")}
+                    />
+                    {errors.toilets && (
+                      <p className="flex items-center gap-x-1 text-red-500">
+                        <span>
+                          <IoIosWarning />
+                        </span>
+                        <span>{errors.toilets.message}</span>
+                      </p>
+                    )}
+                  </div>
                 </div>
-                <div className="flex flex-col gap-y-2 pb-5 ">
-                  <label className="text-slate-500" htmlFor="bedrooms">
-                    Số phòng ngủ
-                  </label>
-                  <input
-                    className={`${
-                      errors.bedrooms ? "border-red-500" : "border-slate-400"
-                    } text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
-                    type="number"
-                    name="bedrooms"
-                    id="bedrooms"
-                    min={0}
-                    max={300}
-                    autoComplete="on"
-                    {...register("bedrooms")}
-                  />
-                  {errors.bedrooms && (
-                    <p className="flex items-center gap-x-1 text-red-500">
-                      <span>
-                        <IoIosWarning />
-                      </span>
-                      <span>{errors.bedrooms.message}</span>
-                    </p>
-                  )}
-                </div>
-                <div className="flex flex-col gap-y-2 pb-5 ">
-                  <label className="text-slate-500" htmlFor="toilets">
-                    Số toilet
-                  </label>
-                  <input
-                    className={`${
-                      errors.toilets ? "border-red-500" : "border-slate-400"
-                    } text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
-                    type="number"
-                    name="toilets"
-                    id="toilets"
-                    min={0}
-                    max={300}
-                    autoComplete="on"
-                    {...register("toilets")}
-                  />
-                  {errors.toilets && (
-                    <p className="flex items-center gap-x-1 text-red-500">
-                      <span>
-                        <IoIosWarning />
-                      </span>
-                      <span>{errors.toilets.message}</span>
-                    </p>
-                  )}
-                </div>
-              </div>
+              )}
             </div>
             <div className="flex flex-col gap-y-2">
               <p className="text-slate-400">Thông tin mô tả cụ thể</p>
