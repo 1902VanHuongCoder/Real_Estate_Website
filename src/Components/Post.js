@@ -58,7 +58,7 @@ const Post = () => {
     price: yup
       .string()
       .max(15, "Tối đa 15 ký tự")
-      .min(3, "Ít nhất 3 kí tự")
+      .min(1, "Ít nhất 3 kí tự")
       .required("Trường này được yêu cầu"),
     acreage: yup
       .number()
@@ -110,6 +110,7 @@ const Post = () => {
             title: data.postTitle,
             address: data.address,
             price: data.price,
+            unit: data.unit,
             typeOfHouse: data.typeOfProperty,
             renting: methodWithProperty.renting,
             saling: methodWithProperty.saling,
@@ -147,6 +148,7 @@ const Post = () => {
             title: data.postTitle,
             address: data.address,
             price: data.price,
+            unit: data.unit,
             renting: methodWithProperty.renting,
             saling: methodWithProperty.saling,
 
@@ -195,14 +197,11 @@ const Post = () => {
       handleShowNotification("Bạn chưa chọn ảnh tiêu đề bài đăng.", "error");
     }
     window.scrollTo({
-      top: 500,
+      top: 0,
       behavior: "smooth",
     });
     setShowSpinner(false);
   };
-
-  console.log("Is home: " + isHouse);
-  console.log("Is ground: " + isGround);
 
   return (
     <Transitions>
@@ -393,11 +392,24 @@ const Post = () => {
                   autoComplete="on"
                   {...register("price")}
                 />
-                {methodWithProperty.renting === true && (
-                  <span className="absolute h-[50px] w-[70px] flex justify-center items-center bg-slate-200 right-0 top-0 border-l-0 border-[1px] border-solid">
-                    /tháng
-                  </span>
-                )}
+
+                <div className="absolute right-0 top-0 flex justify-center">
+                  <select
+                    id="unit"
+                    name="unit"
+                    className="h-[50px] border-[1px] border-solid border-slate-400 px-3 outline-none"
+                    {...register("unit")}
+                  >
+                    <option value="billion">tỷ</option>
+                    <option value="million">triệu</option>
+                  </select>
+
+                  {methodWithProperty.renting === true && (
+                    <span className="h-[50px] w-[70px] flex justify-center items-center bg-slate-200 border-l-0 border-[1px] border-solid">
+                      /tháng
+                    </span>
+                  )}
+                </div>
               </div>
               {errors.price && (
                 <p className="flex items-center gap-x-1 text-red-500">

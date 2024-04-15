@@ -39,6 +39,9 @@ import ConfirmBox from "./Components/Partials/ConfirmBox";
 //import firebase services
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { db } from "./FirebaseConfig/firebase";
+import AddStaff from "./Components/Partials/AddStaff";
+import StaffLogin from "./Components/StaffLogin";
+import StaffDashboard from "./StaffDashboard";
 
 function App() {
   const location = useLocation();
@@ -68,7 +71,7 @@ function App() {
         setHouses(dataResponsed);
         initialPostWasFiltered = dataResponsed;
         console.log("Fetching houses was success!"); // check later
-        console.log("Fetching houses was success - 1"); 
+        console.log("Fetching houses was success - 1");
       });
 
       await getDocs(collection(db, "lands")).then((response) => {
@@ -109,8 +112,9 @@ function App() {
     fetchHouseDatas();
     // fetchLandDatas();
     const userInfo = localStorage.getItem("userInfo"); // get user data from local storage
-    let userId = JSON.parse(userInfo).userId; // parse JSON to Object
+
     if (userInfo) {
+      let userId = JSON.parse(userInfo).userId; // parse JSON to Object
       // if user has logged in
       fetchUserData(userId); // fetch user datas from database
     }
@@ -158,10 +162,14 @@ function App() {
                 path="/admin/list+of+feedbacks"
                 element={<FeedbackList />}
               ></Route>
+              <Route path="/admin/add+staff" element={<AddStaff />}></Route>
+              <Route path="/staff/login" element={<StaffLogin />}></Route>
 
               {/* <Route path="/admin/list+of+feedbacks" element={<AccountList />}></Route> */}
 
               <Route path="/test2" element={<Example />}></Route>
+
+              <Route path="/staff/dashboard" element={<StaffDashboard />}></Route>
 
               {/* <Route path="/details/*" element={<Details />}></Route>
             <Route path="/uploadimage" element={<UploadImage/>}></Route>

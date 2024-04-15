@@ -118,7 +118,7 @@ const UploadImage = ({
   // handle store list of post's images to firebase storage
   const handleUploadMultipleImageToStorage = (e) => {
     e.preventDefault();
-    
+
     console.log(listOfImages.details);
 
     if (listOfImages.details) {
@@ -185,7 +185,7 @@ const UploadImage = ({
         <label htmlFor="titleImage" className="text-slate-500">
           Chọn ảnh cho phần tiêu đề
         </label>
-        <div className="relative flex p-5 my-5 justify-center items-center w-full sm:w-4/5 min-h-[300px] mx-auto border-[2px] border-dashed border-slate-400">
+        <div className="relative flex p-5 my-5 justify-center items-center w-full min-h-[300px] mx-auto border-[2px] border-dashed border-slate-400">
           {titleImage || titleImageURL ? (
             <img
               src={titleImage ? titleImage.localURL : titleImageURL.imageURL}
@@ -252,7 +252,7 @@ const UploadImage = ({
         <label htmlFor="listOfImages" className="text-slate-500">
           Chọn các hình ảnh tài sản còn lại
         </label>
-        <div className="relative p-5 my-5 flex flex-col gap-y-3 justify-center items-center w-full sm:w-4/5 min-h-[300px] mx-auto border-[2px] border-dashed border-slate-400">
+        <div className="relative p-5 my-5 flex flex-col gap-y-3 justify-center items-center w-full min-h-[300px] mx-auto border-[2px] border-dashed border-slate-400">
           <div className="flex flex-wrap w-full justify-center gap-2">
             {listOfImageURLs.length > 0 &&
               listOfImageURLs.map((url, index) => {

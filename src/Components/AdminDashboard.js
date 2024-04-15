@@ -129,7 +129,7 @@ const AdminDashboard = () => {
       {/* Navigation */}
       <div className="relative mt-5 w-full overflow-x-scroll sm:overflow-hidden rounded-lg h-[60px] border-[1px] border-solid border-slate-200">
         <AnimatePresence mode="wait">
-          <ul className="flex w-[800px] h-full">
+          <ul className="flex w-full h-full">
             <Link
               to="/admin"
               className="relative px-5  flex justify-center items-center "
@@ -221,6 +221,30 @@ const AdminDashboard = () => {
                 }`}
               >
                 Danh sách phản hồi
+              </span>
+            </Link>
+            <Link
+              to="/admin/add+staff"
+              className="relative px-5  flex justify-center items-center "
+            >
+              {location.pathname === "/admin/add+staff" && (
+                <motion.span
+                  key="/admin/add+staff"
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  variants={backgroundAnimationGeneralInfo}
+                  className="absolute w-full overflow-hidden h-full bg-[#0b60b0] -z-1"
+                ></motion.span>
+              )}
+
+              <span
+                className={`relative z-10 ${
+                  location.pathname === "/admin/add+staff" &&
+                  "text-white"
+                }`}
+              >
+                Thêm nhân viên
               </span>
             </Link>
           </ul>
