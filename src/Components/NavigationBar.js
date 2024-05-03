@@ -14,6 +14,7 @@ import { AppContext } from "../Context/AppContext";
 
 // import images
 import logo from "../images/logo.png";
+import user_icon from "../images/user_icon.png";
 
 const NavigationBar = () => {
   const { sideBarOpen, setSideBarOpen, openUserBox, setOpenUserBox, session } =
@@ -62,16 +63,28 @@ const NavigationBar = () => {
 
           <div className="relative flex items-center gap-x-4 md:gap-x-4">
             {localStorage.getItem("userInfo") && session ? (
-              <div className="flex justify-between items-center gap-x-2">
-                {session ? session.username : "Không xác định"}
-                <button
+              <div className="flex justify-between items-center gap-x-4">
+                {session ? (
+                  <span className="font-bold">{session.username}</span>
+                ) : (
+                  "Không xác định"
+                )}
+                <div
                   onClick={() => {
                     setOpenUserBox(!openUserBox);
                   }}
-                  className="w-[40px] h-[40px] flex justify-center items-center bg-white border-[2px] border-solid border-slate-400 rounded-full"
+                  className="w-[50px] h-[50px] rounded-full overflow-hidden border-[4px] border-solid border-slate-200 cursor-pointer"
                 >
-                  <FaUser className="text-[#0B60B0]" />
-                </button>
+                  <img
+                    src={
+                      session && session.photoURL !== ""
+                        ? session.photoURL
+                        : user_icon
+                    }
+                    alt="user_avatar"
+                    className="object-cover"
+                  />
+                </div>
               </div>
             ) : (
               <div className="flex gap-x-2">

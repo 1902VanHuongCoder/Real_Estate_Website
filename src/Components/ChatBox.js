@@ -1,6 +1,6 @@
 // import hooks
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { useNotification } from "./Hooks/useNotification";
+import { useNotification } from "../Hooks/useNotification";
 
 // import icons
 import { LuSendHorizonal } from "react-icons/lu";
@@ -8,11 +8,11 @@ import { FiSearch } from "react-icons/fi";
 import { BiSolidImageAdd } from "react-icons/bi";
 
 //import contexts
-import { AppContext } from "./Context/AppContext";
-import { ChatContext } from "./Context/ChatContext";
+import { AppContext } from "../Context/AppContext";
+import { ChatContext } from "../Context/ChatContext";
 
 //import firebase services
-import { db, storage } from "./FirebaseConfig/firebase";
+import { db, storage } from "../FirebaseConfig/firebase";
 import {
   Timestamp,
   arrayUnion,
@@ -30,14 +30,14 @@ import {
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 // import images
-import logo from "./images/logo.png";
-import user_icon from "./images/user_icon.png";
+import logo from "../images/logo.png";
+import user_icon from "../images/user_icon.png";
 
 // import libraries
 import { v4 as uuid } from "uuid";
-import Transitions from "./Components/Partials/Transition";
+import Transitions from "../Components/Partials/Transition";
 
-const Feedback = () => {
+const ChatBox = () => {
   const { session } = useContext(AppContext);
 
   const { data } = useContext(ChatContext);
@@ -119,22 +119,23 @@ const Feedback = () => {
   const handleKey = (e) => {
     e.code === "Enter" && handleSearch();
   };
+
   const handleSelectChats = (u) => {
     dispatch({ type: "CHANGE_USER", payload: u });
   };
 
   const handleSend = async () => {
     if (img) {
-      const storageRef = ref(storage, uuid());
-
-      const uploadTask = uploadBytesResumable(storageRef, img);
-
+      //   const storageRef = ref(storage, uuid());
+      const storageRef = ref(
+        storage,
+        `/chatImages/${img.details.name}`
+      ); // create reference to storage in products folder
+      const uploadTask = uploadBytesResumable(storageRef, img.details); // upload image to storage
       uploadTask.on(
-        (error) => {
-          //TODO:Handle Error
-        },
+        (error) => console.log(error),
         () => {
-          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+          getDownloadURL(uploadTask.snapshot.ref).then( async(downloadURL) => {
             await updateDoc(doc(db, "chats", data.chatId), {
               messages: arrayUnion({
                 id: uuid(),
@@ -176,6 +177,17 @@ const Feedback = () => {
     setImg(null);
   };
 
+  const handleSendMessage = (e) => {
+    e.code === "Enter" && handleSend();
+  };
+
+  const handleUploadImage = (event) => {
+    if (event.target.files.length > 0) {
+      const url = URL.createObjectURL(event.target.files[0]);
+      setImg({ localURL: url, details: event.target.files[0] });
+    }
+  };
+
   useEffect(() => {
     const getChats = () => {
       const unsub = onSnapshot(doc(db, "userChats", session.userId), (doc) => {
@@ -214,7 +226,9 @@ const Feedback = () => {
         </span>
       </h1>
       <div
-        className={`w-full h-[640px] flex border-[1px] border-solid border-slate-200 shadow-md bg-white text-black overflow-hidden`}
+        className={`w-full h-[${
+          img ? "840px" : "640px"
+        }] flex border-[1px] border-solid border-slate-200 shadow-md bg-white text-black overflow-hidden`}
       >
         <div className="basis-[35%] h-auto border-r-[1px] border-r-solid border-r-slate-200 flex flex-col items-center">
           <div className="h-fit w-full flex justify-center items-center">
@@ -322,7 +336,7 @@ const Feedback = () => {
 
             <div
               ref={scroll}
-              className="h-[500px] w-full bg-slate-100 overflow-auto"
+              className="h-[500px] w-full bg-slate-100 overflow-auto px-4"
             >
               {messages.length < 1 ? (
                 <div className="w-full h-full flex justify-center items-center text-xl">
@@ -331,7 +345,7 @@ const Feedback = () => {
               ) : (
                 messages.map((m) => (
                   <div
-                    className={`flex items-center gap-x-1 p-2 ${
+                    className={`flex items-start gap-x-2 p-2 ${
                       m.senderId === session.userId && "flex-row-reverse"
                     }`}
                     key={m.id}
@@ -344,19 +358,45 @@ const Feedback = () => {
                             : data.user.photoURL
                         }")`,
                       }}
-                      className="w-[50px] h-[50px] rounded-full bg-center bg-cover"
+                      className="min-w-[50px] h-[50px] rounded-full bg-center bg-cover"
                     ></div>
-                    <div className="bg-white p-2 rounded-tr-md">{m.text}</div>
+                    <div
+                      className={`flex flex-col gap-y-4  ${
+                        m.senderId === session.userId
+                          ? "items-end"
+                          : "items-start"
+                      } `}
+                    >
+                      <div
+                        className={`bg-white p-2 rounded-xl ${
+                          m.senderId === session.userId
+                            ? "rounded-br-none"
+                            : "rounded-bl-none"
+                        } max-w-[40%] min-w-fit`}
+                      >
+                        {m.text}
+                      </div>
+                      {m.img && (
+                        <div
+                          className={`max-w-[50%] h-fit border-[4px] border-solid border-white overflow-hidden rounded-lg `}
+                        >
+                          <img
+                            src={m.img}
+                            alt="assets"
+                            className="object-cover"
+                          />
+                        </div>
+                      )}
+                    </div>
                   </div>
                 ))
               )}
             </div>
 
-            <div
-              className="h-[70px] w-full flex gap-x-4 items-center px-4"
-            >
+            <div className="h-[70px] w-full flex gap-x-4 items-center px-4">
               <input
                 type="text"
+                onKeyDown={handleSendMessage}
                 placeholder="Nhập tin nhắn..."
                 onChange={(e) => setText(e.target.value)}
                 value={text}
@@ -375,13 +415,28 @@ const Feedback = () => {
                 type="file"
                 style={{ display: "none" }}
                 id="file"
-                onChange={(e) => setImg(e.target.files[0])}
+                onChange={(event) => handleUploadImage(event)}
               />
             </div>
+            {img?.localURL && (
+              <div className="relative w-[40%] h-[200px] rounded-lg overflow-hidden p-4">
+                <img
+                  src={img.localURL}
+                  alt="image_is_uploaded"
+                  className="object-cover"
+                />
+                <button
+                  onClick={() => setImg(null)}
+                  className="absolute right-4 top-4 bg-white w-[30px] h-[30px] rounded-full text-sm"
+                >
+                  X
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>
     </Transitions>
   );
 };
-export default Feedback;
+export default ChatBox;

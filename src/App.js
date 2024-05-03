@@ -41,6 +41,7 @@ import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { db } from "./FirebaseConfig/firebase";
 import AddStaff from "./Components/Partials/AddStaff";
 import StaffDashboard from "./StaffDashboard";
+import ChatBox from "./Components/ChatBox";
 
 function App() {
   const location = useLocation();
@@ -175,15 +176,15 @@ function App() {
                 element={<StaffDashboard />}
               ></Route>
 
+              {session && <Route path="/chat" element={<ChatBox />}></Route>}
+
               {/* Beta  */}
               <Route path="/test2" element={<Example />}></Route>
 
-              {session && <Route path="/test" element={<Test />}></Route>}
+              {/* {session && <Route path="/test" element={<Test />}></Route>} */}
             </Routes>
           </AnimatePresence>
         </div>
-
-        <Feedback />
 
         <ToTop />
 

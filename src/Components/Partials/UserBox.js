@@ -6,6 +6,7 @@ import { CiLogout, CiLogin, CiUser } from "react-icons/ci";
 import { SlNote } from "react-icons/sl";
 import { LuUserCog } from "react-icons/lu";
 import { IoHomeOutline } from "react-icons/io5";
+import { MdMessage } from "react-icons/md";
 
 //import context
 import { AppContext } from "../../Context/AppContext";
@@ -120,6 +121,16 @@ const UserBox = () => {
           >
             {" "}
             <LuUserCog /> Cập nhật hồ sơ
+          </span>
+        </Link>
+        <Link to="/chat">
+          <span
+            className={` ${
+              currentPath.pathname === "/chat" ? "text-[#0B60B0] font-bold" : ""
+            } flex gap-x-2 text-lg cursor-pointer items-center`}
+          >
+            {" "}
+            <MdMessage /> Nhắn tin
           </span>
         </Link>
         {session?.role === "admin" && (
