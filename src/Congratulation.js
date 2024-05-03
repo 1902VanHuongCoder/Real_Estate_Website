@@ -5,7 +5,7 @@ import { AppContext } from "./Context/AppContext";
 
 const Congratulation = () => {
   const { width, height } = useWindowSize();
-  const { showCongratulation, setShowCongratulation } = useContext(AppContext);
+  const { showCongratulation } = useContext(AppContext);
   return (
     showCongratulation && (
       <div className="fixed top-0 left-0 w-full h-full z-50">

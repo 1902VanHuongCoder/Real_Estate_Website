@@ -1,47 +1,84 @@
-//import hooks
-import React, { useContext } from "react";
+// import hooks
+import React, { useContext, useState } from "react";
+import { useNotification } from "../../Hooks/useNotification";
+// import packages
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-
-// import icons
 import { IoIosWarning } from "react-icons/io";
 
-//import library
-import { v4 as uuidv4 } from "uuid";
-import { addDoc, collection } from "firebase/firestore";
-import { db } from "../../FirebaseConfig/firebase";
-import md5 from "md5";
+// import icons
+import { FaEye } from "react-icons/fa";
+import { FaEyeSlash } from "react-icons/fa";
 
-//import custom hooks
-import { useNotification } from "../../Hooks/useNotification";
+// import firebase services
+import {
+  GoogleAuthProvider,
+  getAuth,
+  signInWithPopup,
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
+import { db, app } from "../../FirebaseConfig/firebase";
 
-//import contexts
+import {
+  addDoc,
+  collection,
+  getDocs,
+  query,
+  serverTimestamp,
+  where,
+} from "firebase/firestore";
+
+//import context
 import { AppContext } from "../../Context/AppContext";
 
-const AddStaff = () => {
-  const { setShowSpinner } = useContext(AppContext); // create loading animation when adding new property
+//import library
+import md5 from "md5";
+import { useNavigate } from "react-router-dom";
+import Transitions from "./Transition";
 
-  const [handleShowNotification] = useNotification(); // notify the state of adding property
+//import images
+import flagIcon from "../../images/vn_flag_icon.png";
+
+const AddStaff = () => {
+  const auth = getAuth(app);
+
+  const { setShowSpinner } = useContext(AppContext);
+
+  const [handleShowNotification] = useNotification(); //custom hook
+
+  const navigate = useNavigate();
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const schema = yup.object().shape({
     // schema to validate form datas
-    staff_name: yup.string().required("Trường này được yêu cầu"),
-    staff_username: yup.string().required("Trường này được yêu cầu"),
-    address: yup
+    username: yup
       .string()
-      .max(100, "Tối đa 100 ký tự")
-      .min(20, "Ít nhất 20 kí tự")
-      .required("Trường này được yêu cầu"),
-    position: yup.string().required("Trường này được yêu cầu"),
-    dateOfBirth: yup.string().required("Trường này được yêu cầu"),
-    staff_password: yup
+      .min(6, "Tên phải dài hơn 6 kí tự")
+      .max(20, "Tên phải ngắn hơn 20 kí tự")
+      .required(),
+    email: yup
       .string()
-      .min(6, "Mật khẩu phải lớn hơn 6 ký tự.")
-      .max(20, "Mật khẩu phải ngắn hơn 20 ký tự.")
-      .required("Trường này được yêu cầu"),
+      .email("Địa chỉ email không hợp lệ")
+      .required("Đây là trường bắt buộc"),
+    phoneNumber: yup
+      .string()
+      .min(3, "Số điện thoại phải lớn hơn 2 số")
+      .max(11, "Số điện thoại phải nhỏ hơn 12 số")
+      .required(),
+    password: yup
+      .string()
+      .min(6, "Mật khẩu phải dài hơn 6 kí tự")
+      .max(12, "Mật khẩu tối đa 12 kí tự")
+      .required(),
+    confirm_password: yup.string().required("Đây là trường bắt buộc"),
+    position: yup.string().required(),
+    dateOfBirth: yup.string().required(),
   });
 
+  // use useForm() hook and combine with YUP library to validate form datas
   const {
     register,
     handleSubmit,
@@ -50,202 +87,331 @@ const AddStaff = () => {
     resolver: yupResolver(schema),
   });
 
-  const handleAddStaff = async (data) => {
-    setShowSpinner(true);
+  // handle sign-up with the form datas
+  const handleSignUp = async (data) => {
+    // handle sign-up of user
+    let flag = false;
     const date = new Date();
-    const staff_datas = {
-      staff_id: uuidv4(),
-      staff_name: data.staff_name,
-      staff_username: data.staff_username,
-      staff_address: data.address,
-      staff_dateOfBirth: data.dateOfBirth,
-      staff_position: data.position,
-      staff_password: md5(data.staff_password),
-      createdAt:
-        date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear(),
-      updatedAt:
-        date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear(),
-    };
-
-    try {
-      await addDoc(collection(db, "staffs"), staff_datas);
-      handleShowNotification("Thêm nhân viên thành công.", "success");
-    } catch (error) {
-      console.log(error);
-      handleShowNotification("Thêm nhân viên thất bại. Hãy thử lại!", "error");
+    if (
+      data.password !== "" &&
+      md5(data.password) === md5(data.confirm_password) // encrypte password with md5 library to increase security for sensitive datas
+    ) {
+      flag = true;
     }
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-    setShowSpinner(false);
+
+    if (flag) {
+      setShowSpinner(true);
+      const userAccountRef = collection(db, "user_accounts"); // reference to user accounts in database
+      const q = query(userAccountRef, where("email", "==", data.email)); // query whether this email had existed in database
+      const result = await getDocs(q); // the query command will reuturn a document list that equal to email
+
+      let state = true; // flag to check whether saving datas to firestore is success
+
+      if (result.docs.length < 1) {
+        // if this account has not existed, add to database
+        const dataToStore = {
+          userId: "more" + data.username + new Date().getFullYear(),
+          username: data.username,
+          email: data.email,
+          phoneNumber: data.phoneNumber,
+          password: md5(data.password),
+          create_at:
+            date.getDay() +
+            "/" +
+            date.getMonth() +
+            1 +
+            "/" +
+            date.getFullYear(),
+          update_at:
+            date.getDay() +
+            "/" +
+            date.getMonth() +
+            1 +
+            "/" +
+            date.getFullYear(),
+          role: "staff",
+          photoURL: "",
+          address: "",
+          backgroundURL: "",
+          position: data.position,
+          dateOfBirth: data.dateOfBirth,
+        };
+
+        try {
+          await addDoc(collection(db, "user_accounts"), dataToStore); // add document to user_accounts table in database
+        } catch (error) {
+          console.log(error);
+          state = false;
+        }
+
+        createUserWithEmailAndPassword(auth, data.email, data.password)
+          .then((userCredential) => {
+            const user = userCredential.user;
+            sendEmailVerification(user);
+          })
+          .catch((error) => {
+            state = false;
+          });
+
+        if (state) {
+          handleShowNotification(
+            "Đăng ký tài khoản thành công! Truy cập email để xác minh tài khoản.",
+            "success"
+          );
+          navigate("/real+estate/signin");
+        } else {
+          handleShowNotification(
+            "Kết nối mạng không ổn định. Hãy thử lại!",
+            "error"
+          );
+        }
+        window.scrollTo(0, 0);
+      } else {
+        // otherwise, require user to sign-up with new email
+        handleShowNotification(
+          "Email này đã được sử dụng! Vui lòng sử dụng 1 email khác.",
+          "error"
+        );
+        window.scrollTo(0, 0);
+      }
+      setShowSpinner(false);
+    } else {
+      // handle errors when there are problems
+      handleShowNotification(
+        "Xác nhận mật khẩu không chính xác. Kiểm tra lại xác nhận mật khẩu của bạn",
+        "error"
+      );
+      window.scrollTo(0, 0);
+      setShowSpinner(false);
+    }
   };
 
   return (
-    <div className="w-full flex justify-center items-center">
-      <form className="w-[500px] h-fit" onSubmit={handleSubmit(handleAddStaff)}>
-        <h1 className="w-full text-center text-4xl font-md pt-10 mb-10 ">
-          <span className="border-b-[5px] border-solid border-[#0B60B0] pb-2">
-            THÊM NHÂN VIÊN
-          </span>
-        </h1>
-
-        <div className=" w-[500px] h-fit p-5 border-slate-200 border-[1px] border-solid shadow-lg mb-10">
-          <div className="flex flex-col gap-y-2 mb-5">
-            <label className="text-slate-500" htmlFor="staff_name">
-              Tên nhân viên
-            </label>
-            <input
-              className={` 
-                border-slate-400
-              text-xl pl-5 h-[50px] w-full border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
-              type="text"
-              name="staff_name"
-              id="staff_name"
-              autoComplete="on"
-              {...register("staff_name")}
-            />
-            {errors.staff_name && (
-              <p className="flex items-center gap-x-1 text-red-500">
-                <span>
-                  <IoIosWarning />
+    <Transitions>
+      <div className="w-full flex justify-center items-center">
+        <form
+          onSubmit={handleSubmit(handleSignUp)}
+          action="/"
+          method="POST"
+          className="flex flex-col gap-y-4"
+        >
+          <h1 className="w-full text-center text-4xl font-md pt-10 mb-10 ">
+            <span className="border-b-[5px] border-solid border-[#0B60B0] pb-2">
+              THÊM NHÂN VIÊN
+            </span>
+          </h1>
+          <div className="w-fit h-fit p-5 border-[1px] border-solid border-slate-200 mb-5">
+            <div className="flex flex-col mb-5 w-[500px] gap-y-2">
+              <label className="text-slate-500 pl-2" htmlFor="username">
+                Tên đăng nhập
+              </label>
+              <input
+                className={`${
+                  errors.username ? "border-red-500" : "border-slate-400"
+                } text-base pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                id="username"
+                name="username"
+                type="text"
+                autoComplete="on"
+                {...register("username")}
+              />
+              {errors.username && (
+                <p className="flex items-center gap-x-1 text-red-500">
+                  <span>
+                    <IoIosWarning />
+                  </span>
+                  <span>{errors.username.message}</span>
+                </p>
+              )}
+            </div>
+            <div className="flex flex-col mb-5 w-[500px] gap-y-2">
+              <label className="text-slate-500 pl-2" htmlFor="email">
+                Địa chỉ email
+              </label>
+              <input
+                className={`${
+                  errors.email ? "border-red-500" : "border-slate-400"
+                } text-base pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="on"
+                {...register("email")}
+              />
+              {errors.email && (
+                <p className="flex items-center gap-x-1 text-red-500">
+                  <span>
+                    <IoIosWarning />
+                  </span>
+                  <span>{errors.email.message}</span>
+                </p>
+              )}
+            </div>
+            <div className="flex flex-col mb-5 w-[500px] gap-y-2">
+              <label className="text-slate-500 pl-2" htmlFor="phoneNumber">
+                Số điện thoại
+              </label>
+              <div className="relative w-full h-fit">
+                <span className="absolute -left-[1px] -top-[1px] w-[100px] h-[52px] flex items-center gap-x-1 pl-2 bg-slate-200">
+                  <span className="w-[40px] h-[30px] bg-cover bg-center">
+                    <img
+                      className="w-full h-full"
+                      src={flagIcon}
+                      alt="vn_flag_icon"
+                    />
+                  </span>
+                  <span className="font-semibold">+84</span>
                 </span>
-                <span>{errors.staff_name.message}</span>
-              </p>
-            )}
-          </div>
+                <input
+                  className={`${
+                    errors.phoneNumber ? "border-red-500" : "border-slate-400"
+                  } w-full text-base pl-28 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  type="text"
+                  autoComplete="on"
+                  {...register("phoneNumber")}
+                />
+              </div>
 
-          <div className="flex flex-col gap-y-2 mb-5">
-            <label className="text-slate-500" htmlFor="staff_username">
-              Tên người dùng
-            </label>
-            <input
-              className={` 
-                border-slate-400
-              text-xl pl-5 h-[50px] w-full border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
-              type="text"
-              name="staff_username"
-              id="staff_username"
-              autoComplete="on"
-              {...register("staff_username")}
-            />
-            {errors.staff_username && (
-              <p className="flex items-center gap-x-1 text-red-500">
-                <span>
-                  <IoIosWarning />
+              {errors.phoneNumber && (
+                <p className="flex items-center gap-x-1 text-red-500">
+                  <span>
+                    <IoIosWarning />
+                  </span>
+                  <span>{errors.phoneNumber.message}</span>
+                </p>
+              )}
+            </div>
+            <div className="flex flex-col mb-5 w-[500px] gap-y-2">
+              <label className="text-slate-500 pl-2" htmlFor="password">
+                Mật khẩu
+              </label>
+              <div className="relative">
+                <span
+                  onClick={() => {
+                    setShowPassword(!showPassword);
+                  }}
+                  className="absolute right-0 top-0 h-[50px] flex justify-center items-center w-[40px] text-slate-500 cursor-pointer"
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </span>
-                <span>{errors.staff_username.message}</span>
-              </p>
-            )}
-          </div>
-
-          <div className="flex flex-col gap-y-2 mb-5">
-            <label className="text-slate-500" htmlFor="staff_password">
-              Mật khẩu
-            </label>
-            <input
-              className={` 
-                border-slate-400
-              text-xl pl-5 h-[50px] w-full border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
-              type="password"
-              name="staff_password"
-              id="staff_password"
-              autoComplete="on"
-              {...register("staff_password")}
-            />
-            {errors.staff_password && (
-              <p className="flex items-center gap-x-1 text-red-500">
-                <span>
-                  <IoIosWarning />
+                <input
+                  className={`${
+                    errors.password ? "border-red-500" : "border-slate-400"
+                  } w-full text-base pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="on"
+                  {...register("password")}
+                />
+              </div>
+              {errors.password && (
+                <p className="flex items-center gap-x-1 text-red-500">
+                  <span>
+                    <IoIosWarning />
+                  </span>
+                  <span>{errors.password.message}</span>
+                </p>
+              )}
+            </div>
+            <div className="flex flex-col mb-5 w-[500px] gap-y-2">
+              <label className="text-slate-500 pl-2" htmlFor="password">
+                Xác nhận mật khẩu
+              </label>
+              <div className="relative">
+                <span
+                  onClick={() => {
+                    setShowPassword(!showPassword);
+                  }}
+                  className="absolute right-0 top-0 h-[50px] flex justify-center items-center w-[40px] text-slate-500 cursor-pointer"
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </span>
-                <span>{errors.staff_password.message}</span>
-              </p>
-            )}
-          </div>
+                <input
+                  className={`${
+                    errors.confirm_password
+                      ? "border-red-500"
+                      : "border-slate-400"
+                  } w-full text-base pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                  id="confirm_password"
+                  name="confirm_password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="on"
+                  {...register("confirm_password")}
+                />
+              </div>
 
-          <div className="flex flex-col gap-y-2 mb-5">
-            <label className="text-slate-500" htmlFor="address">
-              Địa chỉ
-            </label>
-            <input
-              className={` 
-                border-slate-400
-              text-xl pl-5 h-[50px] w-full border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
-              type="text"
-              name="address"
-              id="address"
-              autoComplete="on"
-              {...register("address")}
-            />
-            {errors.address && (
-              <p className="flex items-center gap-x-1 text-red-500">
-                <span>
-                  <IoIosWarning />
-                </span>
-                <span>{errors.address.message}</span>
-              </p>
-            )}
-          </div>
+              {errors.confirm_password && (
+                <p className="flex items-center gap-x-1 text-red-500">
+                  <span>
+                    <IoIosWarning />
+                  </span>
+                  <span>{errors.confirm_password.message}</span>
+                </p>
+              )}
+            </div>
 
-          <div className="flex flex-col gap-y-2 mb-5">
-            <label className="text-slate-500" htmlFor="dateOfBirth">
-              Ngày sinh
-            </label>
-            <input
-              className={` 
-                border-slate-400
-              text-xl pl-5 h-[50px] w-full border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
-              type="date"
-              name="dateOfBirth"
-              id="dateOfBirth"
-              autoComplete="on"
-              {...register("dateOfBirth")}
-            />
-            {errors.dateOfBirth && (
-              <p className="flex items-center gap-x-1 text-red-500">
-                <span>
-                  <IoIosWarning />
-                </span>
-                <span>{errors.dateOfBirth.message}</span>
-              </p>
-            )}
-          </div>
+            <div className="flex flex-col mb-5 w-[500px] gap-y-2">
+              <label className="text-slate-500 pl-2" htmlFor="position">
+                Chức vụ
+              </label>
+              <input
+                className={`${
+                  errors.position ? "border-red-500" : "border-slate-400"
+                } text-base pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                id="position"
+                name="position"
+                type="text"
+                autoComplete="on"
+                {...register("position")}
+              />
+              {errors.position && (
+                <p className="flex items-center gap-x-1 text-red-500">
+                  <span>
+                    <IoIosWarning />
+                  </span>
+                  <span>{errors.position.message}</span>
+                </p>
+              )}
+            </div>
 
-          <div className="flex flex-col gap-y-2 mb-5">
-            <label className="text-slate-500" htmlFor="position">
-              Chức vụ
-            </label>
-            <input
-              className={` 
-                border-slate-400
-              text-xl pl-5 h-[50px] w-full border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
-              type="text"
-              name="position"
-              id="position"
-              autoComplete="on"
-              {...register("position")}
-            />
-            {errors.position && (
-              <p className="flex items-center gap-x-1 text-red-500">
-                <span>
-                  <IoIosWarning />
-                </span>
-                <span>{errors.position.message}</span>
-              </p>
-            )}
+            <div className="flex flex-col mb-5 w-[500px] gap-y-2">
+              <label className="text-slate-500 pl-2" htmlFor="dateOfBirth">
+                Ngày sinh
+              </label>
+              <input
+                className={`${
+                  errors.dateOfBirth ? "border-red-500" : "border-slate-400"
+                } text-base pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                id="dateOfBirth"
+                name="dateOfBirth"
+                type="date"
+                autoComplete="on"
+                {...register("dateOfBirth")}
+              />
+              {errors.dateOfBirth && (
+                <p className="flex items-center gap-x-1 text-red-500">
+                  <span>
+                    <IoIosWarning />
+                  </span>
+                  <span>{errors.dateOfBirth.message}</span>
+                </p>
+              )}
+            </div>
+            <div className="flex justify-center mb-5 w-[500px] mt-10">
+              <button
+                type="submit"
+                className="ml-1 text-white bg-[#0B60B0] h-[40px] px-5 w-[200px] hover:opacity-80"
+              >
+                Thêm nhân viên
+              </button>
+            </div>
           </div>
-
-          <div className="flex justify-center items-center mt-10 mb-3">
-            <button
-              type="submit"
-              className="ml-1 text-white bg-[#0B60B0] h-[40px] px-5 w-[200px] hover:opacity-80 uppercase"
-            >
-              Thêm nhân viên
-            </button>
-          </div>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+    </Transitions>
   );
 };
 

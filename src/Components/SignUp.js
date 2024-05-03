@@ -24,9 +24,11 @@ import { db, app } from "../FirebaseConfig/firebase";
 import {
   addDoc,
   collection,
+  doc,
   getDocs,
   query,
   serverTimestamp,
+  setDoc,
   where,
 } from "firebase/firestore";
 
@@ -45,7 +47,8 @@ import googleIcon from "../images/google_logo.png";
 const SignUp = () => {
   const auth = getAuth(app);
 
-  const { setSession, setShowSpinner, setShowCongratulation } = useContext(AppContext);
+  const { setSession, setShowSpinner, setShowCongratulation } =
+    useContext(AppContext);
 
   const [handleShowNotification] = useNotification(); //custom hook
 
@@ -100,16 +103,20 @@ const SignUp = () => {
 
     if (flag) {
       setShowSpinner(true);
-      const userAccountRef = collection(db, "user_accounts"); // reference to user accounts in database
-      const q = query(userAccountRef, where("email", "==", data.email)); // query whether this email had existed in database
-      const result = await getDocs(q); // the query command will reuturn a document list that equal to email
-
       let state = true; // flag to check whether saving datas to firestore is success
+      try {
+        const res = await createUserWithEmailAndPassword(
+          auth,
+          data.email,
+          data.password
+        );
 
-      if (result.docs.length < 1) {
-        // if this account has not existed, add to database
+        console.log(res.user);
+
+        sendEmailVerification(res.user);
+
         const dataToStore = {
-          userId: "more" + data.username + new Date().getFullYear(),
+          userId: res.user.uid,
           username: data.username,
           email: data.email,
           phoneNumber: data.phoneNumber,
@@ -134,53 +141,34 @@ const SignUp = () => {
           backgroundURL: "",
         };
 
-        const ref = await addDoc(collection(db, "user_accounts"), dataToStore); // add document to user_accounts table in database
+        await setDoc(doc(db, "user_accounts", res.user.uid), dataToStore);
 
-        if (!ref.id) {
-          state = false;
-        }
+        await setDoc(doc(db, "userChats", res.user.uid), {});
+      } catch (error) {
+        state = false;
+      }
 
-        createUserWithEmailAndPassword(auth, data.email, data.password)
-          .then((userCredential) => {
-            const user = userCredential.user;
-            sendEmailVerification(user);
-          })
-          .catch((error) => {
-            state = false;
-          });
-
-        if (state) {
-          window.scrollTo(0, 0);
-          handleShowNotification(
-            "Đăng ký tài khoản thành công! Truy cập email để xác minh tài khoản.",
-            "success"
-          );
-          navigate("/real+estate/signin");
-        } else {
-          window.scrollTo(0, 0);
-          handleShowNotification(
-            "Kết nối mạng không ổn định. Hãy thử lại!",
-            "error"
-          );
-        }
-      } else {
-        // otherwise, require user to sign-up with new email
+      if (state) {
         handleShowNotification(
-          "Email này đã được sử dụng! Vui lòng sử dụng 1 email khác.",
+          "Đăng ký tài khoản thành công! Truy cập email để xác minh tài khoản.",
+          "success"
+        );
+        navigate("/real+estate/signin");
+      } else {
+        handleShowNotification(
+          "Đăng ký tài khoản không thành công. Hãy thử lại!",
           "error"
         );
-        window.scrollTo(0, 0);
       }
-      setShowSpinner(false);
     } else {
       // handle errors when there are problems
       handleShowNotification(
         "Xác nhận mật khẩu không chính xác. Kiểm tra lại xác nhận mật khẩu của bạn",
         "error"
       );
-      window.scrollTo(0, 0);
-      setShowSpinner(false);
     }
+    window.scrollTo(0, 0);
+    setShowSpinner(false);
   };
 
   // handle sign-up with Google Provider through Firebase SDK - can't use this feature because it has some problems with Chrome browser
@@ -191,40 +179,39 @@ const SignUp = () => {
     var userEmail = "";
     const provider = new GoogleAuthProvider(); // use Google provider to authenticate user.
     try {
-      const result = await signInWithPopup(auth, provider); // render popup to authenticate with Google
-      const user = result.user; // some basic user informations are returned.
-      userEmail = user.email; 
-      const userData = {
-        userId: "more" + result.displayName + new Date().getFullYear(),
-        username: user.displayName,
-        email: user.email,
+      const res = await signInWithPopup(auth, provider); // render popup to authenticate with Google
+      userEmail = res.user.email;
+      const dataToStore = {
+        userId: res.user.uid,
+        username: res.user.displayName,
+        email: res.user.email,
         phoneNumber: "",
-        password: user.uid,
+        password: res.user.uid,
         create_at:
           date.getDay() + "/" + date.getMonth() + 1 + "/" + date.getFullYear(),
         update_at:
           date.getDay() + "/" + date.getMonth() + 1 + "/" + date.getFullYear(),
         role: "user",
-        photoURL: user.photoURL,
+        photoURL: res.user.photoURL,
         address: "",
         backgroundURL: "",
       };
 
       // check whether user had existed
       const userAccountRef = collection(db, "user_accounts");
-      const q = query(userAccountRef, where("email", "==", user.email));
+      const q = query(userAccountRef, where("email", "==", res.user.email));
       const queryResult = await getDocs(q);
+
       if (queryResult.docs.length < 1) {
-        await addDoc(collection(db, "user_accounts"), userData);
+        await setDoc(doc(db, "user_accounts", res.user.uid), dataToStore);
+        await setDoc(doc(db, "userChats", res.user.uid), {});
         handleShowNotification("Đăng ký tài khoản thành công!", "success");
-        window.scrollTo(0, 0);
         flag = true;
       } else {
         handleShowNotification(
           "Email này đã được sử dụng! Vui lòng sử dụng 1 email khác.",
           "error"
         );
-        window.scrollTo(0, 0);
       }
     } catch (error) {
       const errorMessage = error.message;
@@ -232,20 +219,16 @@ const SignUp = () => {
         "Kết nối mạng không ổn định. Vui lòng thử lại",
         "error"
       );
-      window.scrollTo(0, 0);
       console.log(errorMessage);
     }
 
     if (flag) {
       const userAccountRef = collection(db, "user_accounts"); // reference to user accounts in database
-      const q = query(userAccountRef, where("email", "==",  userEmail)); // query whether this email had existed in database
+      const q = query(userAccountRef, where("email", "==", userEmail)); // query whether this email had existed in database
       const result = await getDocs(q); // the query command will reuturn a document list that equal to email
       result.docs.forEach((doc) => {
         const dataToStoreToLocalStorage = {
-          userEmail: doc.data().email,
-          userName: doc.data().username,
           userId: doc.id,
-          photoURL: doc.data().photoURL,
         };
         localStorage.setItem(
           "userInfo",

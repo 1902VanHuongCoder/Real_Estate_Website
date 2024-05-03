@@ -12,6 +12,8 @@ import {
 } from "react-icons/fa6";
 import { GiMultiDirections } from "react-icons/gi";
 import { PiToiletFill } from "react-icons/pi";
+import { MdMessage } from "react-icons/md";
+
 import { FaTag } from "react-icons/fa";
 import { FaPenNib } from "react-icons/fa";
 import { BsSendFill } from "react-icons/bs";
@@ -290,7 +292,11 @@ const Example = () => {
             </div>
           </div>
 
-          <div className="flex gap-y-5 flex-col border-b-[1px] border-b-solid border-b-slate-200 py-5">
+          <button className="mt-5 w-full h-[50px] bg-[#0b60b0] text-white flex justify-center items-center gap-x-2 rounded-md hover:opacity-90">
+            <MdMessage /> <span>Nhắn tin</span>
+          </button>
+
+          {/* <div className="flex gap-y-5 flex-col border-b-[1px] border-b-solid border-b-slate-200 py-5">
             <div className="flex items-center gap-x-2">
               <span>
                 <FaTag />
@@ -380,7 +386,7 @@ const Example = () => {
                 </button>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

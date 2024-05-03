@@ -5,6 +5,7 @@ import { useNotification } from "../../Hooks/useNotification";
 // import icons
 import { LuMessageSquare } from "react-icons/lu";
 import { VscFeedback } from "react-icons/vsc";
+import { LuSendHorizonal } from "react-icons/lu";
 
 // import motion library
 import { motion } from "framer-motion";
@@ -17,12 +18,14 @@ import { db } from "../../FirebaseConfig/firebase";
 import { addDoc, collection } from "firebase/firestore";
 import { useCallback } from "react";
 
+// import images
+import logo from "../../images/logo.png";
+
 const Feedback = () => {
   const feedbackVariants = {
     open: {
-      height: "400px",
-      width: "300px",
-      padding: "20px",
+      height: "500px",
+      width: "500px",
       transition: {
         duration: 0.3,
       },
@@ -30,7 +33,6 @@ const Feedback = () => {
     close: {
       height: 0,
       width: 0,
-      padding: 0,
       border: "0px solid rgba(255,255,255,1)",
       transition: {
         duration: 0.3,
@@ -87,46 +89,60 @@ const Feedback = () => {
           animate={expandFeedbackBox ? "open" : "close"}
           initial={false}
           style={{ transformOrigin: "right bottom" }}
-          className={`absolute -left-[250px] sm:-left-[300px] -top-[400px] border-[1px] border-solid border-slate-200 shadow-md bg-white text-black p-5 overflow-hidden`}
+          className={`absolute flex flex-row -left-[450px] sm:-left-[520px] -top-[500px] border-[1px] border-solid border-slate-200 shadow-md bg-white text-black overflow-hidden`}
         >
-          <p className="flex">
-            <span className="basis-[30%] opacity-80">
-              <VscFeedback />
-            </span>
-            <span className="basis-[70%]">Phản hồi</span>
-          </p>
-          <form
-            onSubmit={handleFeedBacks}
-            className="mt-5"
-            action="/"
-            method="POST"
-          >
-            <label htmlFor="feedback" className="text-base">
-              Nhập nội dung phản hồi của bạn
-            </label>
-            <textarea
-              onChange={(e) => setContent(e.target.value)}
-              id="feedback"
-              name="feedback"
-              maxLength={2000}
-              className="border-[1px] border-solid border-slate-300 focus:outline-none focus:border-[#0B60B0] w-full h-[200px] text-base font-normal mt-5 p-2"
-            ></textarea>
-            <div className="flex justify-between mt-5">
-              <button
-                type="submit"
-                className="hover:opacity-80 font-normal bg-[#0B60B0] text-white px-4 text-base py-1"
-              >
-                Gửi
-              </button>
-              <button
-                type="button"
-                onClick={() => setExpandFeedbackBox(!expandFeedbackBox)}
-                className="hover:opacity-80 font-normal border-[1px] border-solid border-red-500 text-red-600 px-4 text-base py-1"
-              >
-                Hủy
-              </button>
+          <div className="basis-1/5 border-r-[1px] border-r-solid border-r-slate-200 flex flex-col items-center">
+            <div className="h-[70px] w-full flex justify-center items-center mb-2">
+              <img src={logo} alt="logo" className="w-[70%] h-[70%]" />
             </div>
-          </form>
+            <div className="flex flex-col items-center gap-y-4">
+              <div className="flex justify-center items-center">
+                <div
+                  className="h-[40px] w-[40px] bg-white rounded-full bg-center bg-cover"
+                  style={{
+                    backgroundImage:
+                      "url('https://cdn.lazi.vn/timthumb.php?src=storage/uploads/users/avatar/723886_1633696779.jpg&w=300&h=300')",
+                  }}
+                ></div>
+                <p>Trinh Huy</p>
+              </div>
+
+              <div
+                className="h-[40px] w-[40px] bg-white rounded-full bg-center bg-cover"
+                style={{
+                  backgroundImage:
+                    "url('https://img.lovepik.com/bg/20231212/tiny-cute-cute-animal-chick_2451418_wh860.png')",
+                }}
+              ></div>
+            </div>
+          </div>
+
+          <div className="basis-4/5 flex-col">
+            <div className="h-[70px] w-full bg-[#40a2d8]">
+              <div className="flex items-center h-full w-full px-2 gap-x-2">
+                <div
+                  className="h-[40px] w-[40px] bg-white rounded-full bg-center bg-cover"
+                  style={{
+                    backgroundImage:
+                      "url('https://i.pinimg.com/236x/dc/d8/7c/dcd87c0ff92154422320536b41cb4b21.jpg')",
+                  }}
+                ></div>
+                <p className="text-white">Tô Văn Hưởng</p>
+              </div>
+            </div>
+            <div className="h-[360px] w-full bg-slate-100 overflow-y-scroll"></div>
+            <div className="h-[70px] w-full flex gap-x-2 items-center px-4">
+              <input
+                type="text"
+                placeholder="Nhập tin nhắn..."
+                className="border-[1px] border-solid border-slate-200 w-[90%] h-[50px] p-2 outline-none rounded-md"
+              />
+              <span className="text-2xl">
+                {" "}
+                <LuSendHorizonal />
+              </span>
+            </div>
+          </div>
         </motion.div>
       </div>
     )

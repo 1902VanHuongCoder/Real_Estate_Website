@@ -40,14 +40,11 @@ import ConfirmBox from "./Components/Partials/ConfirmBox";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { db } from "./FirebaseConfig/firebase";
 import AddStaff from "./Components/Partials/AddStaff";
-import StaffLogin from "./Components/StaffLogin";
 import StaffDashboard from "./StaffDashboard";
 
 function App() {
   const location = useLocation();
   const {
-    lands,
-    houses,
     session,
     setOpenUserBox,
     setShowSpinner,
@@ -69,9 +66,7 @@ function App() {
           id: doc.id,
         }));
         setHouses(dataResponsed);
-        initialPostWasFiltered = dataResponsed;
-        console.log("Fetching houses was success!"); // check later
-        console.log("Fetching houses was success - 1");
+        initialPostWasFiltered = dataResponsed; // CHECK LATER
       });
 
       await getDocs(collection(db, "lands")).then((response) => {
@@ -81,8 +76,8 @@ function App() {
         }));
         setLands(dataResponsed);
         initialPostWasFiltered = initialPostWasFiltered.concat(dataResponsed);
-        console.log("Fetching lands was success!");
       });
+
       setPostsWasFiltered(initialPostWasFiltered);
     } catch (error) {
       console.log("Error when fetching house datas");
@@ -106,8 +101,6 @@ function App() {
     }
   };
 
-  console.log("Render all of the components");
-
   useEffect(() => {
     fetchHouseDatas();
     // fetchLandDatas();
@@ -129,65 +122,73 @@ function App() {
       <div className="relative max-w-[1200px] mx-auto overflow-hidden">
         <NavigationBar />
         <Notification />
-        {session && session.role === "admin" && <AdminDashboard />}
+        {session && (session.role === "admin" || session.role === "staff") && (
+          <AdminDashboard />
+        )}
         <div onClick={() => setOpenUserBox(false)}>
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
               <Route index path="/" element={<Home />}></Route>
+
               <Route path="/real+estate/signup" element={<SignUp />}></Route>
+
               <Route path="/real+estate/signin" element={<Login />}></Route>
+
               <Route
                 path="/real+estate/search+result/*"
                 element={<OptionResults />}
               ></Route>
+
               <Route path="/details" element={<Details />}></Route>
+
               <Route
                 path="/real+estate/your+profile"
                 element={<Profile />}
               ></Route>
+
               <Route
                 path="/real+estate/update+profile"
                 element={<UpdateProfile />}
               ></Route>
+
               <Route path="/real+estate/post" element={<Post />}></Route>
+
               <Route
                 path="/admin/list+of+posts"
                 element={<WaitingPosts />}
               ></Route>
+
               <Route
                 path="/admin/list+of+user+accounts"
                 element={<AccountList />}
               ></Route>
+
               <Route
                 path="/admin/list+of+feedbacks"
                 element={<FeedbackList />}
               ></Route>
+
               <Route path="/admin/add+staff" element={<AddStaff />}></Route>
-              <Route path="/staff/login" element={<StaffLogin />}></Route>
 
-              {/* <Route path="/admin/list+of+feedbacks" element={<AccountList />}></Route> */}
+              <Route
+                path="/staff/dashboard"
+                element={<StaffDashboard />}
+              ></Route>
 
+              {/* Beta  */}
               <Route path="/test2" element={<Example />}></Route>
 
-              <Route path="/staff/dashboard" element={<StaffDashboard />}></Route>
-
-              {/* <Route path="/details/*" element={<Details />}></Route>
-            <Route path="/uploadimage" element={<UploadImage/>}></Route>
-            <Route path="/admin" element={<AdminDashboard />}></Route>
-            <Route path="/test" element={<Test />}></Route>
-            <Route path="/login1" element={<LoginTest />}></Route>
-            <Route path="/optionResult" element={<OptionResults />}></Route>
-            <Route path="/updateprofile" element={<UpdateProfile />}></Route>
-            <Route path="/profile" element={<Profile />}></Route>
-            <Route path="/test1" element={<Test1 />}></Route>
-            <Route path="/test2" element={<Veryfy />}></Route> */}
+              {session && <Route path="/test" element={<Test />}></Route>}
             </Routes>
           </AnimatePresence>
         </div>
 
         <Feedback />
+
         <ToTop />
+
         {session && session.role === "user" && <Footer />}
+
         <Sidebar />
       </div>
     </div>

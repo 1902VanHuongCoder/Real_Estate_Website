@@ -45,15 +45,10 @@ const Login = () => {
     if (result.docs.length < 1) {
       // if this account has not existed, notify for user to sign up new account
       handleShowNotification("Bạn chưa có tài khoản. Hãy đăng ký!", "error");
-      window.scrollTo(0, 0);
-      setShowSpinner(false);
     } else {
       result.docs.forEach((doc) => {
         if (doc.data().password === md5(password)) {
           if (auth.currentUser.emailVerified) {
-
-            window.scrollTo(0, 0);
-
             handleShowNotification("Đăng nhập thành công!", "success");
 
             const dataToStoreToLocalStorage = {
@@ -62,7 +57,7 @@ const Login = () => {
               userId: doc.id,
               photoURL: doc.data().photoURL,
             };
-            
+
             localStorage.setItem(
               "userInfo",
               JSON.stringify(dataToStoreToLocalStorage)
@@ -75,15 +70,13 @@ const Login = () => {
               "Email của bạn chưa được xác thực. Xác thực ngay!",
               "error"
             );
-            window.scrollTo(0, 0);
           }
         } else {
           handleShowNotification("Sai mật khẩu", "error");
-          window.scrollTo(0, 0);
         }
       });
-      setShowSpinner(false);
     }
+    setShowSpinner(false);
   };
 
   const userInfo = localStorage.getItem("userInfo");
@@ -93,8 +86,10 @@ const Login = () => {
       navigate("/");
     } else if (userInfo && session && session.role === "admin") {
       navigate("/admin/list+of+posts");
+    } else if (userInfo && session && session.role === "staff") {
+      navigate("/staff/dashboard");
     }
-  },[userInfo, session]);
+  }, [userInfo, session]);
 
   return (
     <Transitions>
