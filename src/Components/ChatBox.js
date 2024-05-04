@@ -124,18 +124,44 @@ const ChatBox = () => {
     dispatch({ type: "CHANGE_USER", payload: u });
   };
 
+  console.log(img);
   const handleSend = async () => {
     if (img) {
-      //   const storageRef = ref(storage, uuid());
-      const storageRef = ref(
-        storage,
-        `/chatImages/${img.details.name}`
-      ); // create reference to storage in products folder
-      const uploadTask = uploadBytesResumable(storageRef, img.details); // upload image to storage
+      const storageRef = ref(storage, "chatImages/" + img.details.name);
+
+      const uploadTask = uploadBytesResumable(storageRef, img.details);
+
+      // Register three observers:
+      // 1. 'state_changed' observer, called any time the state changes
+      // 2. Error observer, called on failure
+      // 3. Completion observer, called on successful completion
       uploadTask.on(
-        (error) => console.log(error),
+        "state_changed",
+        (snapshot) => {
+          // Observe state change events such as progress, pause, and resume
+          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log("Upload is " + progress + "% done");
+          switch (snapshot.state) {
+            case "paused":
+              console.log("Upload is paused");
+              break;
+            case "running":
+              console.log("Upload is running");
+              break;
+            default:
+              return;
+          }
+        },
+
+        (error) => {
+          // Handle unsuccessful uploads
+        },
         () => {
-          getDownloadURL(uploadTask.snapshot.ref).then( async(downloadURL) => {
+          // Handle successful uploads on complete
+          // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+          getDownloadURL(uploadTask.snapshot.ref).then( async (downloadURL) => {
             await updateDoc(doc(db, "chats", data.chatId), {
               messages: arrayUnion({
                 id: uuid(),
@@ -148,7 +174,27 @@ const ChatBox = () => {
           });
         }
       );
-    } else {
+
+      //   const storageRef = ref(storage, uuid());
+      // const storageRef = ref(storage, `chatImages/${img.details.name}`); // create reference to storage in products folder
+      // const uploadTask = uploadBytesResumable(storageRef, img.details); // upload image to storage
+      // uploadTask.on(
+      //   (error) => console.log(error),
+      //   () => {
+      //     getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+      //       await updateDoc(doc(db, "chats", data.chatId), {
+      //         messages: arrayUnion({
+      //           id: uuid(),
+      //           text,
+      //           senderId: session.userId,
+      //           date: Timestamp.now(),
+      //           img: downloadURL,
+      //         }),
+      //       });
+      //     });
+      //   }
+      // );
+    } else if (text !== "") {
       await updateDoc(doc(db, "chats", data.chatId), {
         messages: arrayUnion({
           id: uuid(),
@@ -161,14 +207,14 @@ const ChatBox = () => {
 
     await updateDoc(doc(db, "userChats", session.userId), {
       [data.chatId + ".lastMessage"]: {
-        text,
+        text: img ? "Hình ảnh" : text,
       },
       [data.chatId + ".date"]: serverTimestamp(),
     });
 
     await updateDoc(doc(db, "userChats", data.user.userId), {
       [data.chatId + ".lastMessage"]: {
-        text,
+        text: img ? "Hình ảnh" : text,
       },
       [data.chatId + ".date"]: serverTimestamp(),
     });
@@ -178,7 +224,7 @@ const ChatBox = () => {
   };
 
   const handleSendMessage = (e) => {
-    e.code === "Enter" && handleSend();
+    e.key === "Enter" && handleSend();
   };
 
   const handleUploadImage = (event) => {
@@ -237,7 +283,7 @@ const ChatBox = () => {
 
           <div className="flex items-center w-full justify-center mb-5 gap-x-2 p-4">
             <input
-              onKeyDown={handleKey}
+              onKeyUp={handleKey}
               onChange={(e) => setUsername(e.target.value)}
               value={username}
               className="outline-none border-[2px] border-solid border-slate-200 rounded-sm p-2 w-[80%]"
@@ -354,7 +400,11 @@ const ChatBox = () => {
                       style={{
                         backgroundImage: `url("${
                           m.senderId === session.userId
-                            ? session.photoURL
+                            ? session.photoURL === ""
+                              ? user_icon
+                              : session.photoURL
+                            : data.user.photoURL === ""
+                            ? user_icon
                             : data.user.photoURL
                         }")`,
                       }}

@@ -139,6 +139,7 @@ const SignUp = () => {
           photoURL: "",
           address: "",
           backgroundURL: "",
+          registerMethod: "emailAndPassword",
         };
 
         await setDoc(doc(db, "user_accounts", res.user.uid), dataToStore);
@@ -180,6 +181,7 @@ const SignUp = () => {
     const provider = new GoogleAuthProvider(); // use Google provider to authenticate user.
     try {
       const res = await signInWithPopup(auth, provider); // render popup to authenticate with Google
+
       userEmail = res.user.email;
       const dataToStore = {
         userId: res.user.uid,
@@ -195,6 +197,7 @@ const SignUp = () => {
         photoURL: res.user.photoURL,
         address: "",
         backgroundURL: "",
+        registerMethod: "google",
       };
 
       // check whether user had existed

@@ -9,14 +9,17 @@ import { Link, useNavigate } from "react-router-dom";
 // import firebase services
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { app, db } from "../FirebaseConfig/firebase";
-import { AppContext } from "../Context/AppContext";
+import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
 
 //import icons
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { getAuth } from "firebase/auth";
+import googleIcon from "../images/google_logo.png";
 
 //import component
 import Transitions from "./Partials/Transition";
+
+//import contexts
+import { AppContext } from "../Context/AppContext";
 
 const Login = () => {
   const [handleShowNotification] = useNotification(); //custom hook
@@ -32,13 +35,12 @@ const Login = () => {
 
   const navigate = useNavigate();
 
+  // handle login of user
   const auth = getAuth(app);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setShowSpinner(true);
-
-    // handle login of user
     const userAccountRef = collection(db, "user_accounts"); // reference to user accounts in database
     const q = query(userAccountRef, where("email", "==", email)); // query whether this email had existed in database
     const result = await getDocs(q); // the query command will reuturn a document list that equal to email
@@ -47,23 +49,45 @@ const Login = () => {
       handleShowNotification("Bạn chưa có tài khoản. Hãy đăng ký!", "error");
     } else {
       result.docs.forEach((doc) => {
-        if (doc.data().password === md5(password)) {
+        if (doc.data().registerMethod === "emailAndPassword") {
+          console.log("Sign up by email and password!");
+          if (doc.data().password === md5(password)) {
+            if (auth.currentUser.emailVerified) {
+              handleShowNotification("Đăng nhập thành công!", "success");
+              localStorage.setItem(
+                "userInfo",
+                JSON.stringify({
+                  userId: doc.id,
+                })
+              );
+              const data = { ...doc.data(), id: doc.id };
+
+              setSession(data);
+
+              setShowCongratulation(true);
+            } else {
+              handleShowNotification(
+                "Email của bạn chưa được xác thực. Xác thực ngay!",
+                "error"
+              );
+            }
+          } else {
+            handleShowNotification("Sai mật khẩu", "error");
+          }
+        } else if (doc.data().registerMethod === "google") {
+          console.log("Sign up by google");
           if (auth.currentUser.emailVerified) {
             handleShowNotification("Đăng nhập thành công!", "success");
-
-            const dataToStoreToLocalStorage = {
-              userEmail: doc.data().email,
-              userName: doc.data().username,
-              userId: doc.id,
-              photoURL: doc.data().photoURL,
-            };
-
             localStorage.setItem(
               "userInfo",
-              JSON.stringify(dataToStoreToLocalStorage)
+              JSON.stringify({
+                userId: doc.id,
+              })
             );
             const data = { ...doc.data(), id: doc.id };
+
             setSession(data);
+
             setShowCongratulation(true);
           } else {
             handleShowNotification(
@@ -71,8 +95,6 @@ const Login = () => {
               "error"
             );
           }
-        } else {
-          handleShowNotification("Sai mật khẩu", "error");
         }
       });
     }
