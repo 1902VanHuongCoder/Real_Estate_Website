@@ -6,28 +6,28 @@ import { useNavigate } from "react-router-dom";
 import { GoDotFill } from "react-icons/go";
 import { AppContext } from "../../Context/AppContext";
 
-
 // import custom hooks
 import useConfirmBox from "../../Hooks/useConfirmBox";
 import { useNotification } from "../../Hooks/useNotification";
 
-const WaitingPosts = () => {
-  const { news, showConfirmBox } = useContext(AppContext);
+const ListOfPosts = () => {
+  const { postsWasFiltered, showConfirmBox } = useContext(AppContext);
+
   const [display] = useConfirmBox();
-  const [ handleShowNotification ] = useNotification();
+  const [handleShowNotification] = useNotification();
 
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
   const listOfPostsWereDevided = [];
   for (let i = currentPage * 6 - 6; i < currentPage * 6; i++) {
-    if (i >= news.length) {
+    if (i >= postsWasFiltered.length) {
       break;
     }
-    listOfPostsWereDevided.push(news[i]);
+    listOfPostsWereDevided.push(postsWasFiltered[i]);
   }
 
   const buttonsArray = [];
-  for (let j = 1; j <= Math.ceil(news.length / 6); j++) {
+  for (let j = 1; j <= Math.ceil(postsWasFiltered.length / 6); j++) {
     buttonsArray.push(j);
   }
 
@@ -40,7 +40,7 @@ const WaitingPosts = () => {
   };
 
   const handleUpdatePost = (element) => {
-    navigate("/test2", { state: element });
+    navigate("/test", { state: element });
   };
   return (
     <div className="p-5 border-[1px] border-solid border-slate-200 mt-5 mb-5 rounded-t-xl">
@@ -53,8 +53,8 @@ const WaitingPosts = () => {
 
       <div className="w-full mt-5 h-fit">
         {/* List posts that are waiting accepting */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-10">
-          {news.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-10">
+          {postsWasFiltered.length > 0 ? (
             listOfPostsWereDevided?.map((element, index) => (
               <div
                 key={index}
@@ -68,10 +68,14 @@ const WaitingPosts = () => {
                     }}
                   ></div>
                   <div className="py-3 px-2 flex flex-col gap-y-2">
-                    <p className="text-xl font-medium">{element.postTitle}</p>
+                    <p className="text-xl font-medium">{element.title}</p>
                     <div className="text-lg flex gap-x-1">
                       <span className="text-slate-500">Ngày đăng:</span>
                       <span>{element.createdAt}</span>
+                    </div>
+                    <div className="text-lg flex gap-x-1">
+                      <span className="text-slate-500">Nhân viên:</span>
+                      <span>Tô Văn Hưởng</span>
                     </div>
                   </div>
                 </div>
@@ -113,4 +117,4 @@ const WaitingPosts = () => {
   );
 };
 
-export default WaitingPosts;
+export default ListOfPosts;

@@ -254,7 +254,7 @@ const UploadImage = ({
         </label>
         <div className="relative p-5 my-5 flex flex-col gap-y-3 justify-center items-center w-full min-h-[300px] mx-auto border-[2px] border-dashed border-slate-400">
           <div className="flex flex-wrap w-full justify-center gap-2">
-            {listOfImageURLs.length > 0 &&
+            {listOfImageURLs?.length > 0 &&
               listOfImageURLs.map((url, index) => {
                 return (
                   <div

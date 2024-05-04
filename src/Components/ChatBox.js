@@ -155,13 +155,9 @@ const ChatBox = () => {
           }
         },
 
-        (error) => {
-          // Handle unsuccessful uploads
-        },
+        (error) => {},
         () => {
-          // Handle successful uploads on complete
-          // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-          getDownloadURL(uploadTask.snapshot.ref).then( async (downloadURL) => {
+          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
             await updateDoc(doc(db, "chats", data.chatId), {
               messages: arrayUnion({
                 id: uuid(),
@@ -174,26 +170,6 @@ const ChatBox = () => {
           });
         }
       );
-
-      //   const storageRef = ref(storage, uuid());
-      // const storageRef = ref(storage, `chatImages/${img.details.name}`); // create reference to storage in products folder
-      // const uploadTask = uploadBytesResumable(storageRef, img.details); // upload image to storage
-      // uploadTask.on(
-      //   (error) => console.log(error),
-      //   () => {
-      //     getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-      //       await updateDoc(doc(db, "chats", data.chatId), {
-      //         messages: arrayUnion({
-      //           id: uuid(),
-      //           text,
-      //           senderId: session.userId,
-      //           date: Timestamp.now(),
-      //           img: downloadURL,
-      //         }),
-      //       });
-      //     });
-      //   }
-      // );
     } else if (text !== "") {
       await updateDoc(doc(db, "chats", data.chatId), {
         messages: arrayUnion({

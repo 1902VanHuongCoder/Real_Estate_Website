@@ -5,7 +5,6 @@ import Home from "./Home";
 import Details from "./Details";
 import UpdateProfile from "./Components/UpdateProfile";
 import AdminDashboard from "./Components/AdminDashboard";
-import Test from "./Test";
 import Login from "./Components/Login";
 import SignUp from "./Components/SignUp";
 import OptionResults from "./Components/OptionResults";
@@ -28,10 +27,8 @@ import { useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { useContext, useEffect } from "react";
 import { AppContext } from "./Context/AppContext";
-import Example from "./test2";
 import Loading from "./Components/Partials/Loading";
 import Congratulation from "./Congratulation";
-import WaitingPosts from "./Components/Partials/WaitingPosts";
 import AccountList from "./Components/Partials/AccountList";
 import FeedbackList from "./Components/Partials/FeebacksList";
 import ConfirmBox from "./Components/Partials/ConfirmBox";
@@ -42,6 +39,10 @@ import { db } from "./FirebaseConfig/firebase";
 import AddStaff from "./Components/Partials/AddStaff";
 import StaffDashboard from "./StaffDashboard";
 import ChatBox from "./Components/ChatBox";
+import GeneralInfo from "./Components/GeneralInfo";
+import UpdatePost from "./Components/UpdatePost";
+import ListOfPosts from "./Components/Partials/ListOfPosts";
+import Test from "./Test";
 
 function App() {
   const location = useLocation();
@@ -61,7 +62,7 @@ function App() {
     let initialPostWasFiltered;
 
     try {
-      await getDocs(collection(db, "posts")).then((response) => {
+      await getDocs(collection(db, "houses")).then((response) => {
         const dataResponsed = response.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id,
@@ -156,7 +157,7 @@ function App() {
 
               <Route
                 path="/admin/list+of+posts"
-                element={<WaitingPosts />}
+                element={<ListOfPosts />}
               ></Route>
 
               <Route
@@ -171,15 +172,19 @@ function App() {
 
               <Route path="/admin/add+staff" element={<AddStaff />}></Route>
 
+              <Route path="/admin" element={<GeneralInfo />}></Route>
+
               <Route
                 path="/staff/dashboard"
                 element={<StaffDashboard />}
               ></Route>
 
               {session && <Route path="/chat" element={<ChatBox />}></Route>}
+              <Route path="/staff/update+post" element={<UpdatePost />}></Route>
 
               {/* Beta  */}
-              <Route path="/test2" element={<Example />}></Route>
+
+              <Route path="/test" element={<Test />}></Route>
 
               {/* {session && <Route path="/test" element={<Test />}></Route>} */}
             </Routes>

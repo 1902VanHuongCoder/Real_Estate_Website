@@ -126,6 +126,7 @@ const Post = () => {
             description: value,
             titleImageURL: titleImageURL,
             besideImageURLs: listOfImageURLs,
+            house: true,
 
             createdAt:
               date.getDate() +
@@ -158,6 +159,7 @@ const Post = () => {
             description: value,
             titleImageURL: titleImageURL,
             besideImageURLs: listOfImageURLs,
+            ground: true,
 
             createdAt:
               date.getDate() +
