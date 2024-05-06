@@ -9,11 +9,10 @@ import { Link, useNavigate } from "react-router-dom";
 // import firebase services
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { app, db } from "../FirebaseConfig/firebase";
-import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 
 //import icons
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import googleIcon from "../images/google_logo.png";
 
 //import component
 import Transitions from "./Partials/Transition";
@@ -22,6 +21,7 @@ import Transitions from "./Partials/Transition";
 import { AppContext } from "../Context/AppContext";
 
 const Login = () => {
+
   const [handleShowNotification] = useNotification(); //custom hook
 
   const [showPassword, setShowPassword] = useState(false);

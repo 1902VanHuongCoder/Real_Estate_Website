@@ -21,7 +21,12 @@ import { AppContext } from "../Context/AppContext";
 
 //import firebase service
 import { db, storage } from "../FirebaseConfig/firebase";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
 import {
   collection,
   doc,
@@ -51,6 +56,8 @@ const UpdateProfile = () => {
   const {
     register,
     handleSubmit,
+    getValues,
+    getFieldState,
     formState: { errors },
   } = useForm();
 
@@ -84,120 +91,240 @@ const UpdateProfile = () => {
   };
   // update user's datas
   const handleUpdateUserProfile = async (data) => {
-    setShowSpinner(true);
-    if(data.username === "" && data.phoneNumber === "" && data.address === "" && !background.details && !userAvatar.details){
-      return;
+    // setShowSpinner(true);
+    const profileRef = doc(db, "user_accounts", session.userId);
+    const valuesThatNeedToUpdate = {};
+    const getDataFields = getValues(); // get values of all of the input fields
+
+    Object.keys(getDataFields).forEach((key) => {
+      // check which field is changed to update
+      if (getFieldState(key).isDirty) {
+        valuesThatNeedToUpdate[key] = getDataFields[key];
+      }
+    });
+
+    if (background.details) {
+      console.log(session.backgroundURL);
+
+      if (session.backgroundURL !== "") {
+        const desertRef = ref(
+          storage,
+          `userImages/${session.backgroundImageName}`
+        );
+        // Delete the file
+        deleteObject(desertRef)
+          .then(() => {
+            console.log("background image File was deleted successfully.");
+          })
+          .catch((error) => {
+            console.log("Deleting background image file is failed.");
+          });
+      }
+
+      console.log("1 run");
+      const storageRef = ref(storage, `userImages/${background.details.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, background.details);
+
+      uploadTask.on(
+        //keep tracking upload process to display nescessary informations
+        "state_changed",
+        (snapshot) => {
+          // return percent of completed upload
+          const percent = Math.round(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          );
+          console.log(percent);
+        },
+        (error) => console.log(error),
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+            updateDoc(profileRef, {
+              backgroundURL: url,
+              backgroundImageName: background.details.name,
+            });
+            updateSession(session.userId);
+          });
+        }
+      );
     }
-    const userAccountRef = doc(db, "user_accounts", session.id);
 
-    setTimeout(async () => {
-      if (background.details) {
-        console.log("Update background before url");
-        const storageRef = ref(
-          storage,
-          `/userImages/${background.details.name}`
-        ); // create reference to storage in products folder
-        const uploadTask = uploadBytesResumable(storageRef, background.details); // upload image to storage
-        uploadTask.on(
-          //keep tracking upload process to display nescessary informations
-          "state_changed",
-          (snapshot) => {
-            // return percent of completed upload
-            const percent = Math.round(
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-            );
-          },
-          (error) => {
-            console.log(error);
-            handleShowNotification(
-              "Kết nối mạng không ổn định! Hãy thử lại.",
-              "error"
-            );
-          },
-          () => {
-            getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-              console.log("BackgroundURL: " + url);
-              updateDoc(userAccountRef, {
-                backgroundURL: url,
-              });
+    if (userAvatar.details) {
+      if (session.photoURL !== "") {
+        const desertRef = ref(storage, `userImages/${session.photoName}`);
+        // Delete the file
+        deleteObject(desertRef)
+          .then(() => {
+            console.log("File was deleted successfully.");
+          })
+          .catch((error) => {
+            console.log("Deleting file is failed.");
+          });
+      }
 
-              console.log("Update background after url");
-              // setSession({ ...session, backgroundURL: url });
-              updateSession(session.userId);
-              handleShowNotification("Cập nhật hồ sơ thành công.", "success");
-              setShowSpinner(false);
+      const storageRef = ref(storage, `userImages/${userAvatar.details.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, userAvatar.details);
+
+      uploadTask.on(
+        //keep tracking upload process to display nescessary informations
+        "state_changed",
+        (snapshot) => {
+          // return percent of completed upload
+          const percent = Math.round(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          );
+          console.log(percent);
+        },
+        (error) => console.log(error),
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+            updateDoc(profileRef, {
+              photoURL: url,
+              photoName: userAvatar.details.name,
             });
-          }
-        );
-      }
-      if (userAvatar.details) {
-        console.log("Update user avatar before url");
-        const storageRef = ref(
-          storage,
-          `/userImages/${userAvatar.details.name}`
-        ); // create reference to storage in products folder
-        const uploadTask = uploadBytesResumable(storageRef, userAvatar.details); // upload image to storage
-        uploadTask.on(
-          //keep tracking upload process to display nescessary informations
-          "state_changed",
-          (snapshot) => {
-            // return percent of completed upload
-            const percent = Math.round(
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-            );
-          },
-          (error) => {
-            console.log(error);
-            handleShowNotification(
-              "Kết nối mạng không ổn định! Hãy thử lại.",
-              "error"
-            );
-          },
-          () => {
-            getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-              console.log("UseravatarURL: " + url);
-              updateDoc(userAccountRef, {
-                photoURL: url,
-              });
-              console.log("Update user avatar after url");
-              updateSession(session.userId);
-              handleShowNotification("Cập nhật hồ sơ thành công.", "success");
-              setShowSpinner(false);
-            });
-          }
-        );
-      }
+            updateSession(session.userId);
+          });
+        }
+      );
+    }
 
-      if (data.username !== "") {
-        await updateDoc(userAccountRef, {
-          username: data.username,
-        });
-        console.log("Username was updated");
-        setSession({ ...session, username: data.username });
+    try {
+      const date = new Date();
+      if (Object.keys(valuesThatNeedToUpdate).length !== 0) {
+        updateDoc(profileRef, {
+          ...valuesThatNeedToUpdate,
+          updatedAt:
+            date.getDate() +
+            "/" +
+            (date.getMonth() + 1) +
+            "/" +
+            date.getFullYear(),
+        }); // update datas that have changed
+        handleShowNotification("Cập nhật bài đăng thành công", "success");
+        setSession({ ...session, ...valuesThatNeedToUpdate });
       }
+    } catch (error) {
+      console.log("Update profile was failed!");
+    }
 
-      if (data.phoneNumber !== "") {
-        await updateDoc(userAccountRef, {
-          phoneNumber: data.phoneNumber,
-        });
-        console.log("Phone number was updated");
-        setSession({ ...session, phoneNumber: data.phoneNumber });
-      }
+    // if (
+    //   data.username === "" &&
+    //   data.phoneNumber === "" &&
+    //   data.address === "" &&
+    //   !background.details &&
+    //   !userAvatar.details
+    // ) {
+    //   return;
+    // }
+    // const userAccountRef = doc(db, "user_accounts", session.id);
 
-      if (data.address !== "") {
-        await updateDoc(userAccountRef, {
-          address: data.address,
-        });
-        setSession({ ...session, address: data.address });
-        console.log("Address was updated");
-      }
+    // setTimeout(async () => {
+    //   if (background.details) {
+    //     console.log("Update background before url");
+    //     const storageRef = ref(
+    //       storage,
+    //       `/userImages/${background.details.name}`
+    //     ); // create reference to storage in products folder
+    //     const uploadTask = uploadBytesResumable(storageRef, background.details); // upload image to storage
+    //     uploadTask.on(
+    //       //keep tracking upload process to display nescessary informations
+    //       "state_changed",
+    //       (snapshot) => {
+    //         // return percent of completed upload
+    //         const percent = Math.round(
+    //           (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+    //         );
+    //       },
+    //       (error) => {
+    //         console.log(error);
+    //         handleShowNotification(
+    //           "Kết nối mạng không ổn định! Hãy thử lại.",
+    //           "error"
+    //         );
+    //       },
+    //       () => {
+    //         getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+    //           console.log("BackgroundURL: " + url);
+    //           updateDoc(userAccountRef, {
+    //             backgroundURL: url,
+    //           });
 
-      if (!background.details && !userAvatar.details) {
-        setShowSpinner(false);
-        handleShowNotification("Cập nhật hồ sơ thành công.", "success");
-        console.log("No background and avatar is running....");
-      }
-    }, 3000);
+    //           console.log("Update background after url");
+    //           // setSession({ ...session, backgroundURL: url });
+    //           updateSession(session.userId);
+    //           handleShowNotification("Cập nhật hồ sơ thành công.", "success");
+    //           setShowSpinner(false);
+    //         });
+    //       }
+    //     );
+    //   }
+    //   if (userAvatar.details) {
+    //     console.log("Update user avatar before url");
+    //     const storageRef = ref(
+    //       storage,
+    //       `/userImages/${userAvatar.details.name}`
+    //     ); // create reference to storage in products folder
+    //     const uploadTask = uploadBytesResumable(storageRef, userAvatar.details); // upload image to storage
+    //     uploadTask.on(
+    //       //keep tracking upload process to display nescessary informations
+    //       "state_changed",
+    //       (snapshot) => {
+    //         // return percent of completed upload
+    //         const percent = Math.round(
+    //           (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+    //         );
+    //       },
+    //       (error) => {
+    //         console.log(error);
+    //         handleShowNotification(
+    //           "Kết nối mạng không ổn định! Hãy thử lại.",
+    //           "error"
+    //         );
+    //       },
+    //       () => {
+    //         getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+    //           console.log("UseravatarURL: " + url);
+    //           updateDoc(userAccountRef, {
+    //             photoURL: url,
+    //           });
+    //           console.log("Update user avatar after url");
+    //           updateSession(session.userId);
+    //           handleShowNotification("Cập nhật hồ sơ thành công.", "success");
+    //           setShowSpinner(false);
+    //         });
+    //       }
+    //     );
+    //   }
+
+    //   if (data.username !== "") {
+    //     await updateDoc(userAccountRef, {
+    //       username: data.username,
+    //     });
+    //     console.log("Username was updated");
+    //     setSession({ ...session, username: data.username });
+    //   }
+
+    //   if (data.phoneNumber !== "") {
+    //     await updateDoc(userAccountRef, {
+    //       phoneNumber: data.phoneNumber,
+    //     });
+    //     console.log("Phone number was updated");
+    //     setSession({ ...session, phoneNumber: data.phoneNumber });
+    //   }
+
+    //   if (data.address !== "") {
+    //     await updateDoc(userAccountRef, {
+    //       address: data.address,
+    //     });
+    //     setSession({ ...session, address: data.address });
+    //     console.log("Address was updated");
+    //   }
+
+    //   if (!background.details && !userAvatar.details) {
+    //     setShowSpinner(false);
+    //     handleShowNotification("Cập nhật hồ sơ thành công.", "success");
+    //     console.log("No background and avatar is running....");
+    //   }
+    // }, 3000);
   };
   useEffect(() => {
     const userInfo = localStorage.getItem("userInfo");
@@ -220,7 +347,7 @@ const UpdateProfile = () => {
           className="w-full"
         >
           <div
-            className="relative w-full h-[500px] bg-cover bg-center bg-no-repeat"
+            className="relative w-full h-[650px] bg-cover bg-center bg-no-repeat"
             style={{
               backgroundImage: `url(${
                 background.localURL
@@ -353,6 +480,9 @@ const UpdateProfile = () => {
                     name="phoneNumber"
                     type="text"
                     autoComplete="on"
+                    placeholder={
+                      session.phoneNumber !== "" && session.phoneNumber
+                    }
                     {...register("phoneNumber")}
                   />
                 </div>

@@ -15,8 +15,7 @@ import { PiToiletFill } from "react-icons/pi";
 import { MdMessage } from "react-icons/md";
 
 import { FaTag } from "react-icons/fa";
-import { FaPenNib } from "react-icons/fa";
-import { BsSendFill } from "react-icons/bs";
+import { FaMapMarkerAlt } from "react-icons/fa";
 
 //import context
 import { AppContext } from "../../Context/AppContext";
@@ -25,23 +24,17 @@ import { AppContext } from "../../Context/AppContext";
 import { htmlToText } from "html-to-text";
 import { motion, AnimatePresence } from "framer-motion";
 import { wrap } from "popmotion";
-import { useLocation } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
-import { addDoc, collection } from "firebase/firestore";
-import { db } from "../../FirebaseConfig/firebase";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+
 
 const Example = () => {
   const { setShowImage, session } = useContext(AppContext);
-
-  const [handleShowNotification] = useNotification();
 
   const { state } = useLocation();
 
   const [[page, direction], setPage] = useState([0, 0]);
 
-  const [question, setQuestion] = useState("");
-
-  const randomId = uuidv4();
+  const navigate = useNavigate();
 
   console.log(session);
   console.log(state);
@@ -99,40 +92,10 @@ const Example = () => {
     setPage([page + newDirection, newDirection]);
   };
 
-  const handleToAskCompany = async () => {
-    const date = new Date();
-    let hour = date.getHours();
-    let min = date.getMinutes();
-    let day = date.getDate();
-    let month = date.getMonth() + 1;
-    let year = date.getFullYear();
-    let date_string = hour + ":" + min + " " + day + "/" + month + "/" + year;
-
-    const dataToStoreToDatabase = {
-      commentId: randomId,
-      postId: state.postId,
-      commentContent: question,
-      create_at: date_string,
-    };
-
-    try {
-      const docRef = await addDoc(
-        collection(db, "comments"),
-        dataToStoreToDatabase
-      );
-      handleShowNotification("Bình luận thành công!", "success");
-    } catch (error) {
-      console.log(error);
-      handleShowNotification(
-        "Kết nối mạng không ổn định! Hãy thử lại.",
-        "error"
-      );
-    }
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+  const handleToMessage = async () => {
+      navigate("/chat", {state: state.userId});
   };
+
   return (
     <div>
       <div className="flex gap-x-5 lg:flex-row flex-col">
@@ -202,8 +165,23 @@ const Example = () => {
       <div className="flex lg:flex-row flex-col">
         <div className="px-5 lg:px-0 lg:pl-5 lg:basis-[70%]">
           <div className="py-5 border-b-[1px] border-b-solid border-b-slate-200">
-            <h1 className="text-2xl mb-1 font-medium">{state?.postTitle}</h1>
-            <p>{state?.address}</p>
+            <h1 className="text-2xl mb-1 font-medium">{state?.title}</h1>
+            <p className="flex items-center gap-x-1">
+              <span className="text-red-500">
+                <FaMapMarkerAlt />
+              </span>
+              <span>{state?.address}</span>
+            </p>
+            <p className="inline-flex items-center gap-x-1 mt-5 bg-green-500 p-4 rounded-md text-white">
+              <span className="">
+                <FaTag />
+              </span>
+              <span className="font-medium">
+                {state?.stateOfProperty === 1 && "Bài đăng mới"}
+                {state?.stateOfProperty === 2 && "Đang thỏa thuận"}
+                {state?.stateOfProperty === 0 && "Đã hoàn thành giao dịch"}
+              </span>
+            </p>
           </div>
           <div className="border-b-[1px] border-b-solid border-b-slate-200 py-5 basis-[75%] grid grid-cols-2 sm:grid-cols-3 gap-2 lg:grid-cols-4 lg:gap-x-5 justify-evenly">
             <div className="flex items-center gap-x-2">
@@ -283,18 +261,37 @@ const Example = () => {
               <span className="text-lg">{state?.updatedAt}</span>
             </div>
             <div className="flex flex-col gap-y-1 items-center">
-              <span className="opacity-80">Liên hệ công ty</span>
-              <span className="text-lg">0334745377</span>
+              <span className="opacity-80">Hoa hồng</span>
+              <span className="text-lg">{state?.commission} %</span>
             </div>
             <div className="flex flex-col gap-y-1 items-center">
               <span className="opacity-80">Mã bài đăng</span>
-              <span className="text-lg">{state?.postId}</span>
+              <span className="text-lg">{state?.propertyId}</span>
             </div>
           </div>
 
-          <button className="mt-5 w-full h-[50px] bg-[#0b60b0] text-white flex justify-center items-center gap-x-2 rounded-md hover:opacity-90">
-            <MdMessage /> <span>Nhắn tin</span>
-          </button>
+          <div className="py-5">
+            <h2 className="flex items-center gap-x-1 mb-1">
+              <span>
+                <GoDotFill />
+              </span>
+              <span>Nhân viên hỗ trợ:</span>
+            </h2>
+            <p className="text-justify mt-5 font-bold">{state?.username}</p>
+          </div>
+
+          <div className="mt-5 w-full h-[50px] bg-[#0b60b0] text-white rounded-md hover:opacity-90">
+            {session ? (
+              <button
+                onClick={handleToMessage}
+                className="flex justify-center items-center w-full h-full gap-x-2"
+              >
+                <MdMessage /> <span>Nhắn tin</span>
+              </button>
+            ) : (
+              <Link to="/real+estate/signin">Đăng nhập ngay</Link>
+            )}
+          </div>
 
           {/* <div className="flex gap-y-5 flex-col border-b-[1px] border-b-solid border-b-slate-200 py-5">
             <div className="flex items-center gap-x-2">

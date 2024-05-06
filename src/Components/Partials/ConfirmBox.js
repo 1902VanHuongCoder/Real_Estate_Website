@@ -13,7 +13,6 @@ import { db, storage } from "../../FirebaseConfig/firebase";
 import { deleteObject, ref } from "firebase/storage";
 import { deleteDoc, doc } from "firebase/firestore";
 
-
 const confirmBoxVariants = {
   hidden: {
     scale: 0,
@@ -32,34 +31,53 @@ const ConfirmBox = () => {
 
   const handleConfirmDeleting = async () => {
     if (showConfirmBox.typeOfCollection === "posts") {
-        // Create a reference to the file to delete
-        const listImagesNeedToDelete =
-          showConfirmBox.dataToDelete.besideImageURLs;
-        listImagesNeedToDelete.push(showConfirmBox.dataToDelete.titleImageURL);
+      // Create a reference to the file to delete
+      const listImagesNeedToDelete =
+        showConfirmBox.dataToDelete.besideImageURLs;
+      listImagesNeedToDelete.push(showConfirmBox.dataToDelete.titleImageURL);
 
-        for (let i = 0; i < listImagesNeedToDelete.length; i++) {
-          const desertRef = ref(storage, listImagesNeedToDelete[i].imageURL);
+      for (let i = 0; i < listImagesNeedToDelete.length; i++) {
+        const desertRef = ref(storage, listImagesNeedToDelete[i].imageURL);
 
-          console.log(listImagesNeedToDelete[i]);
+        console.log(listImagesNeedToDelete[i]);
 
-          // Delete the file
-          deleteObject(desertRef)
-            .then(() => {
-              console.log("File was deleted successfully.");
-            })
-            .catch((error) => {
-              console.log("Deleting file is failed.");
-            });
-        }
-        try {
-          await deleteDoc(doc(db, "posts", showConfirmBox.dataToDelete.id));
-          handleShowNotification("Xóa bài đăng thành công.");
-        } catch (e) {
-          handleShowNotification("Xóa bài đăng thất bại do mạng không ổn định");
-          console.log(e);
-        }
-   
+        // Delete the file
+        deleteObject(desertRef)
+          .then(() => {
+            console.log("File was deleted successfully.");
+          })
+          .catch((error) => {
+            console.log("Deleting file is failed.");
+          });
+      }
+      try {
+        await deleteDoc(doc(db, "posts", showConfirmBox.dataToDelete.id));
+        handleShowNotification("Xóa bài đăng thành công.");
+      } catch (e) {
+        handleShowNotification("Xóa bài đăng thất bại do mạng không ổn định");
+        console.log(e);
+      }
     }
+
+    if (showConfirmBox.typeOfCollection === "user_accounts") {
+      console.log(showConfirmBox.dataToDelete.photoURL);
+      const desertRef = ref(storage, showConfirmBox.dataToDelete.photoURL);
+      try {
+        deleteObject(desertRef)
+          .then(() => {
+            console.log("File was deleted successfully.");
+          })
+          .catch((error) => {
+            console.log("Deleting file is failed.");
+          });
+        await deleteDoc(doc(db, "posts", showConfirmBox.dataToDelete.id));
+        handleShowNotification("Xóa tài khoản người dùng thành công.");
+      } catch (e) {
+        handleShowNotification("Xóa tài khoản người dùng thất bại do mạng không ổn định");
+        console.log(e);
+      }
+    }
+
     setShowConfirmBox({
       ...showConfirmBox,
       show: false,

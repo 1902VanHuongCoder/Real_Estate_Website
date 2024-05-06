@@ -13,6 +13,7 @@ import { db } from "../FirebaseConfig/firebase";
 
 // import custome hooks
 import { useNotification } from "../Hooks/useNotification";
+import Transitions from "./Partials/Transition";
 
 const GeneralInfo = () => {
   const { postsWasFiltered, setShowSpinner } = useContext(AppContext);
@@ -42,49 +43,55 @@ const GeneralInfo = () => {
   }, []);
 
   return (
-    <div className="flex flex-col gap-y-10">
-      {/* General infomations */}
-      <div className="">
-        <div className="flex items-center gap-x-2 text-xl">
-          <span>
-            <GoDotFill />
-          </span>
-          <span>Thông tin chung</span>
-        </div>
-        <div className="flex gap-2 mt-5 flex-wrap">
-          <div className="w-[300px] bg-white border-[1px] border-solid border-slate-200 p-4 rounded-e-md flex gap-x-5 items-center rounded-lg">
-            <span className="text-white w-[50px] h-[50px] rounded-full flex justify-center items-center bg-[#40A2D8]">
-              <FaBook />
-            </span>
+    <Transitions>
+      <div className="flex flex-col gap-y-10">
+        {/* General infomations */}
+        <div className="">
+          <div className="flex items-center gap-x-2 text-xl">
             <span>
-              <span className="text-xl font-medium">
-                {postsWasFiltered ? (postsWasFiltered.length > 9 ? postsWasFiltered.length : "0" + postsWasFiltered.length) : 0}
-              </span>{" "}
-              <span> bài đăng</span>
+              <GoDotFill />
             </span>
+            <span>Thông tin chung</span>
           </div>
-          <div className="w-[300px] bg-white border-[1px] border-solid border-slate-200 p-4 rounded-e-md flex gap-x-5 items-center rounded-lg">
-            <span className="text-white w-[50px] h-[50px] rounded-full flex justify-center items-center bg-[#40A2D8]">
-              <FaUser />
-            </span>
-            <span>
-              <span className="text-xl font-medium">
-                {userAccount
-                  ? userAccount.length > 9
-                    ? userAccount.length
-                    : "0" + userAccount.length
-                  : 0}
+          <div className="flex gap-2 mt-5 flex-wrap">
+            <div className="w-[300px] bg-white border-[1px] border-solid border-slate-200 p-4 rounded-e-md flex gap-x-5 items-center rounded-lg">
+              <span className="text-white w-[50px] h-[50px] rounded-full flex justify-center items-center bg-[#40A2D8]">
+                <FaBook />
               </span>
-              <span> tài khoản</span>
-            </span>
-          </div>
-          <div>
-            <span></span>
+              <span>
+                <span className="text-xl font-medium">
+                  {postsWasFiltered
+                    ? postsWasFiltered.length > 9
+                      ? postsWasFiltered.length
+                      : "0" + postsWasFiltered.length
+                    : 0}
+                </span>{" "}
+                <span> bài đăng</span>
+              </span>
+            </div>
+            <div className="w-[300px] bg-white border-[1px] border-solid border-slate-200 p-4 rounded-e-md flex gap-x-5 items-center rounded-lg">
+              <span className="text-white w-[50px] h-[50px] rounded-full flex justify-center items-center bg-[#40A2D8]">
+                <FaUser />
+              </span>
+              <span>
+                <span className="text-xl font-medium">
+                  {userAccount
+                    ? userAccount.length > 9
+                      ? userAccount.length
+                      : "0" + userAccount.length
+                    : 0}
+                </span>
+                <span> tài khoản</span>
+              </span>
+            </div>
+            <div>
+              <span></span>
+            </div>
           </div>
         </div>
+        <Diagram />
       </div>
-      <Diagram />
-    </div>
+    </Transitions>
   );
 };
 

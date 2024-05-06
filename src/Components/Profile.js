@@ -9,14 +9,14 @@ import Transitions from "./Partials/Transition";
 import { AppContext } from "../Context/AppContext";
 
 //import images
-import defaultBackground from '../images/buiding.jpg';
+import defaultBackground from "../images/buiding.jpg";
 import defaultAvatar from "../images/user_icon.png";
 
 //import components
 import { Link } from "react-router-dom";
 
 const Profile = () => {
-  const {session} = useContext(AppContext);
+  const { session } = useContext(AppContext);
   useEffect(() => {
     const userInfo = localStorage.getItem("userInfo");
     if (!userInfo) {
@@ -24,14 +24,20 @@ const Profile = () => {
     }
   }, []);
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-  
+
   return (
     <Transitions>
       <div className="w-full h-fit">
         {/* background  */}
         <div
-          className="h-[400px] w-full bg-center bg-cover bg-no-repeat"
-          style={{ backgroundImage: `url("${ session &&  session.backgroundURL !== "" ? session.backgroundURL : defaultBackground}")` }}
+          className="h-[650px] w-full bg-center bg-cover bg-no-repeat"
+          style={{
+            backgroundImage: `url("${
+              session && session.backgroundURL !== ""
+                ? session.backgroundURL
+                : defaultBackground
+            }")`,
+          }}
         ></div>
 
         <div className="relative h-fit pt-[300px] sm:pt-[280px] lg:pt-[250px]">
@@ -40,40 +46,68 @@ const Profile = () => {
             <div className="w-fit h-fit border-[5px] border-solid border-slate-300 rounded-full">
               <div
                 className="w-[120px] h-[120px] rounded-full bg-cover bg-center bg-no-repeat"
-                style={{ backgroundImage: `url("${session && session.photoURL !== "" ? session.photoURL : defaultAvatar}")` }}
+                style={{
+                  backgroundImage: `url("${
+                    session && session.photoURL !== ""
+                      ? session.photoURL
+                      : defaultAvatar
+                  }")`,
+                }}
               ></div>
             </div>
-            <h1 className="mt-5 text-4xl font-medium">{session ? session.username : "Lỗi hiển thị"}</h1>
+            <h1 className="mt-5 text-4xl font-medium">
+              {session ? session.username : "Lỗi hiển thị"}
+            </h1>
             <p className="text-base sm:text-lg text-slate-500 mt-5 flex gap-x-2 items-center">
               <span className="text-red-500 hidden sm:block">
                 <FaLocationDot />
               </span>
               <span className="text-center">
-                {session && session.address !== "" ? session.address : "Chưa cập nhật thông tin"}
+                {session && session.address !== ""
+                  ? session.address
+                  : "Chưa cập nhật thông tin"}
               </span>
             </p>
             <p className="text-lg text-slate-500 mt-5">
               <span className="text-base">Điện thoại: </span>
-              <span>{session && session.phoneNumber ? session.phoneNumber : "Chưa cập nhật thông tin"}</span>
+              <span>
+                {session && session.phoneNumber
+                  ? session.phoneNumber
+                  : "Chưa cập nhật thông tin"}
+              </span>
             </p>
             <div className="flex justify-between w-full px-0 sm:px-10 mt-5">
               <p className="flex flex-col items-center sm:flex-row gap-2">
                 <span className="italic">Ngày cập nhật: </span>
-                <span>{session && session.update_at !== "" ? session.update_at : "Không xác định"}</span>
+                <span>
+                  {session && session.update_at !== ""
+                    ? session.updatedAt
+                    : "Không xác định"}
+                </span>
               </p>
               <p className="flex flex-col items-center sm:flex-row gap-2">
                 <span className="italic"> Ngày gia nhập: </span>
-                <span>{session && session.create_at !== "" ? session.create_at : "Không xác định"}</span>
+                <span>
+                  {session && session.create_at !== ""
+                    ? session.createdAt
+                    : "Không xác định"}
+                </span>
               </p>
             </div>
           </div>
 
           {/* navigation options */}
           <div className="w-full h-fit flex gap-x-2 px-5 pb-5 border-b-[1px] border-b-solid border-b-slate-200">
-            <Link to="/" className="h-[60px] border-[1px] border-solid border-slate-400 px-5 py-3 bg-[#40A2D8] text-white font-medium text-lg">
+            <Link
+              to="/"
+              className="h-[60px] border-[1px] border-solid border-slate-400 px-5 py-3 bg-[#40A2D8] text-white font-medium text-lg"
+            >
               Trang chủ
             </Link>
-            <Link to="/real+estate/update+profile" className="h-[60px] border-[1px] border-solid border-slate-400 px-5 py-3 bg-[#40A2D8] text-white font-medium text-lg">
+            <Link
+              to="/real+estate/update+profile"
+              className="h-[60px] border-[1px] border-solid border-slate-400 px-5 py-3 bg-[#40A2D8] text-white font-medium text-lg"
+            >
               Sửa hồ sơ
             </Link>
           </div>

@@ -111,8 +111,6 @@ const SignUp = () => {
           data.password
         );
 
-        console.log(res.user);
-
         sendEmailVerification(res.user);
 
         const dataToStore = {
@@ -121,18 +119,16 @@ const SignUp = () => {
           email: data.email,
           phoneNumber: data.phoneNumber,
           password: md5(data.password),
-          create_at:
+          createdAt:
             date.getDay() +
             "/" +
-            date.getMonth() +
-            1 +
+            parseInt(date.getMonth() + 1) +
             "/" +
             date.getFullYear(),
-          update_at:
+          updatedAt:
             date.getDay() +
             "/" +
-            date.getMonth() +
-            1 +
+            parseInt(date.getMonth() + 1) +
             "/" +
             date.getFullYear(),
           role: "user",

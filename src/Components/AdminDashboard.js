@@ -170,9 +170,34 @@ const AdminDashboard = () => {
                   "text-white"
                 }`}
               >
-                Danh Sách Tài Khoản
+                Danh Sách Tài Khoản Người Dùng
               </span>
             </Link>
+            <Link
+              to="/admin/list+of+staff+accounts"
+              className="relative px-5  flex justify-center items-center "
+            >
+              {location.pathname === "/admin/list+of+staff+accounts" && (
+                <motion.span
+                  key="/admin/list+of+staff+accounts"
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  variants={backgroundAnimationGeneralInfo}
+                  className="absolute w-full overflow-hidden h-full bg-[#0b60b0] -z-1"
+                ></motion.span>
+              )}
+
+              <span
+                className={`relative z-10 ${
+                  location.pathname === "/admin/list+of+staff+accounts" &&
+                  "text-white"
+                }`}
+              >
+                Danh Sách Tài Khoản Nhân Viên
+              </span>
+            </Link>
+
             <Link
               to="/admin/add+staff"
               className="relative px-5  flex justify-center items-center "

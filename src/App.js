@@ -1,4 +1,3 @@
-import { BrowserRouter } from "react-router-dom";
 import { Route, Routes } from "react-router-dom";
 import Post from "./Components/Post";
 import Home from "./Home";
@@ -13,7 +12,6 @@ import Notification from "./Components/Partials/Notification";
 
 import "./App.css";
 import {
-  Feedback,
   ToTop,
   NavigationBar,
   Footer,
@@ -43,6 +41,7 @@ import GeneralInfo from "./Components/GeneralInfo";
 import UpdatePost from "./Components/UpdatePost";
 import ListOfPosts from "./Components/Partials/ListOfPosts";
 import Test from "./Test";
+import StaffAccountsList from "./Components/Partials/StaffAccountList";
 
 function App() {
   const location = useLocation();
@@ -181,6 +180,7 @@ function App() {
 
               {session && <Route path="/chat" element={<ChatBox />}></Route>}
               <Route path="/staff/update+post" element={<UpdatePost />}></Route>
+              <Route path="/admin/list+of+staff+accounts" element={<StaffAccountsList />}></Route>
 
               {/* Beta  */}
 

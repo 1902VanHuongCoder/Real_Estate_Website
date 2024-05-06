@@ -36,15 +36,20 @@ import user_icon from "../images/user_icon.png";
 // import libraries
 import { v4 as uuid } from "uuid";
 import Transitions from "../Components/Partials/Transition";
+import { useLocation } from "react-router-dom";
 
 const ChatBox = () => {
   const { session } = useContext(AppContext);
+
+  const { state } = useLocation();
 
   const { data } = useContext(ChatContext);
 
   const [user, setUser] = useState(null);
 
   const [chats, setChats] = useState([]);
+
+  console.log(chats);
 
   const [username, setUsername] = useState("");
 
@@ -59,28 +64,19 @@ const ChatBox = () => {
   const { dispatch } = useContext(ChatContext);
 
   const handleSelect = async () => {
-    console.log("Current user id: " + session.userId);
-    console.log("user id: " + user.userId);
-
     //check whether the group(chats in firestore) exists, if not create
     const combinedId =
       session.userId > user.userId
         ? session.userId + user.userId
         : user.userId + session.userId;
-
-    console.log("Compare result: " + session.userId > user.userId);
-
     try {
       const res = await getDoc(doc(db, "chats", combinedId));
-
-      console.log("Outside iff");
-
+      console.log(!res.exists());
       if (!res.exists()) {
-        console.log("Inside iff");
-
         //create a chat in chats collection
         await setDoc(doc(db, "chats", combinedId), { messages: [] });
         //create user chats
+        console.log("Testing is running...");
         await updateDoc(doc(db, "userChats", session.userId), {
           [combinedId + ".userInfo"]: {
             userId: user.userId,
@@ -98,7 +94,9 @@ const ChatBox = () => {
           [combinedId + ".date"]: serverTimestamp(),
         });
       }
-    } catch (err) {}
+    } catch (err) {
+      console.log("ERROR");
+    }
     setUser(null);
     setUsername("");
   };
@@ -124,7 +122,6 @@ const ChatBox = () => {
     dispatch({ type: "CHANGE_USER", payload: u });
   };
 
-  console.log(img);
   const handleSend = async () => {
     if (img) {
       const storageRef = ref(storage, "chatImages/" + img.details.name);
@@ -221,8 +218,28 @@ const ChatBox = () => {
       };
     };
 
-    session.userId && getChats();
-  }, [session.userId]);
+    session && getChats();
+  }, [session]);
+
+  const handleFetchData = async () => {
+    if (state) {
+      const q = query(
+        collection(db, "user_accounts"),
+        where("userId", "==", state)
+      );
+      try {
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+          setUser(doc.data());
+        });
+      } catch (err) {
+        setErr(true);
+      }
+    }
+  };
+  useEffect(() => {
+    state && handleFetchData();
+  }, []);
 
   useEffect(() => {
     const unSub = onSnapshot(doc(db, "chats", data.chatId), (doc) => {
@@ -248,11 +265,13 @@ const ChatBox = () => {
         </span>
       </h1>
       <div
-        className={`w-full h-[${
-          img ? "840px" : "640px"
-        }] flex border-[1px] border-solid border-slate-200 shadow-md bg-white text-black overflow-hidden`}
+        className={`w-full flex border-[1px] border-solid border-slate-200 shadow-md text-black overflow-hidden`}
       >
-        <div className="basis-[35%] h-auto border-r-[1px] border-r-solid border-r-slate-200 flex flex-col items-center">
+        <div
+          className={`basis-[35%] h-[${
+            img ? "860px" : "640px"
+          }] border-r-[1px] border-r-solid border-r-slate-200 flex flex-col items-center`}
+        >
           <div className="h-fit w-full flex justify-center items-center">
             <img src={logo} alt="logo" className="w-[40%]" />
           </div>
@@ -296,7 +315,7 @@ const ChatBox = () => {
           </div>
 
           {/* Sidebar */}
-          <div className="flex flex-col w-full h-[660px] overflow-auto">
+          <div className="flex flex-col w-full overflow-auto">
             {Object.entries(chats)
               ?.sort((a, b) => b[1].date - a[1].date)
               .map((chat) => (
@@ -339,7 +358,9 @@ const ChatBox = () => {
             </p>
           </div>
         ) : (
-          <div className="basis-[65%] h-fit flex-col">
+          <div
+            className={`h-[${img ? "860px" : "640px"}]  basis-[65%] flex-col]`}
+          >
             <div className="h-[70px] w-full bg-[#40a2d8] shadow-2xl">
               {/* Partner */}
               <div className="flex items-center h-full w-full px-2 gap-x-2">
@@ -368,17 +389,17 @@ const ChatBox = () => {
                 messages.map((m) => (
                   <div
                     className={`flex items-start gap-x-2 p-2 ${
-                      m.senderId === session.userId && "flex-row-reverse"
+                      m.senderId === session?.userId && "flex-row-reverse"
                     }`}
                     key={m.id}
                   >
                     <div
                       style={{
                         backgroundImage: `url("${
-                          m.senderId === session.userId
-                            ? session.photoURL === ""
+                          m.senderId === session?.userId
+                            ? session?.photoURL === ""
                               ? user_icon
-                              : session.photoURL
+                              : session?.photoURL
                             : data.user.photoURL === ""
                             ? user_icon
                             : data.user.photoURL
@@ -388,14 +409,14 @@ const ChatBox = () => {
                     ></div>
                     <div
                       className={`flex flex-col gap-y-4  ${
-                        m.senderId === session.userId
+                        m.senderId === session?.userId
                           ? "items-end"
                           : "items-start"
                       } `}
                     >
                       <div
                         className={`bg-white p-2 rounded-xl ${
-                          m.senderId === session.userId
+                          m.senderId === session?.userId
                             ? "rounded-br-none"
                             : "rounded-bl-none"
                         } max-w-[40%] min-w-fit`}
@@ -444,7 +465,7 @@ const ChatBox = () => {
                 onChange={(event) => handleUploadImage(event)}
               />
             </div>
-            {img?.localURL && (
+            {img && (
               <div className="relative w-[40%] h-[200px] rounded-lg overflow-hidden p-4">
                 <img
                   src={img.localURL}

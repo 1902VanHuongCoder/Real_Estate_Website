@@ -50,11 +50,11 @@ const News = () => {
                 className="absolute top-5 -left-1 w-fit h-[50px] bg-cover bg-right bg-no-repeat text-white text-lg flex pl-4 pr-6 items-center"
                 style={{ backgroundImage: `url("./images/label.png")` }}
               >
-                {item.price}
+                {item.price} { item.unit === "million" ? "triệu" : "tỷ"}
               </div>
             </div>
             <div className="flex flex-col gap-y-2 p-2">
-              <h3 className="font-medium text-lg">{item.postTitle}</h3>
+              <h3 className="font-medium text-lg">{item.title}</h3>
               <p className="flex items-center gap-x-1 text-base">
                 <span className="text-lg text-red-600">
                   <FaLocationDot />

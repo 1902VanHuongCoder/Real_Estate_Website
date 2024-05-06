@@ -24,7 +24,7 @@ import { AppContext } from "../Context/AppContext";
 import { v4 as uuidv4 } from "uuid";
 
 const Post = () => {
-  const { setShowSpinner } = useContext(AppContext); // create loading animation when adding new property
+  const { setShowSpinner, session } = useContext(AppContext); // create loading animation when adding new property
 
   const [handleShowNotification] = useNotification(); // notify the state of adding property
 
@@ -55,6 +55,7 @@ const Post = () => {
       .max(100, "Tối đa 100 ký tự")
       .min(20, "Ít nhất 20 kí tự")
       .required("Trường này được yêu cầu"),
+    commission: yup.string().required("Trường này được yêu cầu"),
     price: yup
       .string()
       .max(15, "Tối đa 15 ký tự")
@@ -127,6 +128,10 @@ const Post = () => {
             titleImageURL: titleImageURL,
             besideImageURLs: listOfImageURLs,
             house: true,
+            commission: parseFloat(data.commission),
+            userId: session.userId,
+            username: session.username,
+            stateOfProperty: 1,
 
             createdAt:
               date.getDate() +
@@ -159,7 +164,11 @@ const Post = () => {
             description: value,
             titleImageURL: titleImageURL,
             besideImageURLs: listOfImageURLs,
-            ground: true,
+            house: false,
+            commission: parseFloat(data.commission),
+            userId: session.userId,
+            username: session.username,
+            stateOfProperty: 1,
 
             createdAt:
               date.getDate() +
@@ -198,6 +207,7 @@ const Post = () => {
     } else {
       handleShowNotification("Bạn chưa chọn ảnh tiêu đề bài đăng.", "error");
     }
+    console.log(data.commission);
     window.scrollTo({
       top: 0,
       behavior: "smooth",
@@ -290,29 +300,62 @@ const Post = () => {
               </p>
             )}
           </div>
-          <div className="flex flex-col gap-y-2">
-            <label className="text-slate-500" htmlFor="address">
-              Địa chỉ
-            </label>
-            <input
-              className={`${
-                errors.address ? "border-red-500" : "border-slate-400"
-              } text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
-              type="text"
-              name="address"
-              id="address"
-              autoComplete="on"
-              {...register("address")}
-            />
-            {errors.address && (
-              <p className="flex items-center gap-x-1 text-red-500">
-                <span>
-                  <IoIosWarning />
+          <div className="flex gap-x-2">
+            <div className="flex flex-col gap-y-2 basis-3/4">
+              <label className="text-slate-500" htmlFor="address">
+                Địa chỉ
+              </label>
+              <input
+                className={`${
+                  errors.address ? "border-red-500" : "border-slate-400"
+                } text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                type="text"
+                name="address"
+                id="address"
+                autoComplete="on"
+                {...register("address")}
+              />
+              {errors.address && (
+                <p className="flex items-center gap-x-1 text-red-500">
+                  <span>
+                    <IoIosWarning />
+                  </span>
+                  <span>{errors.address.message}</span>
+                </p>
+              )}
+            </div>
+
+            <div className=" flex flex-col gap-y-2 basis-1/4">
+              <label className="text-slate-500" htmlFor="commission">
+                Phần trăm hoa hồng
+              </label>
+              <div className="relative">
+                <input
+                  className={`${
+                    errors.commission ? "border-red-500" : "border-slate-400"
+                  } text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                  type="text"
+                  name="commission"
+                  id="commission"
+                  autoComplete="on"
+                  {...register("commission")}
+                />
+                <span className="absolute h-[50px] w-[70px] flex justify-center items-center bg-slate-200 right-0 top-0 border-l-0 border-[1px] border-solid">
+                  %
                 </span>
-                <span>{errors.address.message}</span>
-              </p>
-            )}
+              </div>
+
+              {errors.commission && (
+                <p className="flex items-center gap-x-1 text-red-500">
+                  <span>
+                    <IoIosWarning />
+                  </span>
+                  <span>{errors.commission.message}</span>
+                </p>
+              )}
+            </div>
           </div>
+
           <div className="flex flex-col gap-y-5 sm:flex-row gap-x-5 pb-10 border-b-[1px] border-solid border-slate-200">
             {isHouse && (
               <div className="text-base basis-1/3 flex flex-col gap-y-1 ">

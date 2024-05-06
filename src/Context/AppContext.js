@@ -20,7 +20,7 @@ const AppProvider = ({ children }) => {
   const [houses, setHouses] = useState([]);
   const [lands, setLands] = useState([]);
   const [postsWasFiltered, setPostsWasFiltered] = useState([]);
-
+  
   useEffect(() => {
     if (showNotification) {
       setTimeout(() => {
