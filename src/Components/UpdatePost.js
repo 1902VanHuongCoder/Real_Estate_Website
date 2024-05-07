@@ -26,6 +26,12 @@ import { useLocation } from "react-router-dom";
 const Test = () => {
   const { state } = useLocation();
 
+  const [test, setTest] = useState({
+    state1: true,
+    state2: false,
+    state3: false,
+  });
+
   const [handleShowNotification] = useNotification(); // notify the state of adding property
 
   const [value, setValueEditor] = useState(state.description); // value of Description Editor
@@ -33,6 +39,8 @@ const Test = () => {
   const [titleImageURL, setTitleImageURL] = useState(state.titleImageURL); // store url of title image
 
   const [listOfImageURLs, setListOfImageURLs] = useState(state.besideImageURLs); // list of images
+
+  const [stateOfPost, setStateOfPost] = useState([true, false, false]);
 
   const [methodWithProperty, setMethodWithProperty] = useState({
     renting: state.renting,
@@ -96,6 +104,7 @@ const Test = () => {
   });
 
   const handleUpdate = async (data) => {
+    console.log(data);
 
     const valuesThatNeedToUpdate = {};
 
@@ -107,6 +116,34 @@ const Test = () => {
         valuesThatNeedToUpdate[key] = getDataFields[key];
       }
     });
+
+    let testStateOfPost = false;
+    for (let i = 0; i < stateOfPost.length; i++) {
+      if (stateOfPost[i] !== state.stateOfProperty[i]) {
+        testStateOfPost = true;
+      }
+    }
+    if (testStateOfPost) {
+      valuesThatNeedToUpdate.stateOfProperty = stateOfPost;
+      // update revenue for the company if transaction is successful
+      if (stateOfPost[stateOfPost.length - 1]) {
+        let revenue = 0;
+        const userId = localStorage.getItem("userInfo");
+        const profileRef = doc(db, "user_accounts", JSON.parse(userId).userId);
+        if (state.unit === "million") {
+          revenue = state.commission * 1000000;
+        } else if (state.unit === "billion") {
+          revenue = state.commission * 1000000000;
+        }
+        try {
+          updateDoc(profileRef, {
+            revenue: revenue,
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    }
 
     if (titleImageURL !== state.titleImageURL) {
       // check user whether user has changed title image
@@ -127,13 +164,15 @@ const Test = () => {
       // check user whether user has changed list of beside images
       valuesThatNeedToUpdate.besideImageURLs = listOfImageURLs;
     }
-    
+
     let postsRef;
     if (isHouse) {
       postsRef = doc(db, "houses", state.id); // reference to posts of database
     } else {
       postsRef = doc(db, "lands", state.id); // reference to posts of database
     }
+
+    console.log(valuesThatNeedToUpdate);
 
     try {
       const date = new Date();
@@ -159,6 +198,9 @@ const Test = () => {
     });
   };
 
+  const handleUpdate01 = () => {
+    alert("Hello");
+  };
   return (
     <Transitions>
       <div className="w-4/5 sm:p-5 mx-auto">
@@ -172,13 +214,73 @@ const Test = () => {
           className="w-full h-fit flex flex-col gap-y-3"
           action="/"
           method="POST"
-          onSubmit={handleSubmit(handleUpdate)}
+          onSubmit={handleSubmit(handleUpdate01)}
         >
           <p className="border-l-[5px] border-solid border-[#0B60B0] mb-5 text-xl pl-2">
             Nội dung chính
           </p>
 
           {/* Main Content */}
+          <div className="text-slate-500">Cập nhật trạng thái bài đăng</div>
+          <div className="flex justify-evenly items-center my-5">
+            <label
+              htmlFor="1"
+              className="flex gap-x-2 items-center bg-green-500 p-4 rounded-md"
+            >
+              <input
+                checked={stateOfPost[0]}
+                type="checkbox"
+                id="1"
+                onChange={(e) => {
+                  console.log("Hello");
+                  setStateOfPost([
+                    e.target.checked,
+                    !e.target.checked,
+                    !e.target.checked,
+                  ]);
+                }}
+              />
+              <span>Bài đăng mới</span>
+            </label>
+            <label
+              htmlFor="2"
+              className="flex gap-x-2 items-center bg-yellow-500 p-4 rounded-md"
+            >
+              <input
+                checked={stateOfPost[1]}
+                type="checkbox"
+                id="2"
+                onChange={(e) => {
+                  console.log("Hello1");
+                  setStateOfPost([
+                    !e.target.checked,
+                    e.target.checked,
+                    !e.target.checked,
+                  ]);
+                }}
+              />
+              <span>Đang thỏa thuận</span>
+            </label>
+            <label
+              htmlFor="3"
+              className="flex gap-x-2 items-center bg-blue-500 p-4 rounded-md"
+            >
+              <input
+                checked={stateOfPost[2]}
+                type="checkbox"
+                id="3"
+                onChange={(e) =>
+                  setStateOfPost([
+                    !e.target.checked,
+                    !e.target.checked,
+                    e.target.checked,
+                  ])
+                }
+              />
+              <span>Giao dịch thành công</span>
+            </label>
+          </div>
+
           <div className="flex flex-col gap-y-2">
             <label className="text-slate-500" htmlFor="title">
               Tiêu đề bài đăng
@@ -203,29 +305,63 @@ const Test = () => {
               </p>
             )}
           </div>
-          <div className="flex flex-col gap-y-2">
-            <label className="text-slate-500" htmlFor="address">
-              Địa chỉ
-            </label>
-            <input
-              defaultValue={state.address}
-              className={`${
-                errors.address ? "border-red-500" : "border-slate-400"
-              } text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
-              type="text"
-              name="address"
-              id="address"
-              autoComplete="on"
-              {...register("address")}
-            />
-            {errors.address && (
-              <p className="flex items-center gap-x-1 text-red-500">
-                <span>
-                  <IoIosWarning />
+
+          <div className="flex gap-x-2">
+            <div className="flex flex-col gap-y-2 basis-3/4">
+              <label className="text-slate-500" htmlFor="address">
+                Địa chỉ
+              </label>
+              <input
+                defaultValue={state.address}
+                className={`${
+                  errors.address ? "border-red-500" : "border-slate-400"
+                } text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                type="text"
+                name="address"
+                id="address"
+                autoComplete="on"
+                {...register("address")}
+              />
+              {errors.address && (
+                <p className="flex items-center gap-x-1 text-red-500">
+                  <span>
+                    <IoIosWarning />
+                  </span>
+                  <span>{errors.address.message}</span>
+                </p>
+              )}
+            </div>
+
+            <div className=" flex flex-col gap-y-2 basis-1/4">
+              <label className="text-slate-500" htmlFor="commission">
+                Phần trăm hoa hồng
+              </label>
+              <div className="relative">
+                <input
+                  defaultValue={state.commission}
+                  className={`${
+                    errors.commission ? "border-red-500" : "border-slate-400"
+                  } text-xl pl-5 h-[50px] border-[1px] border-solid rounded-none outline-none focus:border-[#0B60B0] `}
+                  type="text"
+                  name="commission"
+                  id="commission"
+                  autoComplete="on"
+                  {...register("commission")}
+                />
+                <span className="absolute h-[50px] w-[70px] flex justify-center items-center bg-slate-200 right-0 top-0 border-l-0 border-[1px] border-solid">
+                  %
                 </span>
-                <span>{errors.address.message}</span>
-              </p>
-            )}
+              </div>
+
+              {errors.commission && (
+                <p className="flex items-center gap-x-1 text-red-500">
+                  <span>
+                    <IoIosWarning />
+                  </span>
+                  <span>{errors.commission.message}</span>
+                </p>
+              )}
+            </div>
           </div>
           <div className="flex flex-col gap-y-5 sm:flex-row gap-x-5 pb-10 border-b-[1px] border-solid border-slate-200">
             {isHouse && (
@@ -560,6 +696,7 @@ const Test = () => {
               Reset
             </button>
             <button
+              onClick={handleUpdate}
               type="submit"
               className="ml-1 text-white bg-[#0B60B0] h-[40px] px-5 w-[150px] hover:opacity-80 uppercase"
             >

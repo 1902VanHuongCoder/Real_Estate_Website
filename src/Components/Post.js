@@ -131,7 +131,7 @@ const Post = () => {
             commission: parseFloat(data.commission),
             userId: session.userId,
             username: session.username,
-            stateOfProperty: 1,
+            stateOfProperty: [true, false, false],
 
             createdAt:
               date.getDate() +
@@ -168,7 +168,7 @@ const Post = () => {
             commission: parseFloat(data.commission),
             userId: session.userId,
             username: session.username,
-            stateOfProperty: 1,
+            stateOfProperty: [true, false, false],
 
             createdAt:
               date.getDate() +

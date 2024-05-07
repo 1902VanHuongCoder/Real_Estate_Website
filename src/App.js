@@ -42,6 +42,7 @@ import UpdatePost from "./Components/UpdatePost";
 import ListOfPosts from "./Components/Partials/ListOfPosts";
 import Test from "./Test";
 import StaffAccountsList from "./Components/Partials/StaffAccountList";
+import StaffPost from "./Components/StaffPost";
 
 function App() {
   const location = useLocation();
@@ -123,9 +124,8 @@ function App() {
       <div className="relative max-w-[1200px] mx-auto overflow-hidden">
         <NavigationBar />
         <Notification />
-        {session && (session.role === "admin" || session.role === "staff") && (
-          <AdminDashboard />
-        )}
+        {session && session.role === "admin" && <AdminDashboard />}
+        {session && session.role === "staff" && <StaffDashboard />}
         <div onClick={() => setOpenUserBox(false)}>
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
@@ -174,13 +174,16 @@ function App() {
               <Route path="/admin" element={<GeneralInfo />}></Route>
 
               <Route
-                path="/staff/dashboard"
-                element={<StaffDashboard />}
+                path="/staff/list+posts+of+staff"
+                element={<StaffPost />}
               ></Route>
 
               {session && <Route path="/chat" element={<ChatBox />}></Route>}
               <Route path="/staff/update+post" element={<UpdatePost />}></Route>
-              <Route path="/admin/list+of+staff+accounts" element={<StaffAccountsList />}></Route>
+              <Route
+                path="/admin/list+of+staff+accounts"
+                element={<StaffAccountsList />}
+              ></Route>
 
               {/* Beta  */}
 

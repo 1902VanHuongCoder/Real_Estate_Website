@@ -92,7 +92,8 @@ const UpdateProfile = () => {
   // update user's datas
   const handleUpdateUserProfile = async (data) => {
     // setShowSpinner(true);
-    const profileRef = doc(db, "user_accounts", session.userId);
+    const userId = localStorage.getItem("userInfo");
+    const profileRef = doc(db, "user_accounts", JSON.parse(userId).userId);
     const valuesThatNeedToUpdate = {};
     const getDataFields = getValues(); // get values of all of the input fields
 
@@ -104,12 +105,12 @@ const UpdateProfile = () => {
     });
 
     if (background.details) {
-      console.log(session.backgroundURL);
+      console.log(session?.backgroundURL);
 
-      if (session.backgroundURL !== "") {
+      if (session?.backgroundURL !== "") {
         const desertRef = ref(
           storage,
-          `userImages/${session.backgroundImageName}`
+          `userImages/${session?.backgroundImageName}`
         );
         // Delete the file
         deleteObject(desertRef)
@@ -142,15 +143,15 @@ const UpdateProfile = () => {
               backgroundURL: url,
               backgroundImageName: background.details.name,
             });
-            updateSession(session.userId);
+            updateSession(session?.userId);
           });
         }
       );
     }
 
     if (userAvatar.details) {
-      if (session.photoURL !== "") {
-        const desertRef = ref(storage, `userImages/${session.photoName}`);
+      if (session?.photoURL !== "") {
+        const desertRef = ref(storage, `userImages/${session?.photoName}`);
         // Delete the file
         deleteObject(desertRef)
           .then(() => {
@@ -181,7 +182,7 @@ const UpdateProfile = () => {
               photoURL: url,
               photoName: userAvatar.details.name,
             });
-            updateSession(session.userId);
+            updateSession(session?.userId);
           });
         }
       );
@@ -206,125 +207,10 @@ const UpdateProfile = () => {
       console.log("Update profile was failed!");
     }
 
-    // if (
-    //   data.username === "" &&
-    //   data.phoneNumber === "" &&
-    //   data.address === "" &&
-    //   !background.details &&
-    //   !userAvatar.details
-    // ) {
-    //   return;
-    // }
-    // const userAccountRef = doc(db, "user_accounts", session.id);
-
-    // setTimeout(async () => {
-    //   if (background.details) {
-    //     console.log("Update background before url");
-    //     const storageRef = ref(
-    //       storage,
-    //       `/userImages/${background.details.name}`
-    //     ); // create reference to storage in products folder
-    //     const uploadTask = uploadBytesResumable(storageRef, background.details); // upload image to storage
-    //     uploadTask.on(
-    //       //keep tracking upload process to display nescessary informations
-    //       "state_changed",
-    //       (snapshot) => {
-    //         // return percent of completed upload
-    //         const percent = Math.round(
-    //           (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-    //         );
-    //       },
-    //       (error) => {
-    //         console.log(error);
-    //         handleShowNotification(
-    //           "Kết nối mạng không ổn định! Hãy thử lại.",
-    //           "error"
-    //         );
-    //       },
-    //       () => {
-    //         getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-    //           console.log("BackgroundURL: " + url);
-    //           updateDoc(userAccountRef, {
-    //             backgroundURL: url,
-    //           });
-
-    //           console.log("Update background after url");
-    //           // setSession({ ...session, backgroundURL: url });
-    //           updateSession(session.userId);
-    //           handleShowNotification("Cập nhật hồ sơ thành công.", "success");
-    //           setShowSpinner(false);
-    //         });
-    //       }
-    //     );
-    //   }
-    //   if (userAvatar.details) {
-    //     console.log("Update user avatar before url");
-    //     const storageRef = ref(
-    //       storage,
-    //       `/userImages/${userAvatar.details.name}`
-    //     ); // create reference to storage in products folder
-    //     const uploadTask = uploadBytesResumable(storageRef, userAvatar.details); // upload image to storage
-    //     uploadTask.on(
-    //       //keep tracking upload process to display nescessary informations
-    //       "state_changed",
-    //       (snapshot) => {
-    //         // return percent of completed upload
-    //         const percent = Math.round(
-    //           (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-    //         );
-    //       },
-    //       (error) => {
-    //         console.log(error);
-    //         handleShowNotification(
-    //           "Kết nối mạng không ổn định! Hãy thử lại.",
-    //           "error"
-    //         );
-    //       },
-    //       () => {
-    //         getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-    //           console.log("UseravatarURL: " + url);
-    //           updateDoc(userAccountRef, {
-    //             photoURL: url,
-    //           });
-    //           console.log("Update user avatar after url");
-    //           updateSession(session.userId);
-    //           handleShowNotification("Cập nhật hồ sơ thành công.", "success");
-    //           setShowSpinner(false);
-    //         });
-    //       }
-    //     );
-    //   }
-
-    //   if (data.username !== "") {
-    //     await updateDoc(userAccountRef, {
-    //       username: data.username,
-    //     });
-    //     console.log("Username was updated");
-    //     setSession({ ...session, username: data.username });
-    //   }
-
-    //   if (data.phoneNumber !== "") {
-    //     await updateDoc(userAccountRef, {
-    //       phoneNumber: data.phoneNumber,
-    //     });
-    //     console.log("Phone number was updated");
-    //     setSession({ ...session, phoneNumber: data.phoneNumber });
-    //   }
-
-    //   if (data.address !== "") {
-    //     await updateDoc(userAccountRef, {
-    //       address: data.address,
-    //     });
-    //     setSession({ ...session, address: data.address });
-    //     console.log("Address was updated");
-    //   }
-
-    //   if (!background.details && !userAvatar.details) {
-    //     setShowSpinner(false);
-    //     handleShowNotification("Cập nhật hồ sơ thành công.", "success");
-    //     console.log("No background and avatar is running....");
-    //   }
-    // }, 3000);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
   useEffect(() => {
     const userInfo = localStorage.getItem("userInfo");
@@ -352,8 +238,8 @@ const UpdateProfile = () => {
               backgroundImage: `url(${
                 background.localURL
                   ? background.localURL
-                  : session && session.backgroundURL !== ""
-                  ? session.backgroundURL
+                  : session && session?.backgroundURL !== ""
+                  ? session?.backgroundURL
                   : defaultBackground
               })`,
             }}
@@ -383,8 +269,8 @@ const UpdateProfile = () => {
                   backgroundImage: `url(${
                     userAvatar.localURL
                       ? userAvatar.localURL
-                      : session && session.photoURL !== ""
-                      ? session.photoURL
+                      : session && session?.photoURL !== ""
+                      ? session?.photoURL
                       : defaultAvatar
                   })`,
                 }}
@@ -419,7 +305,7 @@ const UpdateProfile = () => {
                   id="username"
                   name="username"
                   placeholder={
-                    session ? session.username : "Nhập tên của bạn ..."
+                    session ? session?.username : "Nhập tên của bạn ..."
                   }
                   {...register("username")}
                 />
@@ -442,8 +328,8 @@ const UpdateProfile = () => {
                   id="address"
                   name="address"
                   placeholder={
-                    session && session.address !== ""
-                      ? session.address
+                    session && session?.address !== ""
+                      ? session?.address
                       : "Nhập địa chỉ ..."
                   }
                   {...register("address")}
@@ -481,7 +367,7 @@ const UpdateProfile = () => {
                     type="text"
                     autoComplete="on"
                     placeholder={
-                      session.phoneNumber !== "" && session.phoneNumber
+                      session?.phoneNumber !== "" && session?.phoneNumber
                     }
                     {...register("phoneNumber")}
                   />
@@ -496,6 +382,35 @@ const UpdateProfile = () => {
                   </p>
                 )}
               </div>
+
+              {session?.role === "staff" && (
+                <div className="flex flex-col gap-y-1">
+                  <label htmlFor="position">Chức vụ</label>
+                  <input
+                    className={`${
+                      errors.position ? "border-red-500" : "border-slate-400"
+                    } w-full h-[50px] outline-none border-[1px] border-solid  pl-3`}
+                    type="text"
+                    id="position"
+                    name="position"
+                    placeholder={
+                      session && session?.position !== ""
+                        ? session?.position
+                        : "Nhập chức vụ ..."
+                    }
+                    {...register("position")}
+                  />
+                  {errors.position && (
+                    <p className="flex items-center gap-x-1 text-red-500">
+                      <span>
+                        <IoIosWarning />
+                      </span>
+                      <span>{errors.position.message}</span>
+                    </p>
+                  )}
+                </div>
+              )}
+
               <div className="mt-5 flex justify-end">
                 <button
                   type="submit"

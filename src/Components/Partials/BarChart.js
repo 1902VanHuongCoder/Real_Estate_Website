@@ -1,30 +1,20 @@
 import React from "react";
 import Chart from "react-apexcharts";
 
-const Test = () => {
+const BarChart = ({data, columnName}) => {
  const options = {
    chart: {
      id: "basic-bar",
    },
    xaxis: {
-     categories: ["Nguyễn Văn Bảy","Tô Văn Hưởng"],
+     categories: columnName,
    },
-   title: {
-    text: "Doanh thu của từng nhân viên",
-    align: "center",
-    margin: 10,
-    offsetY: 10,
-    style: {
-      fontSize: "20px",
-    },
-    cssClass: 'chart-title',
-  },
  };
 
  const series = [
    {
      name: "triệu",
-     data: [30000, 40000],
+     data: data,
      colors: ['#008FFB', '#ee4d2d'],
    },
  ];
@@ -40,4 +30,4 @@ const Test = () => {
  );
 };
 
-export default Test;
+export default BarChart;

@@ -265,7 +265,7 @@ const ChatBox = () => {
         </span>
       </h1>
       <div
-        className={`w-full flex border-[1px] border-solid border-slate-200 shadow-md text-black overflow-hidden`}
+        className={`w-full flex border-[1px] border-solid border-slate-200 shadow-md text-black overflow-hidden mb-10`}
       >
         <div
           className={`basis-[35%] h-[${
@@ -316,7 +316,7 @@ const ChatBox = () => {
 
           {/* Sidebar */}
           <div className="flex flex-col w-full overflow-auto">
-            {Object.entries(chats)
+            { chats && Object.entries(chats)
               ?.sort((a, b) => b[1].date - a[1].date)
               .map((chat) => (
                 <div

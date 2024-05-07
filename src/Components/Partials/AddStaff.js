@@ -123,24 +123,24 @@ const AddStaff = () => {
           email: data.email,
           phoneNumber: data.phoneNumber,
           password: md5(data.password),
-          create_at:
+          createdAt:
             date.getDay() +
             "/" +
-            date.getMonth() +
-            1 +
+            parseInt(date.getMonth() + 1) +
             "/" +
             date.getFullYear(),
-          update_at:
+          updatedAt:
             date.getDay() +
             "/" +
-            date.getMonth() +
-            1 +
+            parseInt(date.getMonth() + 1) +
             "/" +
             date.getFullYear(),
           role: "staff",
           photoURL: "",
+          photoName: "",
           address: "",
           backgroundURL: "",
+          backgroundImageName: "",
           position: data.position,
           dateOfBirth: data.dateOfBirth,
           registerMethod: "emailAndPassword",

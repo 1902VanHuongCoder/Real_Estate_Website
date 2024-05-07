@@ -133,7 +133,7 @@ const UserBox = () => {
             <MdMessage /> Nhắn tin
           </span>
         </Link>
-        {session?.role === "admin" && (
+        {session?.role === "staff" && (
           <Link to="/real+estate/post">
             <span
               className={` ${
